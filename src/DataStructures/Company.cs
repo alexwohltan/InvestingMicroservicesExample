@@ -26,5 +26,10 @@ namespace DataStructures
         {
 
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

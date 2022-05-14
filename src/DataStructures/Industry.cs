@@ -19,5 +19,10 @@ namespace DataStructures
         public string Name { get; set; }
 
         public List<Company> Companies { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

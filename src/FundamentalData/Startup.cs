@@ -11,6 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using MessageBroker;
+using MessageBroker.RabbitMQ;
+using IntegrationEvents;
+using FundamentalData.Integration;
 
 namespace FundamentalData
 {
@@ -20,10 +24,14 @@ namespace FundamentalData
         {
             Configuration = configuration;
             Environment = environment;
+
+            EventBus = new EventBusRabbitMQ();
         }
 
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment Environment { get; set; }
+
+        public IEventBus EventBus { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -70,6 +78,8 @@ namespace FundamentalData
             {
                 endpoints.MapControllers();
             });
+
+            EventBus.Subscribe<NewMarketEvent, NewMarketEventConsumer>(new NewMarketEventConsumer(EventBus));
         }
     }
 }

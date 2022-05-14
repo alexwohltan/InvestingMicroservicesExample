@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.Json.Serialization;
+
 namespace DataStructures
 {
     public class IncomeStatement : FinancialStatement
@@ -24,6 +26,7 @@ namespace DataStructures
         /// Umsatzkostenquote, Cost of sales ratio
         /// = Cost of Revenue / Revenue
         /// </summary>
+        [JsonIgnore]
         public virtual decimal CostOfRevenueRatio => CostOfRevenue / Revenue;
 
         /// <summary>
@@ -47,11 +50,13 @@ namespace DataStructures
         /// Verwaltungs- und Vertriebskostenquote
         /// = SellingGeneralAndAdministrativeExpenses / Revenue
         /// </summary>
+        [JsonIgnore]
         public virtual decimal SellingExpenseRatio => SellingGeneralAndAdministrativeExpenses / Revenue;
         /// <summary>
         /// Forschungs- und Entwicklungskostenquote
         /// = ResearchAndDevelopmentExpenses / Revenue
         /// </summary>
+        [JsonIgnore]
         public virtual decimal ResearchDevelopmentExpenseRatio => ResearchAndDevelopmentExpenses / Revenue;
 
         /// <summary>
@@ -93,6 +98,7 @@ namespace DataStructures
         /// Steuerquote
         /// = IncomeTaxExpense / EBT
         /// </summary>
+        [JsonIgnore]
         public virtual decimal TaxRate => IncomeTaxExpense / EarningsBeforeTax;
 
 
