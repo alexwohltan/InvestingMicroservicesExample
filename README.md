@@ -103,33 +103,49 @@ To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+We need docker to run containerized applications. 
 
-### Installation
+For Mac: 
+1. Download Docker, extract it, and drag it into your Application folder. https://docs.docker.com/desktop/mac/install/
+2. Launch Docker, and go to Preferences > Advanced and increase its memory allocation to 4GB
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+We also need a SQL Server. We could use a remote SQL server but for development it is easier to just use the sql docker image.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+Pull the image
+```sh
+docker pull mcr.microsoft.com/azure-sql-edge
+```
+
+Install and configure our SQL Server
+```sh
+docker run -d --name 'InvestingMicroservicesSQLServer' -e 'ACCEPT_EULA=1' -e 'MSSQL_SA_PASSWORD=EukalyptusHantel35!' -p 1433:1433 mcr.microsoft.com/azure-sql-edge
+```
+
+We also need the dotnet ef tool.
+```sh
+dotnet tool install --global dotnet-ef
+```
+
+Install Azura Data Studio so we can see what happenes in our database. https://docs.microsoft.com/en-gb/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver15
+
+### Configure Databases
+
+Locate the FundamentalData Project.
+```sh
+cd src/FundamentalData
+```
+
+Create the Entity Framework Migrations.
+```sh
+dotnet ef migrations add InitialCommit
+```
+
+Apply the migrations to the database.
+```sh
+dotnet ef databse update
+```
 
 
-
-<!-- USAGE EXAMPLES -->
 ## Usage
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
