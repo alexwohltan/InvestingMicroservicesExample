@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataStructures
 {
-    public class Market
+    public class Market : IIdentifier
     {
         [Key]
         public int ID { get; set; }

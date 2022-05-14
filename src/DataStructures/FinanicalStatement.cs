@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataStructures
 {
-    public abstract class FinancialStatement
+    public abstract class FinancialStatement : IIdentifier
     {
         [Key]
         public int ID { get; set; }
