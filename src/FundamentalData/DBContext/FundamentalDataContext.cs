@@ -26,6 +26,7 @@ namespace FundamentalData
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseSqlServer("Server=localhost;user id=sa;password=EukalyptusHantel35!;Database=FundamentalData;");
         }
     }
 }

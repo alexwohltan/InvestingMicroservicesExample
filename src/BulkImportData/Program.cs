@@ -35,7 +35,7 @@ namespace BulkImportData // Note: actual namespace depends on the project name.
         {
             IEventBus bus = new EventBusRabbitMQ();
 
-            bus.Publish(new NewMarketEvent { NewMarket = market });
+            bus.Publish(new NewMarketEvent { NewMarket = market.WithoutCompanies() });
         }
     }
 }

@@ -15,7 +15,7 @@ namespace FundamentalData.Integration
             _eventBus = eventBus;
 		}
 
-        public Task Handle(NewMarketEvent @event)
+        public async Task Handle(NewMarketEvent @event)
         {
             Debug.WriteLine(String.Format("Received new Market. (Name = {0})", @event.NewMarket.Name));
 
@@ -24,10 +24,11 @@ namespace FundamentalData.Integration
                 if(context.Markets.FirstOrDefault(e => e.Name == @event.NewMarket.Name) == null)
                 {
                     context.Markets.Add(@event.NewMarket);
+                    await context.SaveChangesAsync();
                 }
             }
 
-            throw new NotImplementedException();
+            return;
         }
     }
 }

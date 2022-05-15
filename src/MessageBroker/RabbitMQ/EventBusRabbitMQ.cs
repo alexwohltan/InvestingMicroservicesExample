@@ -38,6 +38,7 @@ namespace MessageBroker.RabbitMQ
 
             //string json = JsonConvert.SerializeObject(@event);
             string json = System.Text.Json.JsonSerializer.Serialize(@event);
+            Console.WriteLine(json);
 
             var body = Encoding.UTF8.GetBytes(json);
 
@@ -62,7 +63,7 @@ namespace MessageBroker.RabbitMQ
                 routingKey: eventName);
 
             var consumer = new EventingBasicConsumer(Channel);
-            consumer.Received += (model, ea) =>
+            consumer.Received += async (model, ea) =>
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
@@ -85,6 +86,10 @@ namespace MessageBroker.RabbitMQ
                 Debug.WriteLine(eventObject);
                 //Debug.WriteLine(eventObject2);
                 //Debug.WriteLine(eventObject1);
+
+                //var handlerType = typeof(TH).MakeGenericType(typeof(T));
+                //var handler = Activator.CreateInstance(handlerType);
+                //await (Task)handlerType.GetMethod("Handle").Invoke(handler, new object[] { eventObject });
 
                 handler.Handle(eventObject);
 
