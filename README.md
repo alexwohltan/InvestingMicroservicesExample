@@ -126,6 +126,18 @@ We also need the dotnet ef tool.
 dotnet tool install --global dotnet-ef
 ```
 
+For asynchronous messaging between the services we need an EventBus -> RabbitMQ.
+```sh
+docker pull rabbitmq
+docker run -d --name RabbitMQ -p 5672:5672 -p 15672:15672 rabbitmq
+```
+Open the RabbitMQ CLI in docker and execute this command to enable the GUI.
+```sh
+rabbitmq-plugins enable rabbitmq_management
+```
+
+Go to http://localhost:15672 and add our user. (user: alexander, pass: EukalyptusHantel35!)
+
 Install Azura Data Studio so we can see what happenes in our database. https://docs.microsoft.com/en-gb/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver15
 
 ### Configure Databases
