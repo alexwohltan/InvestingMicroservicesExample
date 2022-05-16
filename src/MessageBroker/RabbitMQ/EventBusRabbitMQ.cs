@@ -38,7 +38,6 @@ namespace MessageBroker.RabbitMQ
 
             //string json = JsonConvert.SerializeObject(@event);
             string json = System.Text.Json.JsonSerializer.Serialize(@event);
-            Console.WriteLine(json);
 
             var body = Encoding.UTF8.GetBytes(json);
 
@@ -50,7 +49,7 @@ namespace MessageBroker.RabbitMQ
             Debug.WriteLine(" [x] Sent '{0}' : '{1}' : '{2}'", ExchangeName, eventName, @event);
         }
 
-        public void Subscribe<T, TH>(TH handler, JsonSerializerOptions options = null)
+        public void Subscribe<T, TH>(TH handler)
             where T : IntegrationEvent
             where TH : IIntegrationEventHandler<T>
         {
@@ -74,16 +73,14 @@ namespace MessageBroker.RabbitMQ
                     ExchangeName,
                     routingKey,
                     message);
-                Debug.WriteLine(typeof(T));
-                Debug.WriteLine(message);
 
-                T eventObject = (T)System.Text.Json.JsonSerializer.Deserialize<T>(message, options);
+                T eventObject = (T)System.Text.Json.JsonSerializer.Deserialize<T>(message);
 
                 //var eventObject1 = JsonConvert.DeserializeObject<T>(message);
 
                 //T eventObject2 = System.Text.Json.JsonSerializer.Deserialize<T>(message);
 
-                Debug.WriteLine(eventObject);
+                //Debug.WriteLine(eventObject);
                 //Debug.WriteLine(eventObject2);
                 //Debug.WriteLine(eventObject1);
 

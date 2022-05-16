@@ -1,31 +1,22 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using IntegrationEvents;
-using MessageBroker;
-
-namespace FundamentalData.Integration
+﻿namespace FundamentalData.Integration
 {
 	public class NewMarketEventConsumer : IIntegrationEventHandler<NewMarketEvent>
 	{
-        private readonly IEventBus _eventBus;
-		public NewMarketEventConsumer(IEventBus eventBus)
+        private readonly FundamentalDataContext _repository;
+
+		public NewMarketEventConsumer(FundamentalDataContext repository)
 		{
-            _eventBus = eventBus;
-		}
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        }
 
         public async Task Handle(NewMarketEvent @event)
         {
             Debug.WriteLine(String.Format("Received new Market. (Name = {0})", @event.NewMarket.Name));
 
-            using (FundamentalDataContext context = new FundamentalDataContext())
+            if (_repository.Markets.FirstOrDefault(e => e.Name == @event.NewMarket.Name) == null)
             {
-                if(context.Markets.FirstOrDefault(e => e.Name == @event.NewMarket.Name) == null)
-                {
-                    context.Markets.Add(@event.NewMarket);
-                    await context.SaveChangesAsync();
-                }
+                _repository.Markets.Add(@event.NewMarket);
+                await _repository.SaveChangesAsync();
             }
 
             return;

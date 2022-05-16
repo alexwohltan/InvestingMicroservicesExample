@@ -9,16 +9,16 @@ namespace DataStructures
     public class Sector : IIdentifier
     {
         [Key]
-        public int ID { get; set; }
+        public virtual int ID { get; set; }
 
         [ForeignKey("Market")]
-        public int MarketID { get; set; }
+        public virtual int MarketID { get; set; }
         [JsonIgnore]
-        public Market Market { get; set; }
+        public virtual Market Market { get; set; }
 
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
-        public List<Industry> Industries { get; set; }
+        public virtual List<Industry> Industries { get; set; }
 
         public override string ToString()
         {

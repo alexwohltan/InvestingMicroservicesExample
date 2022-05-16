@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FundamentalData.Migrations
 {
     [DbContext(typeof(FundamentalDataContext))]
-    [Migration("20220514125022_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20220516215433_Initialize")]
+    partial class Initialize
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -294,7 +294,7 @@ namespace FundamentalData.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<int?>("CompanyID")
+                    b.Property<int>("CompanyID")
                         .HasColumnType("int");
 
                     b.Property<string>("Currency")
@@ -551,9 +551,13 @@ namespace FundamentalData.Migrations
 
             modelBuilder.Entity("DataStructures.Filing", b =>
                 {
-                    b.HasOne("DataStructures.Company", null)
+                    b.HasOne("DataStructures.Company", "Company")
                         .WithMany("Filings")
-                        .HasForeignKey("CompanyID");
+                        .HasForeignKey("CompanyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("DataStructures.IncomeStatement", b =>

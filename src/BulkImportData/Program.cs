@@ -1,8 +1,9 @@
 ﻿using System;
 using DataStructures;
 using IntegrationEvents;
-using MessageBroker;
-using MessageBroker.RabbitMQ;
+using EventBus;
+using EventBusRabbitMQ;
+using EventBus.Abstractions;
 
 namespace BulkImportData // Note: actual namespace depends on the project name.
 {
@@ -33,9 +34,20 @@ namespace BulkImportData // Note: actual namespace depends on the project name.
 
         static async void UploadMarket(Market market, HttpClient client)
         {
-            IEventBus bus = new EventBusRabbitMQ();
+            //IEventBus bus = new EventBusRabbitMQ.EventBusRabbitMQ();
 
-            bus.Publish(new NewMarketEvent { NewMarket = market.WithoutCompanies() });
+            //bus.Publish(new NewMarketEvent { NewMarket = market.WithoutCompanies() });
+
+            //foreach (var sector in market.Sectors)
+            //{
+            //    foreach (var industry in sector.Industries)
+            //    {
+            //        foreach (var company in industry.Companies)
+            //        {
+            //            bus.Publish(new NewCompanyEvent { NewCompany = company, MarketName = market.Name, SectorName = sector.Name, IndustryName = industry.Name });
+            //        }
+            //    }
+            //}
         }
     }
 }

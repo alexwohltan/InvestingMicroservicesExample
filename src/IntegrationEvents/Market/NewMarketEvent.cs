@@ -1,10 +1,10 @@
 ﻿using DataStructures;
-using MessageBroker;
+using EventBus.Events;
 
 namespace IntegrationEvents
 {
-    public class NewMarketEvent : IntegrationEvent
+    public record NewMarketEvent : IntegrationEvent
     {
-        public virtual Market NewMarket { get; set; }
+        public virtual Market? NewMarket { get; set; }
     }
 }

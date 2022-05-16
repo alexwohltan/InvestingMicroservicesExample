@@ -7,6 +7,11 @@ namespace DataStructures
 {
     public class Filing : FinancialStatement
     {
+        [ForeignKey("Company")]
+        public virtual int CompanyID { get; set; }
+        [JsonIgnore]
+        public virtual Company Company { get; set; }
+
         public virtual IncomeStatement IncomeStatement { get; set; }
         public virtual BalanceSheet BalanceSheet { get; set; }
         public virtual CashFlowStatement CashflowStatement { get; set; }

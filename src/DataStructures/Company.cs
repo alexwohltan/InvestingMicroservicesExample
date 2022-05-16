@@ -10,15 +10,15 @@ namespace DataStructures
     public class Company : IIdentifier
     {
         [Key]
-        public int ID { get; set; }
+        public virtual int ID { get; set; }
 
         [ForeignKey("Industry")]
-        public int IndustryID { get; set; }
+        public virtual int IndustryID { get; set; }
         [JsonIgnore]
-        public Industry Industry { get; set; }
+        public virtual Industry Industry { get; set; }
 
-        public string Name { get; set; }
-        public string Ticker { get; set; }
+        public virtual string Name { get; set; }
+        public virtual string Ticker { get; set; }
 
         public virtual List<Filing> Filings { get; set; }
 

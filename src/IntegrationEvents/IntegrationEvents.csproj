@@ -9,11 +9,18 @@
   <ItemGroup>
     <ProjectReference Include="..\MessageBroker\MessageBroker.csproj" />
     <ProjectReference Include="..\DataStructures\DataStructures.csproj" />
+    <ProjectReference Include="..\EventBus\EventBus\EventBus.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Market\" />
+    <None Remove="Sector\" />
+    <None Remove="Industry\" />
+    <None Remove="Company\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Market\" />
+    <Folder Include="Sector\" />
+    <Folder Include="Industry\" />
+    <Folder Include="Company\" />
   </ItemGroup>
 </Project>

@@ -8,7 +8,7 @@ namespace MessageBroker
         void Publish<T>(T @event)
             where T : IntegrationEvent;
 
-        void Subscribe<T, TH>(TH handler, JsonSerializerOptions options = null)
+        void Subscribe<T, TH>(TH handler)
             where T : IntegrationEvent
             where TH : IIntegrationEventHandler<T>;
 

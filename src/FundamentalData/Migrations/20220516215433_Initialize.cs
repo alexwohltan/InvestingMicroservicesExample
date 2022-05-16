@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FundamentalData.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initialize : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -89,7 +89,7 @@ namespace FundamentalData.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CompanyID = table.Column<int>(type: "int", nullable: true),
+                    CompanyID = table.Column<int>(type: "int", nullable: false),
                     Ticker = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FilingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PeriodStartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -104,7 +104,8 @@ namespace FundamentalData.Migrations
                         name: "FK_Filings_Companies_CompanyID",
                         column: x => x.CompanyID,
                         principalTable: "Companies",
-                        principalColumn: "ID");
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

@@ -11,5 +11,7 @@
     <ProjectReference Include="..\DataStructures\DataStructures.csproj" />
     <ProjectReference Include="..\MessageBroker\MessageBroker.csproj" />
     <ProjectReference Include="..\IntegrationEvents\IntegrationEvents.csproj" />
+    <ProjectReference Include="..\EventBus\EventBus\EventBus.csproj" />
+    <ProjectReference Include="..\EventBus\EventBusRabbitMQ\EventBusRabbitMQ.csproj" />
   </ItemGroup>
 </Project>

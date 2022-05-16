@@ -292,7 +292,7 @@ namespace FundamentalData.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<int?>("CompanyID")
+                    b.Property<int>("CompanyID")
                         .HasColumnType("int");
 
                     b.Property<string>("Currency")
@@ -549,9 +549,13 @@ namespace FundamentalData.Migrations
 
             modelBuilder.Entity("DataStructures.Filing", b =>
                 {
-                    b.HasOne("DataStructures.Company", null)
+                    b.HasOne("DataStructures.Company", "Company")
                         .WithMany("Filings")
-                        .HasForeignKey("CompanyID");
+                        .HasForeignKey("CompanyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("DataStructures.IncomeStatement", b =>

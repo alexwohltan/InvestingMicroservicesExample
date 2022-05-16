@@ -11,6 +11,9 @@
     <None Remove="Microsoft.EntityFrameworkCore.Design" />
     <None Remove="Swashbuckle.AspNetCore" />
     <None Remove="Integration\" />
+    <None Remove="Microsoft.EntityFrameworkCore.Proxies" />
+    <None Remove="Autofac" />
+    <None Remove="Autofac.Extensions.DependencyInjection" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
@@ -20,6 +23,9 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.5" />
+    <PackageReference Include="Autofac" Version="6.3.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DBContext\" />
@@ -33,6 +39,12 @@
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
     <ProjectReference Include="..\IntegrationEvents\IntegrationEvents.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\EventBus\EventBus\EventBus.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\EventBus\EventBusRabbitMQ\EventBusRabbitMQ.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>

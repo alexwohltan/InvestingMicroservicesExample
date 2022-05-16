@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
+    <PackageReference Include="Autofac" Version="6.3.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Bulk\" />
+    <None Remove="Autofac.Extensions.DependencyInjection" />
+    <None Remove="Autofac" />
+    <None Remove="RabbitMQ.Client" />
+    <None Remove="data\" />
+    <None Remove="data\SimFin\" />
+    <None Remove="Extensions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Bulk\" />
+    <Folder Include="data\" />
+    <Folder Include="data\SimFin\" />
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataStructures\DataStructures.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\EventBus\EventBus\EventBus.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\EventBus\EventBusRabbitMQ\EventBusRabbitMQ.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+    <ProjectReference Include="..\IntegrationEvents\IntegrationEvents.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

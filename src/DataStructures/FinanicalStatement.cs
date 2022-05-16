@@ -6,11 +6,11 @@ namespace DataStructures
     public abstract class FinancialStatement : IIdentifier
     {
         [Key]
-        public int ID { get; set; }
+        public virtual int ID { get; set; }
 
-        public string Ticker { get; set; }
+        public virtual string Ticker { get; set; }
 
-        public int FiscalYear => FilingDate.Year;
+        public virtual int FiscalYear => FilingDate.Year;
 
         public virtual DateTime FilingDate { get; set; }
         public virtual DateTime PeriodStartDate { get; set; }
@@ -18,7 +18,7 @@ namespace DataStructures
         public virtual DateTime PublishedDate { get; set; }
         public virtual DateTime RestatedDate { get; set; }
 
-        public string Currency { get; set; }
+        public virtual string Currency { get; set; }
 
         public override string ToString()
         {
