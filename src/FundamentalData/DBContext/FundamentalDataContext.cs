@@ -124,6 +124,15 @@ namespace FundamentalData
 
             return (await Markets.FindAsync(marketId)).Sectors.FirstOrDefault(e => e.Name == newSector.Name);
         }
+        public async Task<Sector> AddSector(Sector newSector, string marketName)
+        {
+            var market = await Markets.FirstOrDefaultAsync(e => e.Name == marketName);
+
+            if (market == null)
+                throw new ArgumentException(String.Format("Market with name {0} does not exist", marketName));
+
+            return await AddSector(newSector, market.ID);
+        }
         public async Task<IEnumerable<Sector>> AddSectors(IEnumerable<Sector> sectors, int marketId)
         {
             foreach (var sector in sectors)
@@ -211,6 +220,20 @@ namespace FundamentalData
 
             return (await Sectors.FindAsync(sectorId)).Industries.FirstOrDefault(e => e.Name == newIndustry.Name);
         }
+        public async Task<Industry> AddIndustry(Industry newIndustry, string sectorName, string marketName)
+        {
+            var market = await Markets.FirstOrDefaultAsync(e => e.Name == marketName);
+
+            if (market == null)
+                throw new ArgumentException(String.Format("Market with name {0} does not exist", marketName));
+
+            var sector = market.Sectors.FirstOrDefault(e => e.Name == sectorName);
+
+            if (sector == null)
+                throw new ArgumentException(String.Format("Sector with name {0} does not exist", sectorName));
+
+            return await AddIndustry(newIndustry, sector.ID);
+        }
         public async Task<IEnumerable<Industry>> AddIndustries(IEnumerable<Industry> industries, int sectorId)
         {
             foreach (var industry in industries)
@@ -297,6 +320,25 @@ namespace FundamentalData
             await SaveChangesAsync();
 
             return (await Industries.FindAsync(industryId)).Companies.FirstOrDefault(e => e.Name == newCompany.Name && e.Ticker == newCompany.Ticker);
+        }
+        public async Task<Company> AddCompany(Company newCompany, string industryName, string sectorName, string marketName)
+        {
+            var market = await Markets.FirstOrDefaultAsync(e => e.Name == marketName);
+
+            if (market == null)
+                throw new ArgumentException(String.Format("Market with name {0} does not exist", marketName));
+
+            var sector = market.Sectors.FirstOrDefault(e => e.Name == sectorName);
+
+            if (sector == null)
+                throw new ArgumentException(String.Format("Sector with name {0} does not exist", sectorName));
+
+            var industry = sector.Industries.FirstOrDefault(e => e.Name == industryName);
+
+            if (industry == null)
+                throw new ArgumentException(String.Format("Industry with name {0} does not exist", industryName));
+
+            return await AddCompany(newCompany, industry.ID);
         }
         public async Task<IEnumerable<Company>> AddCompany(IEnumerable<Company> companies, int industryId)
         {

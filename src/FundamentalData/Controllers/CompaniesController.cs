@@ -55,6 +55,21 @@ namespace FundamentalData
 
             return CreatedAtAction(nameof(Post), new { id = result.ID }, result);
         }
+        // POST api/<controller>
+        [HttpPost("names/")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public virtual async Task<ActionResult> Post([FromBody] Company newCompany, string marketName, string sectorName, string industryName)
+        {
+            var result = await _repository.AddCompany(newCompany, industryName, sectorName, marketName);
+
+            if (result == null)
+                return StatusCode(StatusCodes.Status500InternalServerError);
+
+            return CreatedAtAction(nameof(Post), new { id = result.ID }, result);
+        }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]

@@ -48,7 +48,7 @@ namespace FundamentalData
         }
 
         // POST api/<controller>
-        [HttpPost]
+        [HttpPost("{marketId}")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -56,6 +56,21 @@ namespace FundamentalData
         public virtual async Task<ActionResult> Post([FromBody] Sector newSector, int marketId)
         {
             var result = await _repository.AddSector(newSector, marketId);
+
+            if (result == null)
+                return StatusCode(StatusCodes.Status500InternalServerError);
+
+            return CreatedAtAction(nameof(Post), new { id = result.ID }, result);
+        }
+        // POST api/<controller>
+        [HttpPost("names/{marketName}")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public virtual async Task<ActionResult> Post([FromBody] Sector newSector, string marketName)
+        {
+            var result = await _repository.AddSector(newSector, marketName);
 
             if (result == null)
                 return StatusCode(StatusCodes.Status500InternalServerError);
