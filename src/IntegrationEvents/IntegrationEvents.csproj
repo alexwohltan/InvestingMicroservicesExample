@@ -16,11 +16,13 @@
     <None Remove="Sector\" />
     <None Remove="Industry\" />
     <None Remove="Company\" />
+    <None Remove="Filings\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Market\" />
     <Folder Include="Sector\" />
     <Folder Include="Industry\" />
     <Folder Include="Company\" />
+    <Folder Include="Filings\" />
   </ItemGroup>
 </Project>

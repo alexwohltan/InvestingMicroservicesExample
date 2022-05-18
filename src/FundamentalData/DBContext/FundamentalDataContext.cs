@@ -42,7 +42,11 @@ namespace FundamentalData
 
             Debug.WriteLine("Added new Market with name " + newMarket.Name);
 
-            return Markets.FirstOrDefault(e => e.Name == newMarket.Name);
+            var newMarketInDatabase = Markets.FirstOrDefault(e => e.Name == newMarket.Name);
+
+            _eventBus.Publish(new NewMarketEvent { NewMarket = newMarketInDatabase.WithoutCompanies() });
+
+            return newMarketInDatabase;
         }
         public async Task<IEnumerable<Market>> AddMarkets(IEnumerable<Market> markets)
         {
@@ -106,6 +110,8 @@ namespace FundamentalData
             Remove(market);
 
             await SaveChangesAsync();
+
+            _eventBus.Publish(new DeletedMarketEvent { OldMarket = market.WithoutCompanies() });
         }
         #endregion
 
@@ -126,7 +132,11 @@ namespace FundamentalData
 
             Debug.WriteLine("Added new sector with name " + newSector.Name);
 
-            return (await Markets.FindAsync(marketId)).Sectors.FirstOrDefault(e => e.Name == newSector.Name);
+            var newSectorInDatabase = (await Markets.FindAsync(marketId)).Sectors.FirstOrDefault(e => e.Name == newSector.Name);
+
+            _eventBus.Publish(new NewSectorEvent { MarketName = market.Name, NewSector = newSectorInDatabase.WithoutCompanies() });
+
+            return newSectorInDatabase;
         }
         public async Task<Sector> AddSector(Sector newSector, string marketName)
         {
@@ -197,6 +207,7 @@ namespace FundamentalData
         public async Task DeleteSector(int sectorId)
         {
             var sector = await Sectors.FindAsync(sectorId);
+            var marketName = sector.Market.Name;
 
             if (sector == null)
                 throw new ArgumentException(String.Format("Sector with ID {0} not found.", sectorId));
@@ -204,6 +215,8 @@ namespace FundamentalData
             Remove(sector);
 
             await SaveChangesAsync();
+
+            _eventBus.Publish(new DeletedSectorEvent { MarketName = marketName, OldSector = sector });
         }
         #endregion
 
@@ -224,7 +237,11 @@ namespace FundamentalData
 
             Debug.WriteLine("Added new industry with name " + newIndustry.Name);
 
-            return (await Sectors.FindAsync(sectorId)).Industries.FirstOrDefault(e => e.Name == newIndustry.Name);
+            var newIndustryInDatabase = (await Sectors.FindAsync(sectorId)).Industries.FirstOrDefault(e => e.Name == newIndustry.Name);
+
+            _eventBus.Publish(new NewIndustryEvent { MarketName = sector.Market.Name, SectorName = sector.Name, NewIndustry = newIndustryInDatabase });
+
+            return newIndustryInDatabase;
         }
         public async Task<Industry> AddIndustry(Industry newIndustry, string sectorName, string marketName)
         {
@@ -300,6 +317,8 @@ namespace FundamentalData
         public async Task DeleteIndustry(int industryId)
         {
             var industry = await Industries.FindAsync(industryId);
+            var sector = await Sectors.FindAsync(industry.SectorID);
+            var market = await Markets.FindAsync(sector.MarketID);
 
             if (industry == null)
                 throw new ArgumentException(String.Format("Industry with ID {0} not found.", industryId));
@@ -307,6 +326,8 @@ namespace FundamentalData
             Remove(industry);
 
             await SaveChangesAsync();
+
+            _eventBus.Publish(new DeletedIndustryEvent { MarketName = market.Name, SectorName = sector.Name, OldIndustry = industry });
         }
         #endregion
 
@@ -314,6 +335,8 @@ namespace FundamentalData
         public async Task<Company> AddCompany(Company newCompany, int industryId)
         {
             var industry = await Industries.FindAsync(industryId);
+            var sector = await Sectors.FindAsync(industry.SectorID);
+            var market = await Markets.FindAsync(sector.MarketID);
 
             if (industry == null)
                 throw new ArgumentException(String.Format("Industry with ID {0} does not exist", industryId));
@@ -327,7 +350,11 @@ namespace FundamentalData
 
             Debug.WriteLine("Added new company with name " + newCompany.Name);
 
-            return (await Industries.FindAsync(industryId)).Companies.FirstOrDefault(e => e.Name == newCompany.Name && e.Ticker == newCompany.Ticker);
+            var newCompanyInDatabase = (await Industries.FindAsync(industryId)).Companies.FirstOrDefault(e => e.Name == newCompany.Name && e.Ticker == newCompany.Ticker);
+
+            _eventBus.Publish(new NewCompanyEvent { MarketName = market.Name, SectorName = sector.Name, IndustryName = industry.Name, NewCompany = newCompanyInDatabase });
+
+            return newCompanyInDatabase;
         }
         public async Task<Company> AddCompany(Company newCompany, string industryName, string sectorName, string marketName)
         {
@@ -410,6 +437,9 @@ namespace FundamentalData
         public async Task DeleteCompany(int companyId)
         {
             var company = await Companies.FindAsync(companyId);
+            var industry = await Industries.FindAsync(company.IndustryID);
+            var sector = await Sectors.FindAsync(industry.SectorID);
+            var market = await Markets.FindAsync(sector.MarketID);
 
             if (company == null)
                 throw new ArgumentException(String.Format("Company with ID {0} not found.", companyId));
@@ -417,6 +447,8 @@ namespace FundamentalData
             Remove(company);
 
             await SaveChangesAsync();
+
+            _eventBus.Publish(new DeletedCompanyEvent { MarketName = market.Name, SectorName = sector.Name, IndustryName = industry.Name, OldCompany = company });
         }
         #endregion
 
@@ -424,6 +456,9 @@ namespace FundamentalData
         public async Task<Filing> AddFiling(Filing newFiling, int companyId)
         {
             var company = await Companies.FindAsync(companyId);
+            var industry = await Industries.FindAsync(company.IndustryID);
+            var sector = await Sectors.FindAsync(industry.SectorID);
+            var market = await Markets.FindAsync(sector.MarketID);
 
             if (company == null)
                 throw new ArgumentException(String.Format("Company with ID {0} does not exist", companyId));
@@ -435,7 +470,11 @@ namespace FundamentalData
 
             await SaveChangesAsync();
 
-            return (await Companies.FindAsync(companyId)).Filings.FirstOrDefault(e => e.FilingDate == newFiling.FilingDate);
+            var newFilingInDatabase = (await Companies.FindAsync(companyId)).Filings.FirstOrDefault(e => e.FilingDate == newFiling.FilingDate);
+
+            _eventBus.Publish(new NewFilingEvent { MarketName = market.Name, SectorName = sector.Name, IndustryName = industry.Name, CompanyTicker = company.Ticker, NewFiling = newFilingInDatabase });
+
+            return newFilingInDatabase;
         }
         public async Task<IEnumerable<Filing>> AddFilings(IEnumerable<Filing> filings, int companyId)
         {
@@ -488,12 +527,19 @@ namespace FundamentalData
         {
             var filing = await Filings.FindAsync(filingId);
 
+            var company = await Companies.FindAsync(filing.CompanyID);
+            var industry = await Industries.FindAsync(company.IndustryID);
+            var sector = await Sectors.FindAsync(industry.SectorID);
+            var market = await Markets.FindAsync(sector.MarketID);
+
             if (filing == null)
                 throw new ArgumentException(String.Format("Filing with ID {0} not found.", filingId));
 
             Remove(filing);
 
             await SaveChangesAsync();
+
+            _eventBus.Publish(new DeletedFilingEvent { MarketName = market.Name, SectorName = sector.Name, IndustryName = industry.Name, CompanyTicker = company.Ticker, OldFiling = filing });
         }
         #endregion
 

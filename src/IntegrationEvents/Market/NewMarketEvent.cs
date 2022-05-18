@@ -1,7 +1,4 @@
-﻿using DataStructures;
-using EventBus.Events;
-
-namespace IntegrationEvents
+﻿namespace IntegrationEvents
 {
     public record NewMarketEvent : IntegrationEvent
     {
