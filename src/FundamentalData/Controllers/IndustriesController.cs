@@ -28,16 +28,18 @@ namespace FundamentalData
 
 
         // GET api/<controller>/5
-        [HttpGet("{id}", Name = "GetIndustryById")]
+        [HttpGet("ids/", Name = "GetIndustryById")]
         public virtual async Task<ActionResult<Industry>> GetByID(int id)
         {
-            return (await _repository.GetIndustry(id)).WithoutFilings();
+            return (await _repository.GetIndustry(id)).WithoutCompanies();
         }
         // GET api/<controller>/names/
         [HttpGet("names/", Name = "GetIndustryByNameAndSectorId")]
         public virtual async Task<ActionResult<Industry>> GetByName(string name, int sectorId)
         {
-            return (await _repository.GetIndustry(sectorId, name)).WithoutFilings();
+            if (name == null)
+                name = "";
+            return (await _repository.GetIndustry(sectorId, name)).WithoutCompanies();
         }
 
         // GET: api/<controller>/5/Companies
@@ -70,6 +72,9 @@ namespace FundamentalData
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public virtual async Task<ActionResult> Post([FromBody] Industry newIndustry, string marketName, string sectorName)
         {
+            if (sectorName == null)
+                sectorName = "";
+
             var result = await _repository.AddIndustry(newIndustry, sectorName, marketName);
 
             if (result == null)
@@ -79,7 +84,7 @@ namespace FundamentalData
         }
 
         // PUT api/<controller>/5
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -95,7 +100,7 @@ namespace FundamentalData
         }
 
         // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete(int id)

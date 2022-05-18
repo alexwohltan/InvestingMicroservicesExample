@@ -25,3 +25,4 @@ global using Autofac;
 global using Autofac.Extensions.DependencyInjection;
 global using RabbitMQ.Client;
 global using DataStructures;
+global using Newtonsoft;

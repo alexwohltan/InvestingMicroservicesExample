@@ -21,7 +21,7 @@ namespace FundamentalData
 
 
         // GET api/<controller>/5
-        [HttpGet("{id}", Name = "GetFilingById")]
+        [HttpGet(Name = "GetFilingById")]
         public virtual async Task<ActionResult<Filing>> GetByID(int id)
         {
             return await _repository.GetFiling(id);
@@ -44,7 +44,7 @@ namespace FundamentalData
         }
 
         // PUT api/<controller>/5
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -60,7 +60,7 @@ namespace FundamentalData
         }
 
         // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete(int id)

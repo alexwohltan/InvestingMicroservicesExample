@@ -5,9 +5,6 @@ namespace DataStructures
 {
     public class CashFlowStatement : FinancialStatement
     {
-        public virtual int? ReportID { get; set; }
-        public virtual Filing Report { get; set; }
-
         /// <summary>
         /// Abschreibungen
         /// </summary>

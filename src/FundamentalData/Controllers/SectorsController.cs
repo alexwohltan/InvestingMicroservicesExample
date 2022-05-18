@@ -28,27 +28,30 @@ namespace FundamentalData
 
 
         // GET api/<controller>/5
-        [HttpGet("{id}", Name = "GetSectorById")]
+        [HttpGet("ids", Name = "GetSectorById")]
         public virtual async Task<ActionResult<Sector>> GetByID(int id)
         {
-            return (await _repository.GetSector(id)).WithoutFilings();
+            return (await _repository.GetSector(id)).WithoutCompanies();
         }
         // GET api/<controller>/"Industrials"
         [HttpGet("names/", Name = "GetSectorByNameAndMarketId")]
         public virtual async Task<ActionResult<Sector>> GetByName(string name, int marketId)
         {
-            return (await _repository.GetSector(marketId, name)).WithoutFilings();
+            if (name == null)
+                name = "";
+            var sector = (await _repository.GetSector(marketId, name));
+            return sector.WithoutCompanies();
         }
 
         // GET: api/<controller>/5/Industries
         [HttpGet("{id}/Industries", Name = "GetIndustriesBySectorId")]
         public async virtual Task<IEnumerable<Industry>> Get(int sectorId)
         {
-            return (await _repository.GetIndustries(sectorId)).Select(e => e.WithoutFilings());
+            return (await _repository.GetIndustries(sectorId)).Select(e => e.WithoutCompanies());
         }
 
         // POST api/<controller>
-        [HttpPost("{marketId}")]
+        [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -63,7 +66,7 @@ namespace FundamentalData
             return CreatedAtAction(nameof(Post), new { id = result.ID }, result);
         }
         // POST api/<controller>
-        [HttpPost("names/{marketName}")]
+        [HttpPost("names/")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -79,7 +82,7 @@ namespace FundamentalData
         }
 
         // PUT api/<controller>/5
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -95,7 +98,7 @@ namespace FundamentalData
         }
 
         // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete(int id)

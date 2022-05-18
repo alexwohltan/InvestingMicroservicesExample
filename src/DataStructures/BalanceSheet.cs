@@ -3,9 +3,6 @@ namespace DataStructures
 {
     public class BalanceSheet : FinancialStatement
     {
-        public virtual int? ReportID { get; set; }
-        public virtual Filing Report { get; set; }
-
         // ANLAGEVERMÖGEN
         // 0 - Immaterielle Vermögensgegenstände, Sachanlagen, Finanzanlagen
 

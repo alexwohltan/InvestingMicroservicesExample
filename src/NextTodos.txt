@@ -1,0 +1,10 @@
+﻿Create Fundamental Data HTTP Client
+
+Industry & Sector Variables Service
+
+Events in Fundamental Data
+
+bulk controller -> search for sector id and industry id first.
+try catch in Fundamental Data Controllers -> Debug why some companies do not work
+
+Search Service

@@ -21,19 +21,19 @@ namespace FundamentalData
 
 
         // GET api/<controller>/5
-        [HttpGet("{id}", Name = "GetCompanyById")]
+        [HttpGet("ids", Name = "GetCompanyById")]
         public virtual async Task<ActionResult<Company>> GetByID(int id)
         {
             return await _repository.GetCompany(id);
         }
         // GET api/<controller>/names/
-        [HttpGet("tickers/", Name = "GetCompanyByTicker")]
+        [HttpGet("tickers", Name = "GetCompanyByTicker")]
         public virtual async Task<ActionResult<Company>> GetByTicker(string ticker)
         {
             return await _repository.GetCompany(ticker);
         }
 
-        // GET: api/<controller>/5/Companies
+        // GET: api/<controller>/5/Filings
         [HttpGet("{id}/Filings", Name = "GetFilingsByCompanyId")]
         public async virtual Task<IEnumerable<Filing>> Get(int companyId)
         {
@@ -48,12 +48,20 @@ namespace FundamentalData
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public virtual async Task<ActionResult> Post([FromBody] Company newCompany, int industryId)
         {
-            var result = await _repository.AddCompany(newCompany, industryId);
+            try
+            {
+                var result = await _repository.AddCompany(newCompany, industryId);
 
-            if (result == null)
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                if (result == null)
+                    return StatusCode(StatusCodes.Status500InternalServerError);
 
-            return CreatedAtAction(nameof(Post), new { id = result.ID }, result);
+                return CreatedAtAction(nameof(Post), new { id = result.ID }, result);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
         // POST api/<controller>
         [HttpPost("names/")]
@@ -63,16 +71,29 @@ namespace FundamentalData
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public virtual async Task<ActionResult> Post([FromBody] Company newCompany, string marketName, string sectorName, string industryName)
         {
-            var result = await _repository.AddCompany(newCompany, industryName, sectorName, marketName);
+            try
+            {
+                if (sectorName == null)
+                    sectorName = "";
+                if (industryName == null)
+                    industryName = "";
 
-            if (result == null)
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                var result = await _repository.AddCompany(newCompany, industryName, sectorName, marketName);
 
-            return CreatedAtAction(nameof(Post), new { id = result.ID }, result);
+                if (result == null)
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+
+                return CreatedAtAction(nameof(Post), new { id = result.ID }, result);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT api/<controller>/5
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -88,7 +109,7 @@ namespace FundamentalData
         }
 
         // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete(int id)

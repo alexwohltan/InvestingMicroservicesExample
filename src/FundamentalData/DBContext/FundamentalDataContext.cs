@@ -40,6 +40,8 @@ namespace FundamentalData
 
             await SaveChangesAsync();
 
+            Debug.WriteLine("Added new Market with name " + newMarket.Name);
+
             return Markets.FirstOrDefault(e => e.Name == newMarket.Name);
         }
         public async Task<IEnumerable<Market>> AddMarkets(IEnumerable<Market> markets)
@@ -121,6 +123,8 @@ namespace FundamentalData
             market.Sectors.Add(newSector);
 
             await SaveChangesAsync();
+
+            Debug.WriteLine("Added new sector with name " + newSector.Name);
 
             return (await Markets.FindAsync(marketId)).Sectors.FirstOrDefault(e => e.Name == newSector.Name);
         }
@@ -217,6 +221,8 @@ namespace FundamentalData
             sector.Industries.Add(newIndustry);
 
             await SaveChangesAsync();
+
+            Debug.WriteLine("Added new industry with name " + newIndustry.Name);
 
             return (await Sectors.FindAsync(sectorId)).Industries.FirstOrDefault(e => e.Name == newIndustry.Name);
         }
@@ -319,6 +325,8 @@ namespace FundamentalData
 
             await SaveChangesAsync();
 
+            Debug.WriteLine("Added new company with name " + newCompany.Name);
+
             return (await Industries.FindAsync(industryId)).Companies.FirstOrDefault(e => e.Name == newCompany.Name && e.Ticker == newCompany.Ticker);
         }
         public async Task<Company> AddCompany(Company newCompany, string industryName, string sectorName, string marketName)
@@ -328,10 +336,16 @@ namespace FundamentalData
             if (market == null)
                 throw new ArgumentException(String.Format("Market with name {0} does not exist", marketName));
 
+            if (sectorName == null)
+                sectorName = "";
+
             var sector = market.Sectors.FirstOrDefault(e => e.Name == sectorName);
 
             if (sector == null)
                 throw new ArgumentException(String.Format("Sector with name {0} does not exist", sectorName));
+
+            if (industryName == null)
+                industryName = "";
 
             var industry = sector.Industries.FirstOrDefault(e => e.Name == industryName);
 

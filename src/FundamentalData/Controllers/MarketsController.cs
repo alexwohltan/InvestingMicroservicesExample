@@ -34,14 +34,14 @@ namespace FundamentalData
         }
 
         // GET api/<controller>/5
-        [HttpGet("{id}", Name = "GetMarketById")]
+        [HttpGet("ids/", Name = "GetMarketById")]
         public virtual async Task<ActionResult<Market>> GetByID(int id)
         {
             var result = (await _repository.GetMarket(id)).WithoutCompanies();
             return Ok(result);
         }
         // GET api/<controller>/"US"
-        [HttpGet("names/{name}", Name = "GetMarketByName")]
+        [HttpGet("names/", Name = "GetMarketByName")]
         public virtual async Task<ActionResult<Market>> GetByName(string name)
         {
             return (await _repository.GetMarket(name)).WithoutCompanies();
@@ -64,16 +64,23 @@ namespace FundamentalData
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public virtual async Task<ActionResult> Post([FromBody] Market newMarket)
         {
-            var result = await _repository.AddMarket(newMarket);
+            try
+            {
+                var result = await _repository.AddMarket(newMarket);
 
-            if (result == null)
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                if (result == null)
+                    return StatusCode(StatusCodes.Status500InternalServerError);
 
-            return CreatedAtAction(nameof(Post), new { id = result.ID }, result);
+                return CreatedAtAction(nameof(Post), new { id = result.ID }, result);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT api/<controller>/5
-        [HttpPut("{id}")]
+        [HttpPut]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -89,7 +96,7 @@ namespace FundamentalData
         }
 
         // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> Delete(int id)

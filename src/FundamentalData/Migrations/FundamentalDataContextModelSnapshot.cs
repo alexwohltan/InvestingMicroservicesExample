@@ -90,9 +90,6 @@ namespace FundamentalData.Migrations
                     b.Property<decimal>("Receivables")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("ReportID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("RestatedDate")
                         .HasColumnType("datetime2");
 
@@ -151,10 +148,6 @@ namespace FundamentalData.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("ReportID")
-                        .IsUnique()
-                        .HasFilter("[ReportID] IS NOT NULL");
 
                     b.ToTable("BalanceSheet");
                 });
@@ -239,9 +232,6 @@ namespace FundamentalData.Migrations
                     b.Property<decimal>("RepaymentOfDebt")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("ReportID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("RestatedDate")
                         .HasColumnType("datetime2");
 
@@ -252,10 +242,6 @@ namespace FundamentalData.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("ReportID")
-                        .IsUnique()
-                        .HasFilter("[ReportID] IS NOT NULL");
 
                     b.ToTable("CashFlowStatement");
                 });
@@ -292,6 +278,12 @@ namespace FundamentalData.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
+                    b.Property<int?>("BalanceSheetID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CashflowStatementID")
+                        .HasColumnType("int");
+
                     b.Property<int>("CompanyID")
                         .HasColumnType("int");
 
@@ -300,6 +292,9 @@ namespace FundamentalData.Migrations
 
                     b.Property<DateTime>("FilingDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("IncomeStatementID")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("PeriodStartDate")
                         .HasColumnType("datetime2");
@@ -315,7 +310,13 @@ namespace FundamentalData.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("BalanceSheetID");
+
+                    b.HasIndex("CashflowStatementID");
+
                     b.HasIndex("CompanyID");
+
+                    b.HasIndex("IncomeStatementID");
 
                     b.ToTable("Filings");
                 });
@@ -427,9 +428,6 @@ namespace FundamentalData.Migrations
                     b.Property<DateTime>("PublishedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ReportID")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("ResearchAndDevelopmentExpenses")
                         .HasColumnType("decimal(18,2)");
 
@@ -452,10 +450,6 @@ namespace FundamentalData.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("ReportID")
-                        .IsUnique()
-                        .HasFilter("[ReportID] IS NOT NULL");
 
                     b.ToTable("IncomeStatement");
                 });
@@ -518,24 +512,6 @@ namespace FundamentalData.Migrations
                     b.ToTable("Sectors");
                 });
 
-            modelBuilder.Entity("DataStructures.BalanceSheet", b =>
-                {
-                    b.HasOne("DataStructures.Filing", "Report")
-                        .WithOne("BalanceSheet")
-                        .HasForeignKey("DataStructures.BalanceSheet", "ReportID");
-
-                    b.Navigation("Report");
-                });
-
-            modelBuilder.Entity("DataStructures.CashFlowStatement", b =>
-                {
-                    b.HasOne("DataStructures.Filing", "Report")
-                        .WithOne("CashflowStatement")
-                        .HasForeignKey("DataStructures.CashFlowStatement", "ReportID");
-
-                    b.Navigation("Report");
-                });
-
             modelBuilder.Entity("DataStructures.Company", b =>
                 {
                     b.HasOne("DataStructures.Industry", "Industry")
@@ -549,22 +525,31 @@ namespace FundamentalData.Migrations
 
             modelBuilder.Entity("DataStructures.Filing", b =>
                 {
+                    b.HasOne("DataStructures.BalanceSheet", "BalanceSheet")
+                        .WithMany()
+                        .HasForeignKey("BalanceSheetID");
+
+                    b.HasOne("DataStructures.CashFlowStatement", "CashflowStatement")
+                        .WithMany()
+                        .HasForeignKey("CashflowStatementID");
+
                     b.HasOne("DataStructures.Company", "Company")
                         .WithMany("Filings")
                         .HasForeignKey("CompanyID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DataStructures.IncomeStatement", "IncomeStatement")
+                        .WithMany()
+                        .HasForeignKey("IncomeStatementID");
+
+                    b.Navigation("BalanceSheet");
+
+                    b.Navigation("CashflowStatement");
+
                     b.Navigation("Company");
-                });
 
-            modelBuilder.Entity("DataStructures.IncomeStatement", b =>
-                {
-                    b.HasOne("DataStructures.Filing", "Report")
-                        .WithOne("IncomeStatement")
-                        .HasForeignKey("DataStructures.IncomeStatement", "ReportID");
-
-                    b.Navigation("Report");
+                    b.Navigation("IncomeStatement");
                 });
 
             modelBuilder.Entity("DataStructures.Industry", b =>
@@ -592,15 +577,6 @@ namespace FundamentalData.Migrations
             modelBuilder.Entity("DataStructures.Company", b =>
                 {
                     b.Navigation("Filings");
-                });
-
-            modelBuilder.Entity("DataStructures.Filing", b =>
-                {
-                    b.Navigation("BalanceSheet");
-
-                    b.Navigation("CashflowStatement");
-
-                    b.Navigation("IncomeStatement");
                 });
 
             modelBuilder.Entity("DataStructures.Industry", b =>

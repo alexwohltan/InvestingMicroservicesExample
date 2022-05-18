@@ -5,6 +5,30 @@ namespace DataStructures
 {
     public static class Extensions
     {
+        public static Market WithoutSectors(this Market market)
+        {
+            var marketTrimmed = new Market { Name = market.Name, ID = market.ID };
+            marketTrimmed.Sectors = new List<Sector>();
+            return marketTrimmed;
+        }
+
+        public static Market WithoutIndustries(this Market market)
+        {
+            var marketTrimmed = new Market { Name = market.Name, ID = market.ID };
+            marketTrimmed.Sectors = new List<Sector>();
+            foreach (var sec in market.Sectors)
+            {
+                marketTrimmed.Sectors.Add(sec.WithoutIndustries());
+            }
+            return marketTrimmed;
+        }
+        public static Sector WithoutIndustries(this Sector sector)
+        {
+            var sectorTrimmed = new Sector { Name = sector.Name, ID = sector.ID };
+            sectorTrimmed.Industries = new List<Industry>();
+            return sectorTrimmed;
+        }
+
         public static Market WithoutCompanies(this Market market)
         {
             var marketTrimmed = new Market { Name = market.Name, ID = market.ID };

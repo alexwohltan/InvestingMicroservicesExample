@@ -5,9 +5,6 @@ namespace DataStructures
 {
     public class IncomeStatement : FinancialStatement
     {
-        public virtual int? ReportID { get; set; }
-        public virtual Filing Report { get; set; }
-
         /// <summary>
         /// Umsatzerlöse, Sales
         /// </summary>

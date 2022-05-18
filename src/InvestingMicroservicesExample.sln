@@ -21,6 +21,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBusRabbitMQ", "EventBu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataImport", "DataImport\DataImport.csproj", "{C1EAF28B-945A-4603-84DF-A639EF7FDAD5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Fundamental Data", "Fundamental Data", "{4D0E0E59-C9FE-4026-86C3-577C0A1B83D1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9A7AF844-9DFB-4F2C-B90F-1250FF148B25}"
+	ProjectSection(SolutionItems) = preProject
+		NextTodos.txt = NextTodos.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FundamentalDataHTTPClient", "FundamentalData\FundamentalDataHTTPClient\FundamentalDataHTTPClient.csproj", "{F4794637-EFE2-4B36-83C3-7D4089ABF2D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +68,10 @@ Global
 		{C1EAF28B-945A-4603-84DF-A639EF7FDAD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1EAF28B-945A-4603-84DF-A639EF7FDAD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1EAF28B-945A-4603-84DF-A639EF7FDAD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4794637-EFE2-4B36-83C3-7D4089ABF2D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4794637-EFE2-4B36-83C3-7D4089ABF2D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4794637-EFE2-4B36-83C3-7D4089ABF2D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4794637-EFE2-4B36-83C3-7D4089ABF2D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,5 +82,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{79B54DB8-4B24-4D6C-8FA3-BBFA3549653B} = {9BD20E65-5643-42A6-AFDF-E47311BBD1DA}
 		{3DC2D3DD-0998-4277-A0BC-F508030C97CB} = {9BD20E65-5643-42A6-AFDF-E47311BBD1DA}
+		{050DE660-A1CD-4D64-A307-96B9C21ECDF5} = {4D0E0E59-C9FE-4026-86C3-577C0A1B83D1}
+		{F4794637-EFE2-4B36-83C3-7D4089ABF2D3} = {4D0E0E59-C9FE-4026-86C3-577C0A1B83D1}
 	EndGlobalSection
 EndGlobal
