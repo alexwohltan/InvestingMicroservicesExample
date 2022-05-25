@@ -1,4 +1,6 @@
-﻿namespace FundamentalData
+﻿using RabbitMQ.Client;
+
+namespace Benchmark
 {
     public class Startup
     {
@@ -19,12 +21,12 @@
                 options.JsonSerializerOptions.MaxDepth = 32;
             });
 
-            if(Environment.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
-                services.AddDbContext<FundamentalDataContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("FundamentalDatabase"))
-                .UseLazyLoadingProxies());
+                //services.AddDbContext<BenchmarkDbContext>(options =>
+                //options.UseSqlServer(
+                //    Configuration.GetConnectionString("IndustryBenchmark"))
+                //.UseLazyLoadingProxies());
 
                 services.AddSwaggerGen(c =>
                 {
@@ -33,11 +35,13 @@
             }
             else
             {
-                services.AddDbContext<FundamentalDataContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("FundamentalDatabase"))
-                .UseLazyLoadingProxies());
+                //services.AddDbContext<BenchmarkDbContext>(options =>
+                //options.UseSqlServer(
+                //    Configuration.GetConnectionString("IndustryBenchmark"))
+                //.UseLazyLoadingProxies());
             }
+
+            services.AddSingleton<IBenchmarkRepository, BenchmarkInMemoryRepository>();
 
             services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
             {
@@ -122,18 +126,38 @@
 
             services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
 
-            // TODO: Manage Event Subscriptions
-            //services.AddTransient<NewCompanyEventConsumer>(); -> only used for testing
-            //services.AddTransient<NewMarketEventConsumer>(); -> only used for testing
+            services.AddTransient<NewFilingEventConsumer>();
+            services.AddTransient<NewCompanyEventConsumer>();
+            services.AddTransient<NewIndustryEventConsumer>();
+            services.AddTransient<NewSectorEventConsumer>();
+            services.AddTransient<NewMarketEventConsumer>();
+
+            services.AddTransient<UpdatedCompanyEventConsumer>();
+            services.AddTransient<UpdatedFilingEventConsumer>();
+
+            services.AddTransient<DeletedCompanyEventConsumer>();
+            services.AddTransient<DeletedIndustryEventConsumer>();
+            services.AddTransient<DeletedSectorEventConsumer>();
+            services.AddTransient<DeletedMarketEventConsumer>();
         }
 
         private void ConfigureEventBus(IApplicationBuilder app)
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
 
-            // TODO: Add Event Subscriptions 
-            //eventBus.Subscribe<NewMarketEvent, NewMarketEventConsumer>(); -> only used for testing
-            //eventBus.Subscribe<NewCompanyEvent, NewCompanyEventConsumer>(); -> only used for testing.
+            eventBus.Subscribe<NewFilingEvent, NewFilingEventConsumer>();
+            eventBus.Subscribe<NewCompanyEvent, NewCompanyEventConsumer>();
+            eventBus.Subscribe<NewIndustryEvent, NewIndustryEventConsumer>();
+            eventBus.Subscribe<NewSectorEvent, NewSectorEventConsumer>();
+            eventBus.Subscribe<NewMarketEvent, NewMarketEventConsumer>();
+
+            eventBus.Subscribe<UpdatedCompanyEvent, UpdatedCompanyEventConsumer>();
+            eventBus.Subscribe<UpdatedFilingEvent, UpdatedFilingEventConsumer>();
+
+            eventBus.Subscribe<DeletedCompanyEvent, DeletedCompanyEventConsumer>();
+            eventBus.Subscribe<DeletedIndustryEvent, DeletedIndustryEventConsumer>();
+            eventBus.Subscribe<DeletedSectorEvent, DeletedSectorEventConsumer>();
+            eventBus.Subscribe<DeletedMarketEvent, DeletedMarketEventConsumer>();
         }
     }
 }

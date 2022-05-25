@@ -268,7 +268,7 @@ namespace BulkImportData
             statement.InvestmentPurchasesAndSales = decimal.Parse(line[20]);
             statement.AcquisitionsAndDisposals = decimal.Parse(line[21]);
             statement.InvestingCashFlow = decimal.Parse(line[22]);
-            statement.DividendPaments = decimal.Parse(line[23]);
+            statement.DividendPayments = decimal.Parse(line[23]);
             statement.RepaymentOfDebt = decimal.Parse(line[24]);
             statement.BuybacksOfShares = decimal.Parse(line[25]);
             statement.FinancingCashFlow = decimal.Parse(line[26]);

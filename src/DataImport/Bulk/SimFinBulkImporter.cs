@@ -215,14 +215,14 @@ namespace DataImport
             statement.NetIncome = decimal.Parse(line[26]);
             statement.NetIncomeCom = decimal.Parse(line[27]);
 
-            statement.EPS = statement.WeightedAverageShsOut != 0 ? statement.NetIncomeCom / statement.WeightedAverageShsOut : 0;
-            statement.EPSDiluted = statement.WeightedAverageShsOutDiluted != 0 ? statement.NetIncomeCom / statement.WeightedAverageShsOutDiluted : 0;
-            statement.GrossMargin = statement.Revenue != 0 ? statement.GrossProfit / statement.Revenue : 0;
+            statement.EPS = statement.WeightedAverageShsOut != 0 ? statement.NetIncomeCom / statement.WeightedAverageShsOut : null;
+            statement.EPSDiluted = statement.WeightedAverageShsOutDiluted != 0 ? statement.NetIncomeCom / statement.WeightedAverageShsOutDiluted : null;
+            statement.GrossMargin = statement.Revenue != 0 ? statement.GrossProfit / statement.Revenue : null;
             statement.EBIT = statement.InterestExpense != 0 ? statement.EarningsBeforeTax + statement.InterestExpense : 0;
             statement.EBITDA = statement.DepreciationAmortization != 0 ? statement.EBIT + statement.DepreciationAmortization : 0;
-            statement.EBITMargin = statement.Revenue != 0 ? statement.EBIT / statement.Revenue : 0;
-            statement.EBITDAMargin = statement.Revenue != 0 ? statement.EBITDA / statement.Revenue : 0;
-            statement.EarningsBeforeTaxMargin = statement.Revenue != 0 ? statement.EarningsBeforeTaxAdj / statement.Revenue : 0;
+            statement.EBITMargin = statement.Revenue != 0 ? statement.EBIT / statement.Revenue : null;
+            statement.EBITDAMargin = statement.Revenue != 0 ? statement.EBITDA / statement.Revenue : null;
+            statement.EarningsBeforeTaxMargin = statement.Revenue != 0 ? statement.EarningsBeforeTaxAdj / statement.Revenue : null;
 
             return statement;
         }
@@ -268,7 +268,7 @@ namespace DataImport
             statement.InvestmentPurchasesAndSales = decimal.Parse(line[20]);
             statement.AcquisitionsAndDisposals = decimal.Parse(line[21]);
             statement.InvestingCashFlow = decimal.Parse(line[22]);
-            statement.DividendPaments = decimal.Parse(line[23]);
+            statement.DividendPayments = decimal.Parse(line[23]);
             statement.RepaymentOfDebt = decimal.Parse(line[24]);
             statement.BuybacksOfShares = decimal.Parse(line[25]);
             statement.FinancingCashFlow = decimal.Parse(line[26]);
@@ -309,6 +309,8 @@ namespace DataImport
             }
 
             statement.CashAndCashEquivalents = decimal.Parse(line[10]);
+            statement.CashAndShortTermInvestments = decimal.Parse(line[10]); // SimFin only Reports one number for Cash, Cash Equivalents & Short Term Investments
+
             statement.Receivables = decimal.Parse(line[11]);
             statement.Inventories = decimal.Parse(line[12]);
             statement.TotalCurrentAssets = decimal.Parse(line[13]);
@@ -329,7 +331,7 @@ namespace DataImport
             statement.TotalEquity = decimal.Parse(line[28]);
             statement.TotalLiabilitiesAndEquity = decimal.Parse(line[29]);
 
-            statement.CashAndShortTermInvestments = statement.CashAndCashEquivalents + statement.ShortTermInvestments;
+            statement.TotalDebt = statement.ShortTermDebt + statement.LongTermDebt;
 
             return statement;
         }

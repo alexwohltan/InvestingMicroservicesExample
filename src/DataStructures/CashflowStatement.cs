@@ -22,7 +22,7 @@ namespace DataStructures
         /// Aktienbasierte Vergütung
         /// Mitarbeiter werden mit Aktien bezahlt.
         /// </summary>
-        public decimal StockBasedCompensation { get; set; }
+        public decimal StockBasedCompensation { get; set; } // not in SimFin
         /// <summary>
         /// Operating Cash Flow
         /// </summary>
@@ -47,9 +47,9 @@ namespace DataStructures
 
         public decimal RepaymentOfDebt { get; set; } // Issuance 
         public decimal BuybacksOfShares { get; set; } // Issuance
-        public decimal DividendPaments { get; set; }
+        public decimal DividendPayments { get; set; }
         public decimal FinancingCashFlow { get; set; }
-        public decimal EffectOfForexChangesOnCash { get; set; }
+        public decimal EffectOfForexChangesOnCash { get; set; } // not in SimFin
         public decimal NetCashFlow { get; set; } // Change in Cash
         /// <summary>
         /// Free Cash Flow
@@ -57,8 +57,8 @@ namespace DataStructures
         /// Interest is included already.
         /// = OperatingCashFlow - CapitalExpenditure
         /// </summary>
-        public decimal FreeCashFlow { get; set; }
-        public decimal NetCash { get; set; } // Marketcap
+        public decimal FreeCashFlow { get; set; } // not in SimFin -> Operating CF - Capital Expenditure
+        public decimal NetCash { get; set; } // Marketcap, not in SimFin
 
         public CashFlowStatement()
         {

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FundamentalData.Migrations
 {
     [DbContext(typeof(FundamentalDataContext))]
-    [Migration("20220518122356_Initialize")]
+    [Migration("20220525234658_Initialize")]
     partial class Initialize
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -192,7 +192,7 @@ namespace FundamentalData.Migrations
                     b.Property<decimal>("DepreciationAmortization")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("DividendPaments")
+                    b.Property<decimal>("DividendPayments")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("EffectOfForexChangesOnCash")
@@ -352,16 +352,16 @@ namespace FundamentalData.Migrations
                     b.Property<decimal>("EBITDA")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("EBITDAMargin")
+                    b.Property<decimal?>("EBITDAMargin")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("EBITMargin")
+                    b.Property<decimal?>("EBITMargin")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("EPS")
+                    b.Property<decimal?>("EPS")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("EPSDiluted")
+                    b.Property<decimal?>("EPSDiluted")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("EarningsBeforeTax")
@@ -370,7 +370,7 @@ namespace FundamentalData.Migrations
                     b.Property<decimal>("EarningsBeforeTaxAdj")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("EarningsBeforeTaxMargin")
+                    b.Property<decimal?>("EarningsBeforeTaxMargin")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ExtraordinaryGains")
@@ -382,7 +382,7 @@ namespace FundamentalData.Migrations
                     b.Property<decimal>("FreeCashFlowMargin")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("GrossMargin")
+                    b.Property<decimal?>("GrossMargin")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("GrossProfit")

@@ -102,7 +102,7 @@ namespace DataStructures
         /// <summary>
         /// Minderheitsanteile??
         /// </summary>
-        public virtual decimal NetIncomeNonControllingInt { get; set; }
+        public virtual decimal NetIncomeNonControllingInt { get; set; } // not in SimFin
         /// <summary>
         /// Erträge aus aufgegebenen Geschäftsbereichen
         /// </summary>
@@ -114,7 +114,7 @@ namespace DataStructures
         /// <summary>
         /// Dividenden an Vorzugsaktien
         /// </summary>
-        public virtual decimal PreferredDividends { get; set; }
+        public virtual decimal PreferredDividends { get; set; } // not in SimFin
         /// <summary>
         /// Nettoeinkommen für Stammaktien
         /// = NetIncome - PreferredDividends
@@ -124,12 +124,12 @@ namespace DataStructures
         /// Earnings Per Share
         /// = NetIncomeCom / WeightedAverageShsOut
         /// </summary>
-        public virtual decimal EPS { get; set; }
+        public virtual decimal? EPS { get; set; }
         /// <summary>
         /// Earnings Per Share Diluted
         /// = NetIncomeCom / WeightedAverageShsOutDiluted
         /// </summary>
-        public virtual decimal EPSDiluted { get; set; }
+        public virtual decimal? EPSDiluted { get; set; }
         /// <summary>
         /// Gewichtete durchschnittliche Anzahl an ausgegebenen Aktien
         /// </summary>
@@ -141,27 +141,27 @@ namespace DataStructures
         /// <summary>
         /// Dividende pro Aktie
         /// </summary>
-        public virtual decimal DividendPerShare { get; set; }
+        public virtual decimal DividendPerShare { get; set; } // not in SimFin
         /// <summary>
         /// = GrossProfit / Revenue
         /// </summary>
-        public virtual decimal GrossMargin { get; set; }
+        public virtual decimal? GrossMargin { get; set; }
         /// <summary>
         /// = EBITDA / Revenue
         /// </summary>
-        public virtual decimal EBITDAMargin { get; set; }
+        public virtual decimal? EBITDAMargin { get; set; }
         /// <summary>
         /// EBIT / Revenue
         /// </summary>
-        public virtual decimal EBITMargin { get; set; }
+        public virtual decimal? EBITMargin { get; set; }
         /// <summary>
         /// NetIncome (?) / Revenue (Was ist der Unterschied zu NetProfitMargin?)
         /// </summary>
-        public virtual decimal ProfitMargin { get; set; }
+        public virtual decimal ProfitMargin { get; set; } // not in SimFin
         /// <summary>
         /// FreeCashFlow / Revenue
         /// </summary>
-        public virtual decimal FreeCashFlowMargin { get; set; }
+        public virtual decimal FreeCashFlowMargin { get; set; } // not in SimFin
         /// <summary>
         /// Ergebnis vor Zinsen, Steuern, Abschreibungen auf Sachanlagen und Abschreibungen auf immaterielle Vermögensgegenstände
         /// </summary>
@@ -173,15 +173,15 @@ namespace DataStructures
         /// <summary>
         /// Konzernergebnis
         /// </summary>
-        public virtual decimal ConsolidatedIncome { get; set; }
+        public virtual decimal ConsolidatedIncome { get; set; } // not in SimFin
         /// <summary>
         /// = EBT / Revenue
         /// </summary>
-        public virtual decimal EarningsBeforeTaxMargin { get; set; }
+        public virtual decimal? EarningsBeforeTaxMargin { get; set; }
         /// <summary>
         /// = ConsolidatedIncome / Revenue (Ist das vielleicht der Unterschied zu ProfitMargin?)
         /// </summary>
-        public virtual decimal NetProfitMargin { get; set; }
+        public virtual decimal NetProfitMargin { get; set; } // not in SimFin
 
         public override string ToString()
         {

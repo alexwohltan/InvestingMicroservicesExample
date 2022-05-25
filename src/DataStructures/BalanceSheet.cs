@@ -33,7 +33,7 @@ namespace DataStructures
         /// 2 - Zahlungsmittel
         /// Kassa, Bank, etc.
         /// </summary>
-        public decimal CashAndCashEquivalents { get; set; }
+        public decimal CashAndCashEquivalents { get; set; } // SimFin only Reports one number for Cash, Cash Equivalents & Short Term Investments
         /// <summary>
         /// 2 - Kurzfristige Anlagen (Investments)
         /// Anteile an Kaptialgesellschaften im Umlaufvermögen
@@ -65,7 +65,7 @@ namespace DataStructures
         /// <summary>
         /// 0 - Firmenwert und sonstige immaterielle Werte
         /// </summary>
-        public decimal GoodwillAndIntangibleAssets { get; set; }
+        public decimal GoodwillAndIntangibleAssets { get; set; } // not included in SimFin
         /// <summary>
         /// 0 - Langfristige Anlagen (Investments)
         /// Finanzanlagen
@@ -74,7 +74,11 @@ namespace DataStructures
         /// <summary>
         /// Latente Steuern (Mehr-Weniger-Rechnung)
         /// </summary>
-        public decimal TaxAssets { get; set; }
+        public decimal TaxAssets { get; set; } // not included in SimFin
+        /// <summary>
+        /// 0 - Sonstige Aktiva
+        /// </summary>
+        public decimal OtherAssets { get; set; }
         /// <summary>
         /// 0 - ANLAGEVERMÖGEN
         /// </summary>
@@ -85,6 +89,8 @@ namespace DataStructures
         public decimal TotalAssets { get; set; }
         /// <summary>
         /// 3 - Lieferverbindlichkeiten
+        /// also includes Accruals
+        /// enthält auch Rückstellungen
         /// </summary>
         public decimal Payables { get; set; }
         /// <summary>
@@ -104,20 +110,20 @@ namespace DataStructures
         /// <summary>
         /// 3 - Gesamtverschuldung
         /// </summary>
-        public decimal TotalDebt { get; set; }
+        public decimal TotalDebt { get; set; } // not included in SimFin -> shortterm debt + longterm debt
         /// <summary>
         /// 2&3 - Rechnungsabgrenzungsposten
         /// Aktive/Passive Rechnungsabgrenzung
         /// </summary>
-        public decimal DeferredRevenue { get; set; }
+        public decimal DeferredRevenue { get; set; } // not included in SimFin
         /// <summary>
         /// 3 - Steuerrückstellungen (Steuerschulden)
         /// </summary>
-        public decimal TaxLiabilities { get; set; }
+        public decimal TaxLiabilities { get; set; } // not included in SimFin
         /// <summary>
         /// ????
         /// </summary>
-        public decimal DepositLiabilities { get; set; }
+        public decimal DepositLiabilities { get; set; } // not included in SimFin
         /// <summary>
         /// 3 - Langfristige Verbindlichkeiten
         /// </summary>
@@ -129,13 +135,17 @@ namespace DataStructures
         /// <summary>
         /// ?????
         /// </summary>
-        public decimal OtherComprehensiveIncome { get; set; }
+        public decimal OtherComprehensiveIncome { get; set; } // not included in SimFin
         /// <summary>
         /// 9 - Gewinnrücklagen 
         /// (Deficit)
         /// </summary>
         public decimal RetainedEarnings { get; set; }
 
+        /// <summary>
+        /// the full amount of cash or other assets that shareholders have given a company in exchange for stock.
+        /// Paid-in capital includes the par value of both common and preferred stock plus any amount paid in excess.
+        /// </summary>
         public decimal ShareCapitalAndAdditionalPaidInCapital { get; set; }
 
         public decimal TreasuryStock { get; set; }
@@ -143,23 +153,20 @@ namespace DataStructures
         /// <summary>
         /// 9 - Eigenkapital
         /// </summary>
-        public decimal TotalShareholdersEquity { get; set; }
+        public decimal TotalShareholdersEquity { get; set; } // not included in SimFin
         /// <summary>
         /// 0 - Investments
         /// </summary>
-        public decimal Investments { get; set; }
+        public decimal Investments { get; set; } // not included in SimFin
         /// <summary>
         /// Netto Verschuldung
         /// </summary>
-        public decimal NetDebt { get; set; }
-        /// <summary>
-        /// Sonstige Aktiva
-        /// </summary>
-        public decimal OtherAssets { get; set; }
+        public decimal NetDebt { get; set; } // not included in SimFin
+
         /// <summary>
         /// Sonstige Passiva
         /// </summary>
-        public decimal OtherLiabilites { get; set; }
+        public decimal OtherLiabilites { get; set; } // not included in SimFin
 
         public decimal TotalEquity { get; set; }
 
