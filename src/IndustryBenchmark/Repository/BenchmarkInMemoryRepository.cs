@@ -225,7 +225,7 @@ namespace Benchmark
                 }
             }
 
-            _IndustryBenchmarks.RemoveAll(e => e.MarketName == marketName && e.SectorName == sectorName);
+            _IndustryBenchmarks.RemoveAll(e => e.MarketName == marketName && e.SectorName == sectorName && e.IndustryName == industryName);
         }
     }
 }

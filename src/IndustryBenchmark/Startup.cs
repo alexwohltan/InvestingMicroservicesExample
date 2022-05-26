@@ -23,25 +23,26 @@ namespace Benchmark
 
             if (Environment.IsDevelopment())
             {
-                //services.AddDbContext<BenchmarkDbContext>(options =>
-                //options.UseSqlServer(
-                //    Configuration.GetConnectionString("IndustryBenchmark"))
-                //.UseLazyLoadingProxies());
+                services.AddDbContext<BenchmarkDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("BenchmarkDatabase"))
+                .UseLazyLoadingProxies());
 
                 services.AddSwaggerGen(c =>
                 {
-                    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Fundamental Data", Version = "v1" });
+                    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Benchmark Data", Version = "v1" });
                 });
             }
             else
             {
-                //services.AddDbContext<BenchmarkDbContext>(options =>
-                //options.UseSqlServer(
-                //    Configuration.GetConnectionString("IndustryBenchmark"))
-                //.UseLazyLoadingProxies());
+                services.AddDbContext<BenchmarkDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("BenchmarkDatabase"))
+                .UseLazyLoadingProxies());
             }
 
-            services.AddSingleton<IBenchmarkRepository, BenchmarkInMemoryRepository>();
+            // use this if you do not use the SQL Server.
+            //services.AddSingleton<IBenchmarkRepository, BenchmarkInMemoryRepository>();
 
             services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
             {

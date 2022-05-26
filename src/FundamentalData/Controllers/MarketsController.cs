@@ -30,7 +30,7 @@ namespace FundamentalData
         [HttpGet]
         public virtual IEnumerable<Market> Get()
         {
-            return _repository.GetMarkets().ToList();
+            return _repository.GetMarkets().Select(e => e.WithoutCompanies()).ToList();
         }
 
         // GET api/<controller>/5

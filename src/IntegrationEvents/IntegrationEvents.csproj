@@ -12,17 +12,21 @@
     <ProjectReference Include="..\EventBus\EventBus\EventBus.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Market\" />
-    <None Remove="Sector\" />
-    <None Remove="Industry\" />
-    <None Remove="Company\" />
-    <None Remove="Filings\" />
+    <None Remove="FundamentalData\" />
+    <None Remove="FundamentalData\Company\" />
+    <None Remove="FundamentalData\Filings\" />
+    <None Remove="FundamentalData\Industry\" />
+    <None Remove="FundamentalData\Market\" />
+    <None Remove="FundamentalData\Sector\" />
+    <None Remove="Benchmark\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Market\" />
-    <Folder Include="Sector\" />
-    <Folder Include="Industry\" />
-    <Folder Include="Company\" />
-    <Folder Include="Filings\" />
+    <Folder Include="FundamentalData\" />
+    <Folder Include="FundamentalData\Company\" />
+    <Folder Include="FundamentalData\Filings\" />
+    <Folder Include="FundamentalData\Industry\" />
+    <Folder Include="FundamentalData\Market\" />
+    <Folder Include="FundamentalData\Sector\" />
+    <Folder Include="Benchmark\" />
   </ItemGroup>
 </Project>

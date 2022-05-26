@@ -1,9 +1,13 @@
-﻿Industry & Sector Variables Service
-
-Update Events in Fundamental Data
+﻿Update Events in Fundamental Data
 
 try catch in Fundamental Data Controllers
 
 Search Service
 
 Stockprice service -> also for valuation etc. (Filing & CompanyFundamentals & ToCompanyFundamentals)
+
+Save Benchmarks to Database
+
+User Interface
+
+Benchmark Events
