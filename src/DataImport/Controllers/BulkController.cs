@@ -63,7 +63,7 @@ public class BulkController : ControllerBase
 
                         Debug.WriteLine(String.Format("Added company {0}. ID = {1}.", company.Name, companyId));
 
-                        Thread.Sleep(5000);
+                        //Thread.Sleep(5000);
 
                         //_eventBus.Publish(new NewCompanyEvent { NewCompany = company, MarketName = market.Name, SectorName = sector.Name, IndustryName = industry.Name });
 

@@ -37,7 +37,9 @@ namespace Benchmark
                 if (property.GetGetMethod() == null)
                     continue;
 
-                if (property.GetGetMethod().ReturnType == typeof(decimal))
+                var propGetMethod = property.GetGetMethod();
+
+                if (property.GetGetMethod().ReturnType == typeof(decimal?))
                     metrics.Add(new Metric(property.Name));
             }
 
