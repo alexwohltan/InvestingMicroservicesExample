@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using WebUI.Models;
 
 namespace WebUI.Controllers;
@@ -22,6 +23,27 @@ public class HomeController : Controller
         var markets = await _communicator.GetMarketsForIndexView();
 
         return View(markets);
+    }
+
+    public async Task<IActionResult> Market(string marketName)
+    {
+        var market = await _communicator.GetMarketForMarketView(marketName);
+
+        return View(market);
+    }
+
+    public async Task<IActionResult> Sector(string marketName, string sectorName)
+    {
+        var sector = await _communicator.GetSectorForSectorView(marketName, sectorName);
+
+        return View(sector);
+    }
+
+    public async Task<IActionResult> Industry(string marketName, string sectorName, string industryName)
+    {
+        var industry = await _communicator.GetIndustryForIndustryView(marketName, sectorName, industryName);
+
+        return View(industry);
     }
 
     public IActionResult Privacy()

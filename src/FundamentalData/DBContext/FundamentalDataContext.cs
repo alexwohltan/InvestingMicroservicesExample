@@ -60,7 +60,7 @@ namespace FundamentalData
 
         public IEnumerable<Market> GetMarkets()
         {
-            return Markets;
+            return Markets.Include(e => e.Sectors).ThenInclude(e => e.Industries).ThenInclude(e => e.Companies).ThenInclude(e => e.Filings);
         }
         public async Task<Market> GetMarket(string name)
         {
@@ -169,6 +169,15 @@ namespace FundamentalData
                 throw new ArgumentException(String.Format("Market with ID {0} does not exist", marketId));
 
             return market.Sectors.FirstOrDefault(e => e.Name == name);
+        }
+        public async Task<Sector> GetSector(string marketName, string sectorName)
+        {
+            var market = await Markets.FirstOrDefaultAsync(e => e.Name == marketName);
+
+            if (market == null)
+                throw new ArgumentException(String.Format("Market with name {0} does not exist", marketName));
+
+            return market.Sectors.FirstOrDefault(e => e.Name == sectorName);
         }
         public async Task<Sector> GetSector(int sectorId)
         {
@@ -284,6 +293,20 @@ namespace FundamentalData
         {
             return await Industries.FindAsync(industryId);
         }
+        public async Task<Industry> GetIndustry(string marketName, string sectorName, string industryName)
+        {
+            var market = await Markets.FirstOrDefaultAsync(e => e.Name == marketName);
+
+            if (market == null)
+                throw new ArgumentException(String.Format("Market with name {0} does not exist", marketName));
+
+            var sector = await Sectors.FirstOrDefaultAsync(e => e.Name == sectorName && e.MarketID == market.ID);
+
+            if (sector == null)
+                throw new ArgumentException(String.Format("Sector with name {0} does not exist", sectorName));
+
+            return sector.Industries.FirstOrDefault(e => e.Name == industryName);
+        }
 
         public async Task<Industry> UpdateIndustry(int industryId, Industry newIndustry)
         {
@@ -313,6 +336,7 @@ namespace FundamentalData
 
             return await Industries.FindAsync(industryId);
         }
+
 
         public async Task DeleteIndustry(int industryId)
         {

@@ -24,5 +24,5 @@ global using EventBusRabbitMQ;
 global using Autofac;
 global using Autofac.Extensions.DependencyInjection;
 global using RabbitMQ.Client;
-global using DataStructures;
+global using DataStructures.FundamentalData;
 global using Newtonsoft;

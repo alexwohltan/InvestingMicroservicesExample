@@ -1,0 +1,41 @@
+﻿@model MarketViewModel
+
+@{
+    ViewData["Title"] = "Market Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@Model.Market.Name Market</h1>
+</div>
+
+<div>
+
+    <div id="Sectors" class="visible">
+        <h3 class="display-6">Sectors</h3>
+        <table id="SectorTable" class="table table-hover">
+            <tr>
+                <th>ID</th>
+                <th>Market</th>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+            @foreach (var sector in Model.Market.Sectors)
+            {
+                <tr>
+                    <td>@sector.ID</td>
+                    <td>@Model.Market.Name</td>
+                    <td>@sector.Name</td>
+                    <td><a href="Sector?marketName=@Model.Market.Name&sectorName=@sector.Name">View</a></td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <hr />
+    <div>
+        <h3 class="display-6">Benchmark</h3>
+        @await Html.PartialAsync("_Benchmark", Model.MarketBenchmark)
+    </div>
+    
+    
+</div>

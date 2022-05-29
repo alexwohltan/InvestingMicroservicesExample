@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DataStructures.Market>
+﻿@model IEnumerable<DataStructures.FundamentalData.Market>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -9,21 +9,23 @@
 </div>
 
 <div>
-    <h3 class="display-6">Markets</h3>
-    <table class="table table-hover">
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Action</th>
-        </tr>
-        @foreach (var market in Model)
+    <div id="MarketTable">
+        <h3 class="display-6">Markets</h3>
+        <table class="table table-hover">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+            @foreach (var market in Model)
             {
                 <tr>
                     <td>@market.ID</td>
                     <td>@market.Name</td>
-                    <td><a href="/">View</a></td>
+                    <td><a href="Home/Market?marketName=@market.Name">View</a></td>
                 </tr>
             }
-    </table>
+        </table>
+    </div>
 </div>
 

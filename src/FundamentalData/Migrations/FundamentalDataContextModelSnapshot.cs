@@ -22,7 +22,7 @@ namespace FundamentalData.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("DataStructures.BalanceSheet", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.BalanceSheet", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -152,7 +152,7 @@ namespace FundamentalData.Migrations
                     b.ToTable("BalanceSheet");
                 });
 
-            modelBuilder.Entity("DataStructures.CashFlowStatement", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.CashFlowStatement", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -246,7 +246,7 @@ namespace FundamentalData.Migrations
                     b.ToTable("CashFlowStatement");
                 });
 
-            modelBuilder.Entity("DataStructures.Company", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.Company", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -270,7 +270,7 @@ namespace FundamentalData.Migrations
                     b.ToTable("Companies");
                 });
 
-            modelBuilder.Entity("DataStructures.Filing", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.Filing", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -321,7 +321,7 @@ namespace FundamentalData.Migrations
                     b.ToTable("Filings");
                 });
 
-            modelBuilder.Entity("DataStructures.IncomeStatement", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.IncomeStatement", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -454,7 +454,7 @@ namespace FundamentalData.Migrations
                     b.ToTable("IncomeStatement");
                 });
 
-            modelBuilder.Entity("DataStructures.Industry", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.Industry", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -475,7 +475,7 @@ namespace FundamentalData.Migrations
                     b.ToTable("Industries");
                 });
 
-            modelBuilder.Entity("DataStructures.Market", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.Market", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -491,7 +491,7 @@ namespace FundamentalData.Migrations
                     b.ToTable("Markets");
                 });
 
-            modelBuilder.Entity("DataStructures.Sector", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.Sector", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -512,9 +512,9 @@ namespace FundamentalData.Migrations
                     b.ToTable("Sectors");
                 });
 
-            modelBuilder.Entity("DataStructures.Company", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.Company", b =>
                 {
-                    b.HasOne("DataStructures.Industry", "Industry")
+                    b.HasOne("DataStructures.FundamentalData.Industry", "Industry")
                         .WithMany("Companies")
                         .HasForeignKey("IndustryID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -523,23 +523,23 @@ namespace FundamentalData.Migrations
                     b.Navigation("Industry");
                 });
 
-            modelBuilder.Entity("DataStructures.Filing", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.Filing", b =>
                 {
-                    b.HasOne("DataStructures.BalanceSheet", "BalanceSheet")
+                    b.HasOne("DataStructures.FundamentalData.BalanceSheet", "BalanceSheet")
                         .WithMany()
                         .HasForeignKey("BalanceSheetID");
 
-                    b.HasOne("DataStructures.CashFlowStatement", "CashflowStatement")
+                    b.HasOne("DataStructures.FundamentalData.CashFlowStatement", "CashflowStatement")
                         .WithMany()
                         .HasForeignKey("CashflowStatementID");
 
-                    b.HasOne("DataStructures.Company", "Company")
+                    b.HasOne("DataStructures.FundamentalData.Company", "Company")
                         .WithMany("Filings")
                         .HasForeignKey("CompanyID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DataStructures.IncomeStatement", "IncomeStatement")
+                    b.HasOne("DataStructures.FundamentalData.IncomeStatement", "IncomeStatement")
                         .WithMany()
                         .HasForeignKey("IncomeStatementID");
 
@@ -552,9 +552,9 @@ namespace FundamentalData.Migrations
                     b.Navigation("IncomeStatement");
                 });
 
-            modelBuilder.Entity("DataStructures.Industry", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.Industry", b =>
                 {
-                    b.HasOne("DataStructures.Sector", "Sector")
+                    b.HasOne("DataStructures.FundamentalData.Sector", "Sector")
                         .WithMany("Industries")
                         .HasForeignKey("SectorID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -563,9 +563,9 @@ namespace FundamentalData.Migrations
                     b.Navigation("Sector");
                 });
 
-            modelBuilder.Entity("DataStructures.Sector", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.Sector", b =>
                 {
-                    b.HasOne("DataStructures.Market", "Market")
+                    b.HasOne("DataStructures.FundamentalData.Market", "Market")
                         .WithMany("Sectors")
                         .HasForeignKey("MarketID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -574,22 +574,22 @@ namespace FundamentalData.Migrations
                     b.Navigation("Market");
                 });
 
-            modelBuilder.Entity("DataStructures.Company", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.Company", b =>
                 {
                     b.Navigation("Filings");
                 });
 
-            modelBuilder.Entity("DataStructures.Industry", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.Industry", b =>
                 {
                     b.Navigation("Companies");
                 });
 
-            modelBuilder.Entity("DataStructures.Market", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.Market", b =>
                 {
                     b.Navigation("Sectors");
                 });
 
-            modelBuilder.Entity("DataStructures.Sector", b =>
+            modelBuilder.Entity("DataStructures.FundamentalData.Sector", b =>
                 {
                     b.Navigation("Industries");
                 });

@@ -41,6 +41,17 @@ namespace FundamentalData
                 name = "";
             return (await _repository.GetIndustry(sectorId, name)).WithoutCompanies();
         }
+        // GET api/<controller>/names/
+        [HttpGet("marketNames/", Name = "GetIndustryByNameAndMarketName")]
+        public virtual async Task<ActionResult<Industry>> GetByMarketName(string marketName, string sectorName, string industryName)
+        {
+            if (sectorName == null)
+                sectorName = "";
+            if (industryName == null)
+                industryName = "";
+            var result = (await _repository.GetIndustry(marketName, sectorName, industryName)).WithoutFilings();
+            return result;
+        }
 
         // GET: api/<controller>/5/Companies
         [HttpGet("{id}/Companies", Name = "GetCompaniesByIndustryId")]

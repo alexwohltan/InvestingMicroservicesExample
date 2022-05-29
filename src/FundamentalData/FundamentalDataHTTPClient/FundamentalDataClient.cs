@@ -1,8 +1,12 @@
-﻿using System.Net.Http.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Web;
-using DataStructures;
+using DataStructures.FundamentalData;
 
 namespace FundamentalDataHTTPClient;
 public class FundamentalDataClient
@@ -171,6 +175,22 @@ public class FundamentalDataClient
 
         return sector;
     }
+    public async Task<Sector?> GetSector(string marketName, string sectorName)
+    {
+        Sector? sector = null;
+
+        var requestParameters = new Dictionary<string, string> {
+            { "sectorname", sectorName },
+            { "marketName", marketName }
+        };
+
+        var result = await SendHttpRequest(HttpMethod.Get, "Sectors/marketNames", requestParameters);
+
+        if (result.IsSuccessStatusCode)
+            sector = await result.Content.ReadFromJsonAsync<Sector>();
+
+        return sector;
+    }
 
     public async Task<string> UpdateSector(int sectorId, Sector newSector)
     {
@@ -262,6 +282,23 @@ public class FundamentalDataClient
         };
 
         var result = await SendHttpRequest(HttpMethod.Get, "Industries/names", requestParameters);
+
+        if (result.IsSuccessStatusCode)
+            industry = await result.Content.ReadFromJsonAsync<Industry>();
+
+        return industry;
+    }
+    public async Task<Industry?> GetIndustry(string marketName, string sectorName, string industryName)
+    {
+        Industry? industry = null;
+
+        var requestParameters = new Dictionary<string, string> {
+            { "marketName", marketName },
+            { "sectorName", sectorName },
+            { "industryName", industryName }
+        };
+
+        var result = await SendHttpRequest(HttpMethod.Get, "Industries/marketNames", requestParameters);
 
         if (result.IsSuccessStatusCode)
             industry = await result.Content.ReadFromJsonAsync<Industry>();

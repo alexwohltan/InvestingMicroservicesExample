@@ -2,7 +2,7 @@
 global using EventBus;
 global using EventBus.Abstractions;
 global using EventBusRabbitMQ;
-global using DataStructures;
+global using DataStructures.FundamentalData;
 global using IntegrationEvents;
 global using RabbitMQ.Client;
 global using Autofac;

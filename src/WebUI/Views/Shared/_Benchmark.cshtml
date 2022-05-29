@@ -1,0 +1,41 @@
+﻿@model DataStructures.Benchmark.Benchmark
+
+<div>
+
+    <div id="Metrics">
+        <table id="MetricsTable" class="table table-hover">
+            <tr>
+                <th>Name</th>
+                <th>Min.</th>
+                <th>25</th>
+                <th>Median</th>
+                <th>Avg.</th>
+                <th>75</th>
+                <th>Max</th>
+                <th>Top Companies</th>
+                <th>Worst Companies</th>
+            </tr>
+            @foreach (var metric in Model.Metrics)
+            {
+                <tr>
+                    <td>@String.Format("{0:P2}", metric.MetricName)</td>
+                    <td>@String.Format("{0:P2}", metric.MinValue)</td>
+                    <td>@String.Format("{0:P2}", metric.Percentile25)</td>
+                    <td>@String.Format("{0:P2}", metric.Median)</td>
+                    <td>@String.Format("{0:P2}", metric.Average)</td>
+                    <td>@String.Format("{0:P2}", metric.Percentile75)</td>
+                    <td>@String.Format("{0:P2}", metric.MaxValue)</td>
+
+                    <td>
+                        @string.Join(", ", metric.TopCompanies.Take(5))
+                    </td>
+
+                    <td>
+                        @string.Join(", ", metric.WorstCompanies.Take(5))
+                    </td>
+
+                </tr>
+            }
+        </table>
+    </div>
+</div>

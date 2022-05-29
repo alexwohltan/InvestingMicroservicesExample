@@ -1,9 +1,12 @@
 ﻿using System;
-using DataStructures;
+using DataStructures.FundamentalData;
 using IntegrationEvents;
 using EventBus;
 using EventBusRabbitMQ;
 using EventBus.Abstractions;
+using System.Threading;
+using System.Net.Http;
+using System.Collections.Generic;
 
 namespace BulkImportData // Note: actual namespace depends on the project name.
 {
