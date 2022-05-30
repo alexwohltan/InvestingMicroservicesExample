@@ -27,11 +27,12 @@
                     <td>@String.Format("{0:P2}", metric.MaxValue)</td>
 
                     <td>
-                        @string.Join(", ", metric.TopCompanies.Take(5))
+
+                        @if(metric.TopCompanies != null) @((metric.TopCompanies.Count() < 5) ? string.Join(", ", metric.TopCompanies) : string.Join(", ", metric.TopCompanies.Take(5)))
                     </td>
 
                     <td>
-                        @string.Join(", ", metric.WorstCompanies.Take(5))
+                        @if (metric.WorstCompanies != null)@((metric.WorstCompanies.Count() < 5) ? string.Join(", ", metric.WorstCompanies) : string.Join(", ", metric.WorstCompanies.Take(5)))
                     </td>
 
                 </tr>

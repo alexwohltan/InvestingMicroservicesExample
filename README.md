@@ -157,6 +157,21 @@ Apply the migrations to the database.
 dotnet ef databse update
 ```
 
+Now the same for the Benchmark database
+Locate the Benchmark Project.
+```sh
+cd src/Benchmark/Benchmark
+```
+
+Create the Entity Framework Migrations.
+```sh
+dotnet ef migrations add InitialCommit
+```
+
+Apply the migrations to the database.
+```sh
+dotnet ef databse update
+```
 
 ## Usage
 

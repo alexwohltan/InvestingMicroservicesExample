@@ -8,6 +8,8 @@ Stockprice service -> also for valuation etc. (Filing & CompanyFundamentals & To
 
 Save Benchmarks to Database
 
-User Interface
+User Interface - Company
 
 Benchmark Events
+
+API Gateway

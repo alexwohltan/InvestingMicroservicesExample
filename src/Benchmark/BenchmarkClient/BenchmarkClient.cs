@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using DataStructures.Benchmark;
 
-namespace BenchmarkClient;
+namespace BenchmarkHTTPClient;
 public class BenchmarkClient
 {
     public HttpClient Client { get; set; }

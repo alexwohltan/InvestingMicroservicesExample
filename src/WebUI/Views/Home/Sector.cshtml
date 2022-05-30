@@ -1,11 +1,11 @@
-﻿@model SectorViewModel
+﻿@model ExternalDataStructures.SectorView
 
 @{
     ViewData["Title"] = "Sector Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">@Model.Sector.Name Sector</h1>
+    <h1 class="display-4">@Model.SectorData.Name Sector</h1>
 </div>
 
 <div>
@@ -20,14 +20,14 @@
                 <th>Name</th>
                 <th>Action</th>
             </tr>
-            @foreach (var industry in Model.Sector.Industries)
+            @foreach (var industry in Model.SectorData.Industries)
             {
                 <tr>
                     <td>@industry.ID</td>
-                    <td>@Model.SectorBenchmark.MarketName</td>
-                    <td>@Model.Sector.Name</td>
+                    <td>@Model.BenchmarkData.MarketName</td>
+                    <td>@Model.SectorData.Name</td>
                     <td>@industry.Name</td>
-                    <td><a href="Industry?marketName=@Model.SectorBenchmark.MarketName&sectorName=@Model.Sector.Name&industryName=@industry.Name">View</a></td>
+                    <td><a href="Industry?marketName=@Model.BenchmarkData.MarketName&sectorName=@Model.SectorData.Name&industryName=@industry.Name">View</a></td>
                 </tr>
             }
         </table>
@@ -36,7 +36,7 @@
     <hr />
     <div>
         <h3 class="display-6">Benchmark</h3>
-        @await Html.PartialAsync("_Benchmark", Model.SectorBenchmark)
+        @await Html.PartialAsync("_Benchmark", Model.BenchmarkData)
     </div>
 
 

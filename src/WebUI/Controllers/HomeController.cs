@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using InvestingMicroservicesAPIClient;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebUI.Models;
@@ -9,39 +10,39 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    private APICommunication _communicator;
+    private APIGatewayClient _communicator;
 
     public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger;
 
-        _communicator = new APICommunication();
+        _communicator = new APIGatewayClient("localhost", 7199, "api/");
     }
 
     public async Task<IActionResult> Index()
     {
-        var markets = await _communicator.GetMarketsForIndexView();
+        var markets = await _communicator.GetMarkets();
 
         return View(markets);
     }
 
     public async Task<IActionResult> Market(string marketName)
     {
-        var market = await _communicator.GetMarketForMarketView(marketName);
+        var market = await _communicator.GetMarket(marketName);
 
         return View(market);
     }
 
     public async Task<IActionResult> Sector(string marketName, string sectorName)
     {
-        var sector = await _communicator.GetSectorForSectorView(marketName, sectorName);
+        var sector = await _communicator.GetSector(marketName, sectorName);
 
         return View(sector);
     }
 
     public async Task<IActionResult> Industry(string marketName, string sectorName, string industryName)
     {
-        var industry = await _communicator.GetIndustryForIndustryView(marketName, sectorName, industryName);
+        var industry = await _communicator.GetIndustry(marketName, sectorName, industryName);
 
         return View(industry);
     }

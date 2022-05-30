@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DataStructures.FundamentalData.Market>
+﻿@model IEnumerable<ExternalDataStructures.MarketView>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -20,9 +20,9 @@
             @foreach (var market in Model)
             {
                 <tr>
-                    <td>@market.ID</td>
-                    <td>@market.Name</td>
-                    <td><a href="Home/Market?marketName=@market.Name">View</a></td>
+                    <td>@market.MarketData.ID</td>
+                    <td>@market.MarketData.Name</td>
+                    <td><a href="Home/Market?marketName=@market.MarketData.Name">View</a></td>
                 </tr>
             }
         </table>
