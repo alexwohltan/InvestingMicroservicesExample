@@ -53,6 +53,15 @@
                 return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
             });
 
+            services.AddSingleton<IImporter, SimFinImporter>();
+            services.AddHostedService<QueuedHostedService>();
+            services.AddSingleton<IBackgroundTaskQueue>(sp =>
+            {
+                if (!int.TryParse(Configuration["QueueCapacity"], out var queueCapacity))
+                    queueCapacity = 100;
+                return new BackgroundTaskQueue(queueCapacity);
+            });
+
             RegisterEventBus(services);
 
             var container = new ContainerBuilder();

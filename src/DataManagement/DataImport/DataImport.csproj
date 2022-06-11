@@ -14,32 +14,37 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Bulk\" />
     <None Remove="Autofac.Extensions.DependencyInjection" />
     <None Remove="Autofac" />
     <None Remove="RabbitMQ.Client" />
     <None Remove="data\" />
     <None Remove="data\SimFin\" />
+    <None Remove="Importer\" />
+    <None Remove="APIClients\" />
+    <None Remove="APIClients\SimFin\" />
+    <None Remove="APIClients\SimFin\SimFinDataModels\" />
+    <None Remove="APIClients\SimFin\SimFinDataModels\SimFinFinancialStatements\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Bulk\" />
     <Folder Include="data\" />
     <Folder Include="data\SimFin\" />
+    <Folder Include="Importer\" />
+    <Folder Include="APIClients\" />
+    <Folder Include="APIClients\SimFin\" />
+    <Folder Include="APIClients\SimFin\SimFinDataModels\" />
+    <Folder Include="APIClients\SimFin\SimFinDataModels\SimFinFinancialStatements\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataStructures\DataStructures.csproj">
+    <ProjectReference Include="..\..\EventBus\EventBusRabbitMQ\EventBusRabbitMQ.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
-    <ProjectReference Include="..\EventBus\EventBus\EventBus.csproj">
+    <ProjectReference Include="..\..\DataStructures\DataStructures.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
-    <ProjectReference Include="..\EventBus\EventBusRabbitMQ\EventBusRabbitMQ.csproj">
+    <ProjectReference Include="..\..\FundamentalData\FundamentalDataHTTPClient\FundamentalDataHTTPClient.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
-    <ProjectReference Include="..\IntegrationEvents\IntegrationEvents.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
-    <ProjectReference Include="..\FundamentalData\FundamentalDataHTTPClient\FundamentalDataHTTPClient.csproj">
+    <ProjectReference Include="..\..\IntegrationEvents\IntegrationEvents.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>
