@@ -5,7 +5,7 @@ namespace DataImport
 	{
 		public Task<IEnumerable<string>> GetAvialableTickers();
 
-		public void ImportCompany(string ticker);
+		public void ImportCompany(string ticker, string marketName, string sectorName, string industryName);
 		public void UpdateCompany(string ticker);
 
 		public void ImportStockPrice(string ticker);

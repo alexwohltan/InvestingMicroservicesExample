@@ -1,0 +1,46 @@
+﻿@model ExternalDataStructures.CompanyView
+
+@{
+    ViewData["Title"] = "Company Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@Model.CompanyData.Name</h1>
+</div>
+
+<div>
+    <div id="GeneralInformation">
+        <h3 class="display-6">General Information</h3>
+        <table class="table table-hover">
+            <tr>
+                <th></th>
+                <th>General Information</th>
+            </tr>
+            <tr>
+                <td>ID</td>
+                <td>@Model.CompanyData.ID</td>
+            </tr>
+            <tr>
+                <td>Ticker</td>
+                <td>@Model.CompanyData.Ticker</td>
+            </tr>
+            <tr>
+                <td>Name</td>
+                <td>@Model.CompanyData.Name</td>
+            </tr>
+            <tr>
+                <td>Month FY End</td>
+                <td>@Model.CompanyData.MonthFyEnd</td>
+            </tr>
+            <tr>
+                <td>Number of Employees</td>
+                <td>@Model.CompanyData.NumberEmployees</td>
+            </tr>
+            <tr>
+                <td>Business Summary</td>
+                <td>@Model.CompanyData.BusinessSummary</td>
+            </tr>
+        </table>
+    </div>
+</div>
+

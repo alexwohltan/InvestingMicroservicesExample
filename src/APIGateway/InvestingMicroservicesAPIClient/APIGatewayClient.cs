@@ -78,6 +78,19 @@ public class APIGatewayClient
     #endregion
 
     #region Company
+
+    public async Task<CompanyView?> GetCompany(string ticker)
+    {
+        CompanyView? company = null;
+
+        var result = await SendHttpRequest(HttpMethod.Get, String.Format("Companies/{0}", ticker));
+
+        if (result.IsSuccessStatusCode)
+            company = await result.Content.ReadFromJsonAsync<CompanyView>();
+
+        return company;
+    }
+
     #endregion
 
     private async Task<HttpResponseMessage> SendHttpRequest(HttpMethod method, string location, Dictionary<string, string> parameters = null, object bodyContent = null)

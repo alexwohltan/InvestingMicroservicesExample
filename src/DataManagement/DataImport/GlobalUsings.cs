@@ -17,3 +17,4 @@ global using Microsoft.AspNetCore.Mvc;
 global using DataImport.ImportBackgroundService;
 global using DataImport.APIClients.SimFin;
 global using System.Diagnostics;
+global using FundamentalDataHTTPClient;

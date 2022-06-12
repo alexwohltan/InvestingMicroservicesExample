@@ -19,7 +19,7 @@ public class BulkController : ControllerBase
     [HttpGet(Name = "SimFinBulkImport")]
     public async Task<ActionResult> AddSimFinBulk()
     {
-        SimFinBulkImporter handler = new SimFinBulkImporter();
+        SimFinBulkClient handler = new SimFinBulkClient();
         var markets = handler.RetrieveMarkets();
 
         FundamentalDataHTTPClient.FundamentalDataClient client = new FundamentalDataHTTPClient.FundamentalDataClient("localhost", 60958, "api/");

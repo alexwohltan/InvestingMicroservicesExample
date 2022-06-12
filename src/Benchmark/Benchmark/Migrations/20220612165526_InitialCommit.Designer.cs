@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Benchmark.Migrations
 {
     [DbContext(typeof(BenchmarkDbContext))]
-    [Migration("20220529171816_MetricCompanyName")]
-    partial class MetricCompanyName
+    [Migration("20220612165526_InitialCommit")]
+    partial class InitialCommit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

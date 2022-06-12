@@ -397,7 +397,7 @@ public class FundamentalDataClient
 
         var result = await SendHttpRequest(HttpMethod.Get, "Companies/tickers", requestParameters);
 
-        if (result.IsSuccessStatusCode)
+        if (result.IsSuccessStatusCode && result.StatusCode != System.Net.HttpStatusCode.NoContent)
             company = await result.Content.ReadFromJsonAsync<Company>();
 
         return company;

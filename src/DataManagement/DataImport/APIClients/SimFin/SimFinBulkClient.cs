@@ -6,7 +6,7 @@ using DataStructures.FundamentalData;
 
 namespace DataImport
 {
-    public class SimFinBulkImporter
+    public class SimFinBulkClient
     {
         public const string FILEPATH_BULKDATA = "data/SimFin/";
 
@@ -22,7 +22,7 @@ namespace DataImport
         private string[] balanceDEFileY;
         private string[] cashflowDEFileY;
 
-        public SimFinBulkImporter()
+        public SimFinBulkClient()
         {
             industriesFile = File.ReadAllLines(FILEPATH_BULKDATA + "industries.csv");
 
