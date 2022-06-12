@@ -197,32 +197,32 @@ namespace BulkImportData
             statement.WeightedAverageShsOut = decimal.Parse(line[8]);
             statement.WeightedAverageShsOutDiluted = decimal.Parse(line[9]);
             statement.Revenue = decimal.Parse(line[10]);
-            statement.CostOfRevenue = decimal.Parse(line[11]);
+            statement.CostofRevenue = decimal.Parse(line[11]);
             statement.GrossProfit = decimal.Parse(line[12]);
             statement.OperatingExpenses = decimal.Parse(line[13]);
-            statement.SellingGeneralAndAdministrativeExpenses = decimal.Parse(line[14]);
-            statement.ResearchAndDevelopmentExpenses = decimal.Parse(line[15]);
+            statement.SellingGeneralAdministrative = decimal.Parse(line[14]);
+            statement.ResearchDevelopment = decimal.Parse(line[15]);
             statement.DepreciationAmortization = decimal.Parse(line[16]);
-            statement.OperatingIncome = decimal.Parse(line[17]);
-            statement.NonOperatingIncome = decimal.Parse(line[18]);
+            statement.OperatingIncomeLoss = decimal.Parse(line[17]);
+            statement.NonOperatingIncomeLoss = decimal.Parse(line[18]);
             statement.InterestExpense = decimal.Parse(line[19]);
-            statement.EarningsBeforeTaxAdj = decimal.Parse(line[20]);
-            statement.ExtraordinaryGains = decimal.Parse(line[21]);
-            statement.EarningsBeforeTax = decimal.Parse(line[22]);
-            statement.IncomeTaxExpense = decimal.Parse(line[23]);
-            statement.NetIncomeDiscontinuedOps = decimal.Parse(line[24]);
-            statement.ExtraordinaryGains = statement.ExtraordinaryGains == 0 ? decimal.Parse(line[25]) : statement.ExtraordinaryGains;
+            statement.PretaxIncomeLossAdj = decimal.Parse(line[20]);
+            statement.AbnormalGainsLosses = decimal.Parse(line[21]);
+            statement.PretaxIncomeLoss = decimal.Parse(line[22]);
+            statement.IncomeTaxExpenseBenefitNet = decimal.Parse(line[23]);
+            statement.DiscontinuedOperations = decimal.Parse(line[24]);
+            statement.AbnormalGainsLosses = statement.AbnormalGainsLosses == 0 ? decimal.Parse(line[25]) : statement.AbnormalGainsLosses;
             statement.NetIncome = decimal.Parse(line[26]);
-            statement.NetIncomeCom = decimal.Parse(line[27]);
+            statement.NetIncomeCommon = decimal.Parse(line[27]);
 
-            statement.EPS = statement.WeightedAverageShsOut != 0 ? statement.NetIncomeCom / statement.WeightedAverageShsOut : 0;
-            statement.EPSDiluted = statement.WeightedAverageShsOutDiluted != 0 ? statement.NetIncomeCom / statement.WeightedAverageShsOutDiluted : 0;
+            statement.EPS = statement.WeightedAverageShsOut != 0 ? statement.NetIncomeCommon / statement.WeightedAverageShsOut : 0;
+            statement.EPSDiluted = statement.WeightedAverageShsOutDiluted != 0 ? statement.NetIncomeCommon / statement.WeightedAverageShsOutDiluted : 0;
             statement.GrossMargin = statement.Revenue != 0 ? statement.GrossProfit / statement.Revenue : 0;
-            statement.EBIT = statement.InterestExpense != 0 ? statement.EarningsBeforeTax + statement.InterestExpense : 0;
+            statement.EBIT = statement.InterestExpense != 0 ? statement.PretaxIncomeLoss + statement.InterestExpense : 0;
             statement.EBITDA = statement.DepreciationAmortization != 0 ? statement.EBIT + statement.DepreciationAmortization : 0;
             statement.EBITMargin = statement.Revenue != 0 ? statement.EBIT / statement.Revenue : 0;
             statement.EBITDAMargin = statement.Revenue != 0 ? statement.EBITDA / statement.Revenue : 0;
-            statement.EarningsBeforeTaxMargin = statement.Revenue != 0 ? statement.EarningsBeforeTaxAdj / statement.Revenue : 0;
+            statement.EarningsBeforeTaxMargin = statement.Revenue != 0 ? statement.PretaxIncomeLossAdj / statement.Revenue : 0;
 
             return statement;
         }

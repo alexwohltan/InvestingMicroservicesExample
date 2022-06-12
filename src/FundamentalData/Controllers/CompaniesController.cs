@@ -118,5 +118,74 @@ namespace FundamentalData
 
             return Ok();
         }
+
+        [HttpGet("ids/{id}/prices")]
+        public virtual async Task<IEnumerable<StockPrice>> GetStockPriceByCompanyId(int id)
+        {
+            return await _repository.GetPrices(id);
+        }
+        [HttpGet("tickers/{ticker}/prices")]
+        public virtual async Task<IEnumerable<StockPrice>> GetStockPriceByCompanyId(string ticker)
+        {
+            return await _repository.GetPrices(ticker);
+        }
+
+        [HttpPost("tickers/{ticker}/prices")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public virtual async Task<ActionResult> PostStockPrice([FromBody] IEnumerable<StockPrice> prices, string ticker)
+        {
+            try
+            {
+                var company = await _repository.GetCompany(ticker);
+
+                if (company == null)
+                    return NotFound("Company not found.");
+
+                var result = await _repository.AddStockPrices(prices, company.ID);
+
+                if (result == null)
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+
+                return Accepted();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("ids/{id}/prices")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public virtual async Task<ActionResult> PostStockPrice([FromBody] IEnumerable<StockPrice> prices, int companyId)
+        {
+            try
+            {
+                var company = await _repository.GetCompany(companyId);
+
+                if (company == null)
+                    return NotFound("Company not found.");
+
+                var result = await _repository.AddStockPrices(prices, company.ID);
+
+                if (result == null)
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+
+                return Accepted();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

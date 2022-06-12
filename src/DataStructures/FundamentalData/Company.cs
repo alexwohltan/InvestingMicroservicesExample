@@ -20,7 +20,12 @@ namespace DataStructures.FundamentalData
         public virtual string Name { get; set; }
         public virtual string Ticker { get; set; }
 
+        public virtual int MonthFyEnd { get; set; }
+        public virtual int NumberEmployees { get; set; }
+        public virtual string? BusinessSummary { get; set; }
+
         public virtual List<Filing> Filings { get; set; }
+        public virtual List<StockPrice> Prices { get; set; }
 
         public Company()
         {

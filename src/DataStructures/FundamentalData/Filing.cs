@@ -27,7 +27,7 @@ namespace DataStructures.FundamentalData
         /// Can be increased by increase in income but also by decreasing equity (-> buyback shares or give out dividends)
         /// </summary>
         [JsonIgnore]
-        public decimal? ReturnOnEquity => BalanceSheet.TotalEquity == 0 ? null : IncomeStatement.NetIncomeCom / BalanceSheet.TotalEquity;
+        public decimal? ReturnOnEquity => BalanceSheet.TotalEquity == 0 ? null : IncomeStatement.NetIncomeCommon / BalanceSheet.TotalEquity;
 
         /// <summary>
         /// Umsatzrendite
@@ -66,14 +66,14 @@ namespace DataStructures.FundamentalData
         /// = EBIT / Capital Employed
         /// </summary>
         [JsonIgnore]
-        public decimal? ReturnOnCapitalEmployed => BalanceSheet.CapitalEmployed == 0 ? null : IncomeStatement.OperatingIncome / BalanceSheet.CapitalEmployed;
+        public decimal? ReturnOnCapitalEmployed => BalanceSheet.CapitalEmployed == 0 ? null : IncomeStatement.OperatingIncomeLoss / BalanceSheet.CapitalEmployed;
 
         /// <summary>
         /// Umsatzverdienstrate
         /// = Operating Cashflow / Revenue
         /// </summary>
         [JsonIgnore]
-        public decimal? CashflowTurnoverRatio => IncomeStatement.Revenue == 0 ? null : CashflowStatement.OperatingCashFlow / IncomeStatement.Revenue;
+        public decimal? CashflowTurnoverRatio => IncomeStatement.Revenue == 0 ? null : CashflowStatement.NetCashfromOperatingActivities / IncomeStatement.Revenue;
 
         #endregion
 
@@ -93,28 +93,28 @@ namespace DataStructures.FundamentalData
         /// = (Debt - Cash) / Equity
         /// </summary>
         [JsonIgnore]
-        public decimal? Gearing => BalanceSheet.TotalEquity == 0 ? null : (BalanceSheet.TotalDebt - BalanceSheet.CashAndCashEquivalents) / BalanceSheet.TotalEquity;
+        public decimal? Gearing => BalanceSheet.TotalEquity == 0 ? null : ((BalanceSheet.ShortTermDebt + BalanceSheet.LongTermDebt) - BalanceSheet.CashCashEquivalentsShortTermInvestments) / BalanceSheet.TotalEquity;
 
         /// <summary>
         /// Dynamischer Verschuldungsgrad
         /// = (Debt - Cash) / Free Cashflow
         /// </summary>
         [JsonIgnore]
-        public decimal? DynamicGearing => CashflowStatement.FreeCashFlow == 0 ? null : (BalanceSheet.TotalDebt - BalanceSheet.CashAndCashEquivalents) / CashflowStatement.FreeCashFlow;
+        public decimal? DynamicGearing => CashflowStatement.FreeCashFlow == 0 ? null : ((BalanceSheet.ShortTermDebt + BalanceSheet.LongTermDebt) - BalanceSheet.CashCashEquivalentsShortTermInvestments) / CashflowStatement.FreeCashFlow;
 
         /// <summary>
         /// Nettoverschuldung / EBITDA
         /// = (Debt - Cash) / EBITDA
         /// </summary>
         [JsonIgnore]
-        public decimal? NetDebtoverEBITDA => IncomeStatement.EBITDA == 0 ? null : (BalanceSheet.TotalDebt - BalanceSheet.CashAndCashEquivalents) / IncomeStatement.EBITDA;
+        public decimal? NetDebtoverEBITDA => IncomeStatement.EBITDA == 0 ? null : ((BalanceSheet.ShortTermDebt + BalanceSheet.LongTermDebt) - BalanceSheet.CashCashEquivalentsShortTermInvestments) / IncomeStatement.EBITDA;
 
         /// <summary>
         /// Sachinvestitionsquote
         /// = CAPEX / Operating Cashflow
         /// </summary>
         [JsonIgnore]
-        public decimal? CAPEXoverOperatingCashflow => CashflowStatement.OperatingCashFlow == 0 ? null : (CashflowStatement.CapitalExpenditure * (decimal)-1) / CashflowStatement.OperatingCashFlow;
+        public decimal? CAPEXoverOperatingCashflow => CashflowStatement.NetCashfromOperatingActivities == 0 ? null : (CashflowStatement.PurchaseofFixedAssets * (decimal)-1) / CashflowStatement.NetCashfromOperatingActivities;
 
         /// <summary>
         /// Umlaufintensität
@@ -128,13 +128,13 @@ namespace DataStructures.FundamentalData
         /// = Equity / Total Noncurrent Assets
         /// </summary>
         [JsonIgnore]
-        public decimal? EquityToAssetRatio => BalanceSheet.TotalNonCurrentAssets == 0 ? null : (BalanceSheet.TotalAssets - BalanceSheet.TotalLiabilities) / BalanceSheet.TotalNonCurrentAssets;
+        public decimal? EquityToAssetRatio => BalanceSheet.TotalNoncurrentAssets == 0 ? null : (BalanceSheet.TotalAssets - BalanceSheet.TotalLiabilities) / BalanceSheet.TotalNoncurrentAssets;
         /// <summary>
         /// Anlagendeckungsgrad 2
         /// = (Equity + Noncurrent Liabilities) / Total Noncurrent Assets
         /// </summary>
         [JsonIgnore]
-        public decimal? EquityAndNoncurrentLiabilitiesToAssetRatio => BalanceSheet.TotalNonCurrentAssets == 0 ? null : (BalanceSheet.TotalAssets - BalanceSheet.TotalCurrentLiabilities) / BalanceSheet.TotalNonCurrentAssets;
+        public decimal? EquityAndNoncurrentLiabilitiesToAssetRatio => BalanceSheet.TotalNoncurrentAssets == 0 ? null : (BalanceSheet.TotalAssets - BalanceSheet.TotalCurrentLiabilities) / BalanceSheet.TotalNoncurrentAssets;
 
         #endregion
 
@@ -145,28 +145,28 @@ namespace DataStructures.FundamentalData
         /// = average of Receivables / Revenue * 360
         /// </summary>
         [JsonIgnore]
-        public decimal? DebtorTerms => IncomeStatement.Revenue * 360 == 0 ? null : BalanceSheet.Receivables / IncomeStatement.Revenue * 360;
+        public decimal? DebtorTerms => IncomeStatement.Revenue * 360 == 0 ? null : BalanceSheet.AccountsNotesReceivable / IncomeStatement.Revenue * 360;
 
         /// <summary>
         /// Kreditorenlaufzeit
         /// = average of Payables / Cost of Revenue * 360
         /// </summary>
         [JsonIgnore]
-        public decimal? DaysPayableOutstanding => IncomeStatement.CostOfRevenue * 360 == 0 ? null : BalanceSheet.Payables / IncomeStatement.CostOfRevenue * 360;
+        public decimal? DaysPayableOutstanding => IncomeStatement.CostofRevenue * 360 == 0 ? null : BalanceSheet.AccountsPayable / IncomeStatement.CostofRevenue * 360;
 
         /// <summary>
         /// Liquidität 1. Grades
         /// = (Cash + short term investments) / current Liabilities
         /// </summary>
         [JsonIgnore]
-        public decimal? Liquidity1Degree => BalanceSheet.TotalCurrentLiabilities == 0 ? null : (BalanceSheet.CashAndCashEquivalents) / BalanceSheet.TotalCurrentLiabilities;
+        public decimal? Liquidity1Degree => BalanceSheet.TotalCurrentLiabilities == 0 ? null : (BalanceSheet.CashCashEquivalentsShortTermInvestments) / BalanceSheet.TotalCurrentLiabilities;
 
         /// <summary>
         /// Liquidität 2. Grades
         /// = (Cash + short term investments + Receivables) / current Liabilities
         /// </summary>
         [JsonIgnore]
-        public decimal? Liquidity2Degree => BalanceSheet.TotalCurrentLiabilities == 0 ? null : (BalanceSheet.CashAndCashEquivalents + BalanceSheet.Receivables) / BalanceSheet.TotalCurrentLiabilities;
+        public decimal? Liquidity2Degree => BalanceSheet.TotalCurrentLiabilities == 0 ? null : (BalanceSheet.CashCashEquivalentsShortTermInvestments + BalanceSheet.AccountsNotesReceivable) / BalanceSheet.TotalCurrentLiabilities;
 
         /// <summary>
         /// Liquidität 3. Grades

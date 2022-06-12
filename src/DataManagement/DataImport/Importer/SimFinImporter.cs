@@ -36,7 +36,7 @@ namespace DataImport
             {
                 _logger.LogInformation("Queued " + ticker + " for import.");
 
-
+                _taskQueue.QueueBackgroundWorkItemAsync(ct => RunImportCompanyAsync(ticker, ct));
             }
             catch (Exception ex)
             {

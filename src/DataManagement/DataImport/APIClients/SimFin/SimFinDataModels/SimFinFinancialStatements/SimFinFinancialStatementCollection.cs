@@ -77,5 +77,28 @@ public class SimFinFinancialStatementCollection
             }
         }
     }
+
+    public List<Filing> ToFilingList()
+    {
+        var allDates = ProfitLossStatements.Select(e => e.ReportDate).Union(BalanceSheets.Select(e => e.ReportDate)).Union(CashFlows.Select(e => e.ReportDate)).Union(DerivedFigures.Select(e => e.ReportDate)).Distinct();
+        var result = new List<Filing>();
+        foreach (var date in allDates)
+        {
+            var filing = new Filing();
+
+            if (ProfitLossStatements.FirstOrDefault(e => e.ReportDate == date) != null)
+                filing.IncomeStatement = ProfitLossStatements.FirstOrDefault(e => e.ReportDate == date).ToIncomeStatement();
+            if (BalanceSheets.FirstOrDefault(e => e.ReportDate == date) != null)
+                filing.BalanceSheet = BalanceSheets.FirstOrDefault(e => e.ReportDate == date).ToBalanceSheet();
+            if (CashFlows.FirstOrDefault(e => e.ReportDate == date) != null)
+                filing.CashflowStatement = CashFlows.FirstOrDefault(e => e.ReportDate == date).ToCashFlowStatement();
+
+            if (DerivedFigures.FirstOrDefault(e => e.ReportDate == date) != null & filing.CashflowStatement != null)
+                filing.CashflowStatement.FreeCashFlow = DerivedFigures.FirstOrDefault(e => e.ReportDate == date).FreeCashFlow;
+
+            result.Add(filing);
+        }
+        return result;
+    }
 }
 

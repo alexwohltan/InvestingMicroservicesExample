@@ -17,17 +17,6 @@ namespace DataImport.APIClients.SimFin;
     public SimFinFinancialStatement(IList<string> columns, IList<object> dataPoints)
     {
         SetProperties(columns, dataPoints);
-
-        //SimFinId = ((JsonElement)dataPoints[columns.IndexOf("SimFinId")]).GetInt32();
-        //Ticker = ((JsonElement)dataPoints[columns.IndexOf("Ticker")]).GetString();
-        //FiscalPeriod = ((JsonElement)dataPoints[columns.IndexOf("Fiscal Period")]).GetString();
-        //FiscalYear = ((JsonElement)dataPoints[columns.IndexOf("Fiscal Year")]).GetInt32();
-        //ReportDate = ((JsonElement)dataPoints[columns.IndexOf("Report Date")]).GetDateTime();
-        //PublishDate = ((JsonElement)dataPoints[columns.IndexOf("Publish Date")]).GetDateTime();
-        //RestatedDate = ((JsonElement)dataPoints[columns.IndexOf("Restated Date")]).GetDateTime();
-        //Source = ((JsonElement)dataPoints[columns.IndexOf("Source")]).GetString();
-        //TTM = ((JsonElement)dataPoints[columns.IndexOf("TTM")]).GetBoolean();
-        //ValueCheck = ((JsonElement)dataPoints[columns.IndexOf("Value Check")]).GetBoolean();
     }
 
     private void SetProperties(IList<string> columns, IList<object> dataPoints)

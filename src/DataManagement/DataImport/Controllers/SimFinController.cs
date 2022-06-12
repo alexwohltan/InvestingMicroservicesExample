@@ -38,6 +38,18 @@ namespace DataImport.Controllers
 		{
 			return await Client.GetCompanyFundamentalsBasicLicense(new List<string> { ticker, "AAPL" }, period);
 		}
+
+		[HttpGet("companies/prices")]
+		public async Task<IEnumerable<SimFinSharePriceCollection>> GetPrices(string ticker, bool ratios = false, bool asreported = false, DateTime? startDate = null, DateTime? endDate = null)
+		{
+			return await Client.GetSharePriceData(new List<string> { ticker }, ratios, asreported, startDate, endDate);
+		}
+
+		[HttpGet("companies")]
+		public async Task<Company> GetCompany(string ticker)
+		{
+			return await Client.GetCompany(ticker);
+		}
 	}
 }
 

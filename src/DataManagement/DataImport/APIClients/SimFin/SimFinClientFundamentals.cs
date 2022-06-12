@@ -22,7 +22,7 @@ namespace DataImport.APIClients.SimFin
             ApiKey = apiKey;
         }
 
-        #region Company
+        #region Company Download
 
         #region List of all companies in the database
         public async Task<IEnumerable<string>> ListAllCompaniesInSimFin()
@@ -215,7 +215,7 @@ namespace DataImport.APIClients.SimFin
                 {
                     for (int i = 0; i < 5; i++)
                     {
-                        requestingYears.Add(DateTime.Now.Year - i - 1);
+                        requestingYears.Add(DateTime.Now.Year - i);
                     }
                 }
                 else
@@ -248,6 +248,41 @@ namespace DataImport.APIClients.SimFin
             return (await GetCompanyFundamentals(new List<string> { ticker }, statement, new List<string> { period }, new List<int> { fiscalYear })).First();
         }
         #endregion
+
+        #endregion
+
+        #region Parse Company
+
+        public async Task<Company> GetCompany(string ticker)
+        {
+            var simFinGeneralInfo = (await GetGeneralCompanyInformation(new List<string>() { ticker })).CompanyInfos.First();
+            Debug.WriteLine("Downloaded General Info.");
+            //var simFinCompanyFundamentals = GetCompanyFundamentals(new List<string>() { ticker}, "all", new List<string>() { "fy"})
+            var simFinCompanyFundamentals = (await GetCompanyFundamentalsBasicLicense(new List<string>() { ticker }, "fy")).First();
+            Debug.WriteLine("Downloaded Fundamentals.");
+            var simFinSharePrices = (await GetSharePriceData(new List<string>() { ticker })).First();
+            Debug.WriteLine("Downloaded Share Prices.");
+
+            var company = new Company();
+
+            company.Name = simFinGeneralInfo.CompanyName;
+            company.Ticker = ticker;
+            company.MonthFyEnd = simFinGeneralInfo.MonthFyEnd;
+            company.NumberEmployees = simFinGeneralInfo.NumberEmployees;
+            company.BusinessSummary = simFinGeneralInfo.BusinessSummary;
+
+            Debug.WriteLine("Added General Info.");
+
+            company.Filings = simFinCompanyFundamentals.StatementCollection.ToFilingList();
+
+            Debug.WriteLine("Added Filings.");
+
+            company.Prices = simFinSharePrices.ToStockPriceCollection();
+
+            Debug.WriteLine("Added Prices.");
+
+            return company;
+        }
 
         #endregion
 

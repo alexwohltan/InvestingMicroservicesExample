@@ -497,6 +497,48 @@ public class FundamentalDataClient
     }
     #endregion
 
+    #region StockPrices
+    public async Task<List<StockPrice>?> GetStockPrices(int companyId)
+    {
+        IEnumerable<StockPrice>? prices = null;
+
+        var result = await SendHttpRequest(HttpMethod.Get, "Companies/ids/" + companyId + "/prices");
+
+        if (result.IsSuccessStatusCode)
+            prices = await result.Content.ReadFromJsonAsync<IEnumerable<StockPrice>>();
+
+        return prices.ToList();
+    }
+    public async Task<List<StockPrice>?> GetStockPrices(string ticker)
+    {
+        IEnumerable<StockPrice>? filings = null;
+
+        var result = await SendHttpRequest(HttpMethod.Get, "Companies/tickers/" + ticker + "/prices");
+
+        if (result.IsSuccessStatusCode)
+            filings = await result.Content.ReadFromJsonAsync<IEnumerable<StockPrice>>();
+
+        return filings.ToList();
+    }
+
+    public async Task<string> AddPrices(IEnumerable<StockPrice> newPrices, int companyId)
+    {
+        var result = await SendHttpRequest(HttpMethod.Post, "Companies/ids/" + companyId + "/prices", bodyContent: newPrices);
+        if (result.IsSuccessStatusCode)
+            return result.StatusCode.ToString();
+        else
+            return result.ReasonPhrase;
+    }
+    public async Task<string> AddPrices(IEnumerable<StockPrice> newPrices, string ticker)
+    {
+        var result = await SendHttpRequest(HttpMethod.Post, "Companies/tickers/" + ticker + "/prices", bodyContent: newPrices);
+        if (result.IsSuccessStatusCode)
+            return result.StatusCode.ToString();
+        else
+            return result.ReasonPhrase;
+    }
+    #endregion
+
     private async Task<HttpResponseMessage> SendHttpRequest(HttpMethod method, string location, Dictionary<string, string> parameters = null, object bodyContent = null)
     {
         var builder = new UriBuilder(Hostname);

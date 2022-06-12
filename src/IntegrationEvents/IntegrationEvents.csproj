@@ -19,6 +19,7 @@
     <None Remove="FundamentalData\Market\" />
     <None Remove="FundamentalData\Sector\" />
     <None Remove="Benchmark\" />
+    <None Remove="FundamentalData\StockPrices\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="FundamentalData\" />
@@ -28,5 +29,6 @@
     <Folder Include="FundamentalData\Market\" />
     <Folder Include="FundamentalData\Sector\" />
     <Folder Include="Benchmark\" />
+    <Folder Include="FundamentalData\StockPrices\" />
   </ItemGroup>
 </Project>

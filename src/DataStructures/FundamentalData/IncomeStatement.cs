@@ -9,31 +9,42 @@ namespace DataStructures.FundamentalData
         /// Umsatzerlöse, Sales
         /// </summary>
         public virtual decimal Revenue { get; set; }
+        public virtual decimal SalesServicesRevenue { get; set; }
+        public virtual decimal FinancingRevenue { get; set; }
+        public virtual decimal OtherRevenue { get; set; }
         /// <summary>
         /// Umsatzkosten, Cost of Sales
         /// Herstellungskosten, Distributionskosten, Servicekosten
         /// </summary>
-        public virtual decimal CostOfRevenue { get; set; }
+        public virtual decimal CostofRevenue { get; set; }
+        public virtual decimal CostofGoodsServices { get; set; }
+        public virtual decimal CostofFinancingRevenue { get; set; }
+        public virtual decimal CostofOtherRevenue { get; set; }
         /// <summary>
         /// Rohertrag, Rohgewinn, Bruttoertrag, Bruttomarge
         /// = Revenue - CostOfRevenue
         /// </summary>
         public virtual decimal GrossProfit { get; set; }
+
+        public virtual decimal OtherOperatingIncome { get; set; }
+
         /// <summary>
         /// Umsatzkostenquote, Cost of sales ratio
         /// = Cost of Revenue / Revenue
         /// </summary>
         [JsonIgnore]
-        public virtual decimal CostOfRevenueRatio => CostOfRevenue / Revenue;
+        public virtual decimal CostOfRevenueRatio => CostofRevenue / Revenue;
 
         /// <summary>
         /// Kosten für Forschung und Entwicklung
         /// </summary>
-        public virtual decimal ResearchAndDevelopmentExpenses { get; set; }
+        public virtual decimal ResearchDevelopment { get; set; }
         /// <summary>
         /// Verwaltungs- und Vertriebskosten
         /// </summary>
-        public virtual decimal SellingGeneralAndAdministrativeExpenses { get; set; }
+        public virtual decimal SellingGeneralAdministrative { get; set; }
+        public virtual decimal SellingMarketing { get; set; }
+        public virtual decimal GeneralAdministrative { get; set; }
         /// <summary>
         /// Betriebsaufwand
         /// = ResearchAndDevelopmentExpenses + SellingGeneralAndAdministrativeExpenses
@@ -48,56 +59,91 @@ namespace DataStructures.FundamentalData
         /// = SellingGeneralAndAdministrativeExpenses / Revenue
         /// </summary>
         [JsonIgnore]
-        public virtual decimal SellingExpenseRatio => SellingGeneralAndAdministrativeExpenses / Revenue;
+        public virtual decimal SellingExpenseRatio => SellingGeneralAdministrative / Revenue;
         /// <summary>
         /// Forschungs- und Entwicklungskostenquote
         /// = ResearchAndDevelopmentExpenses / Revenue
         /// </summary>
         [JsonIgnore]
-        public virtual decimal ResearchDevelopmentExpenseRatio => ResearchAndDevelopmentExpenses / Revenue;
+        public virtual decimal ResearchDevelopmentExpenseRatio => ResearchDevelopment / Revenue;
+
+        public virtual decimal ProvisionforDoubtfulAccounts { get; set; }
+        public virtual decimal OtherOperatingExpenses { get; set; }
 
         /// <summary>
         /// Betriebsergebnis
         /// Earnings before Interest and Taxes (EBIT)
         /// = GrossProfit - OperatingExpenses
         /// </summary>
-        public virtual decimal OperatingIncome { get; set; }
+        public virtual decimal OperatingIncomeLoss { get; set; }
         /// <summary>
         /// Einkommen aus nicht-operativer Tätigkeit
         /// </summary>
-        public virtual decimal NonOperatingIncome { get; set; }
+        public virtual decimal NonOperatingIncomeLoss { get; set; }
         /// <summary>
         /// Zinsaufwendungen
         /// </summary>
         public virtual decimal InterestExpense { get; set; }
+        public virtual decimal InterestExpenseNet { get; set; }
+        public virtual decimal InterestIncome { get; set; }
+
+        public virtual decimal OtherInvestmentIncomeLoss { get; set; }
+        public virtual decimal ForeignExchangeGainLoss { get; set; }
+        public virtual decimal IncomeLossfromAffiliates { get; set; }
+        public virtual decimal OtherNonOperatingIncomeLoss { get; set; }
+
         /// <summary>
         /// Ergebnis vor Steuern (NOPLAT?)
         /// EBT
         /// = NetIncome + ExtraordinaryGains + IncomeTaxExpense
         /// </summary>
-        public virtual decimal EarningsBeforeTaxAdj { get; set; }
+        public virtual decimal PretaxIncomeLossAdj { get; set; }
         /// <summary>
         /// Gewinn/Verlust der nur einmal auftritt und nicht wieder erwartet werden kann.
         /// </summary>
-        public virtual decimal ExtraordinaryGains { get; set; }
+        public virtual decimal AbnormalGainsLosses { get; set; }
+
+        public virtual decimal AcquiredInProcessRD { get; set; }
+        public virtual decimal MergerAcquisitionExpense { get; set; }
+        public virtual decimal AbnormalDerivatives { get; set; }
+        public virtual decimal DisposalofAssets { get; set; }
+        public virtual decimal EarlyExtinguishmentofDebt { get; set; }
+        public virtual decimal AssetWriteDown { get; set; }
+        public virtual decimal ImpairmentofGoodwillIntangibles { get; set; }
+        public virtual decimal SaleofBusiness { get; set; }
+        public virtual decimal LegalSettlement { get; set; }
+        public virtual decimal RestructuringCharges { get; set; }
+        public virtual decimal SaleofInvestmentsUnrealizedInvestments { get; set; }
+        public virtual decimal InsuranceSettlement { get; set; }
+        public virtual decimal OtherAbnormalItems { get; set; }
+
         /// <summary>
         /// Ergebnis vor Steuern (NOPLAT?)
         /// EBT
         /// = NetIncome + IncomeTaxExpense
         /// </summary>
-        public virtual decimal EarningsBeforeTax { get; set; }
+        public virtual decimal PretaxIncomeLoss { get; set; }
 
         /// <summary>
         /// Ertragsteueraufwand
         /// </summary>
-        public virtual decimal IncomeTaxExpense { get; set; }
+        public virtual decimal IncomeTaxExpenseBenefitNet { get; set; }
         /// <summary>
         /// Steuerquote
         /// = IncomeTaxExpense / EBT
         /// </summary>
         [JsonIgnore]
-        public virtual decimal TaxRate => IncomeTaxExpense / EarningsBeforeTax;
+        public virtual decimal TaxRate => IncomeTaxExpenseBenefitNet / PretaxIncomeLoss;
 
+        public virtual decimal CurrentIncomeTax { get; set; }
+        public virtual decimal DeferredIncomeTax { get; set; }
+        public virtual decimal TaxAllowanceCredit { get; set; }
+        public virtual decimal IncomeLossfromAffiliatesNetofTaxes { get; set; }
+        public virtual decimal IncomeLossfromContinuingOperations { get; set; }
+        public virtual decimal NetExtraordinaryGainsLosses { get; set; }
+        public virtual decimal AccountingChargesOther { get; set; }
+        public virtual decimal IncomeLossInclMinorityInterest { get; set; }
+        public virtual decimal MinorityInterest { get; set; }
 
         /// <summary>
         /// Minderheitsanteile??
@@ -106,7 +152,7 @@ namespace DataStructures.FundamentalData
         /// <summary>
         /// Erträge aus aufgegebenen Geschäftsbereichen
         /// </summary>
-        public virtual decimal NetIncomeDiscontinuedOps { get; set; }
+        public virtual decimal DiscontinuedOperations { get; set; }
         /// <summary>
         /// Nettoeinkommen
         /// </summary>
@@ -115,11 +161,14 @@ namespace DataStructures.FundamentalData
         /// Dividenden an Vorzugsaktien
         /// </summary>
         public virtual decimal PreferredDividends { get; set; } // not in SimFin
+
+        public virtual decimal OtherAdjustments { get; set; }
+
         /// <summary>
         /// Nettoeinkommen für Stammaktien
         /// = NetIncome - PreferredDividends
         /// </summary>
-        public virtual decimal NetIncomeCom { get; set; }
+        public virtual decimal NetIncomeCommon { get; set; }
         /// <summary>
         /// Earnings Per Share
         /// = NetIncomeCom / WeightedAverageShsOut

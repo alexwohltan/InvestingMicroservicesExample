@@ -3,186 +3,103 @@ namespace DataStructures.FundamentalData
 {
     public class BalanceSheet : FinancialStatement
     {
-        // ANLAGEVERMÖGEN
-        // 0 - Immaterielle Vermögensgegenstände, Sachanlagen, Finanzanlagen
-
-        // UMLAUFVERMÖGEN
-        // 1 - Vorräte
-        // 2 - Sonstiges Umlaufvermögen und Rechnungsabgrenzungsposten
-
-        // FREMDKAPITAL
-        // 3 - Rückstellungen, Verbindlichkeiten und Rechnungsabgrenzungen
-
-        // ERFOLGSKONTEN
-        // Betriebliche Erfolgskonten
-        //      4 - Betriebliche Erträge
-        //      5 - Materialaufwand und Aufwendungen für bezogene Leistungen
-        //      6 - Personalaufwand
-        //      7 - Abschreibungen und sonstige betriebliche Aufwendungen
-        // Finanzerträge und Finanzaufwendungen
-        //      8 - Finanzerträge und Finanzaufwendungen
-        // Steuern vom Einkommen und vom Ertrag
-        //      8 - Steuern vom Einkommen und vom Ertrag
-        // Rücklagenbewegung
-        //      8 Rücklagenbewegung
-
-        // EIGENKAPITAL
-        // 9 - Eigenkapital
-
-        /// <summary>
-        /// 2 - Zahlungsmittel
-        /// Kassa, Bank, etc.
-        /// </summary>
-        public decimal CashAndCashEquivalents { get; set; } // SimFin only Reports one number for Cash, Cash Equivalents & Short Term Investments
-        /// <summary>
-        /// 2 - Kurzfristige Anlagen (Investments)
-        /// Anteile an Kaptialgesellschaften im Umlaufvermögen
-        /// Gläubigerpapiere des Umlaufvermögens
-        /// </summary>
-        public decimal ShortTermInvestments { get; set; }
-        /// <summary>
-        /// 2 - Zahlungsmittel + Kurzfristige Anlagen
-        /// </summary>
-        public decimal CashAndShortTermInvestments { get; set; }
-        /// <summary>
-        /// 2 - Forderungen
-        /// Forderungen aus Lieferungen und Leistungen
-        /// Sonstige Forderungen
-        /// </summary>
-        public decimal Receivables { get; set; }
-        /// <summary>
-        /// 1 - Vorräte
-        /// </summary>
-        public decimal Inventories { get; set; }
-        /// <summary>
-        /// UMLAUFVERMÖGEN
-        /// </summary>
-        public decimal TotalCurrentAssets { get; set; }
-        /// <summary>
-        /// 0 - Sachanlagen (Immobilien, Maschinen, Ausrüstung, etc.)
-        /// </summary>
-        public decimal PropertyPlantAndEquipmentNet { get; set; }
-        /// <summary>
-        /// 0 - Firmenwert und sonstige immaterielle Werte
-        /// </summary>
-        public decimal GoodwillAndIntangibleAssets { get; set; } // not included in SimFin
-        /// <summary>
-        /// 0 - Langfristige Anlagen (Investments)
-        /// Finanzanlagen
-        /// </summary>
-        public decimal LongTermInvestments { get; set; }
-        /// <summary>
-        /// Latente Steuern (Mehr-Weniger-Rechnung)
-        /// </summary>
-        public decimal TaxAssets { get; set; } // not included in SimFin
-        /// <summary>
-        /// 0 - Sonstige Aktiva
-        /// </summary>
-        public decimal OtherAssets { get; set; }
-        /// <summary>
-        /// 0 - ANLAGEVERMÖGEN
-        /// </summary>
-        public decimal TotalNonCurrentAssets { get; set; }
-        /// <summary>
-        /// GESAMTVERMÖGEN (Aktiva)
-        /// </summary>
-        public decimal TotalAssets { get; set; }
-        /// <summary>
-        /// 3 - Lieferverbindlichkeiten
-        /// also includes Accruals
-        /// enthält auch Rückstellungen
-        /// </summary>
-        public decimal Payables { get; set; }
-        /// <summary>
-        /// 3 - Kurzfristige Schulden
-        /// Verbindlichkeiten gegenüber Kreditinstituten
-        /// (Kontoüberzug)
-        /// </summary>
-        public decimal ShortTermDebt { get; set; }
-        /// <summary>
-        /// 3 - Kurzfristige Verbindlichkeiten
-        /// </summary>
-        public decimal TotalCurrentLiabilities { get; set; }
-        /// <summary>
-        /// 3 - Langfristige Schulden
-        /// </summary>
-        public decimal LongTermDebt { get; set; }
-        /// <summary>
-        /// 3 - Gesamtverschuldung
-        /// </summary>
-        public decimal TotalDebt { get; set; } // not included in SimFin -> shortterm debt + longterm debt
-        /// <summary>
-        /// 2&3 - Rechnungsabgrenzungsposten
-        /// Aktive/Passive Rechnungsabgrenzung
-        /// </summary>
-        public decimal DeferredRevenue { get; set; } // not included in SimFin
-        /// <summary>
-        /// 3 - Steuerrückstellungen (Steuerschulden)
-        /// </summary>
-        public decimal TaxLiabilities { get; set; } // not included in SimFin
-        /// <summary>
-        /// ????
-        /// </summary>
-        public decimal DepositLiabilities { get; set; } // not included in SimFin
-        /// <summary>
-        /// 3 - Langfristige Verbindlichkeiten
-        /// </summary>
-        public decimal TotalNonCurrentLiabilities { get; set; }
-        /// <summary>
-        /// 3 - Gesamtverbindlichkeiten 
-        /// </summary>
-        public decimal TotalLiabilities { get; set; }
-        /// <summary>
-        /// ?????
-        /// </summary>
-        public decimal OtherComprehensiveIncome { get; set; } // not included in SimFin
-        /// <summary>
-        /// 9 - Gewinnrücklagen 
-        /// (Deficit)
-        /// </summary>
-        public decimal RetainedEarnings { get; set; }
-
-        /// <summary>
-        /// the full amount of cash or other assets that shareholders have given a company in exchange for stock.
-        /// Paid-in capital includes the par value of both common and preferred stock plus any amount paid in excess.
-        /// </summary>
-        public decimal ShareCapitalAndAdditionalPaidInCapital { get; set; }
-
-        public decimal TreasuryStock { get; set; }
-
-        /// <summary>
-        /// 9 - Eigenkapital
-        /// </summary>
-        public decimal TotalShareholdersEquity { get; set; } // not included in SimFin
-        /// <summary>
-        /// 0 - Investments
-        /// </summary>
-        public decimal Investments { get; set; } // not included in SimFin
-        /// <summary>
-        /// Netto Verschuldung
-        /// </summary>
-        public decimal NetDebt { get; set; } // not included in SimFin
-
-        /// <summary>
-        /// Sonstige Passiva
-        /// </summary>
-        public decimal OtherLiabilites { get; set; } // not included in SimFin
-
-        public decimal TotalEquity { get; set; }
-
-        public decimal TotalLiabilitiesAndEquity { get; set; }
+        public virtual decimal CashCashEquivalentsShortTermInvestments { get; set; }
+        public virtual decimal CashCashEquivalents { get; set; }
+        public virtual decimal ShortTermInvestments { get; set; }
+        public virtual decimal AccountsNotesReceivable { get; set; }
+        public virtual decimal AccountsReceivableNet { get; set; }
+        public virtual decimal NotesReceivableNet { get; set; }
+        public virtual decimal UnbilledRevenues { get; set; }
+        public virtual decimal Inventories { get; set; }
+        public virtual decimal RawMaterials { get; set; }
+        public virtual decimal WorkInProcess { get; set; }
+        public virtual decimal FinishedGoods { get; set; }
+        public virtual decimal OtherInventory { get; set; }
+        public virtual decimal OtherShortTermAssets { get; set; }
+        public virtual decimal PrepaidExpenses { get; set; }
+        public virtual decimal DerivativeHedgingAssetsShortTerm { get; set; }
+        public virtual decimal AssetsHeldforSale { get; set; }
+        public virtual decimal DeferredTaxAssetsShortTerm { get; set; }
+        public virtual decimal IncomeTaxesReceivable { get; set; }
+        public virtual decimal DiscontinuedOperationsShortTerm { get; set; }
+        public virtual decimal MiscShortTermAssets { get; set; }
+        public virtual decimal TotalCurrentAssets { get; set; }
+        public virtual decimal PropertyPlantEquipmentNet { get; set; }
+        public virtual decimal PropertyPlantEquipment { get; set; }
+        public virtual decimal AccumulatedDepreciation { get; set; }
+        public virtual decimal LongTermInvestmentsReceivables { get; set; }
+        public virtual decimal LongTermInvestments { get; set; }
+        public virtual decimal LongTermMarketableSecurities { get; set; }
+        public virtual decimal LongTermReceivables { get; set; }
+        public virtual decimal OtherLongTermAssets { get; set; }
+        public virtual decimal IntangibleAssets { get; set; }
+        public virtual decimal Goodwill { get; set; }
+        public virtual decimal OtherIntangibleAssets { get; set; }
+        public virtual decimal PrepaidExpense { get; set; }
+        public virtual decimal DeferredTaxAssetsLongTerm { get; set; }
+        public virtual decimal DerivativeHedgingAssetsLongTerm { get; set; }
+        public virtual decimal PrepaidPensionCosts { get; set; }
+        public virtual decimal DiscontinuedOperationsLongTerm { get; set; }
+        public virtual decimal InvestmentsinAffiliates { get; set; }
+        public virtual decimal MiscLongTermAssets { get; set; }
+        public virtual decimal TotalNoncurrentAssets { get; set; }
+        public virtual decimal TotalAssets { get; set; }
+        public virtual decimal PayablesAccruals { get; set; }
+        public virtual decimal AccountsPayable { get; set; }
+        public virtual decimal AccruedTaxes { get; set; }
+        public virtual decimal InterestDividendsPayable { get; set; }
+        public virtual decimal OtherPayablesAccruals { get; set; }
+        public virtual decimal ShortTermDebt { get; set; }
+        public virtual decimal ShortTermBorrowings { get; set; }
+        public virtual decimal ShortTermCapitalLeases { get; set; }
+        public virtual decimal CurrentPortionofLongTermDebt { get; set; }
+        public virtual decimal OtherShortTermLiabilities { get; set; }
+        public virtual decimal DeferredRevenueShortTerm { get; set; }
+        public virtual decimal LiabilitiesfromDerivativesHedgingShortTerm { get; set; }
+        public virtual decimal DeferredTaxLiabilitiesShortTerm { get; set; }
+        public virtual decimal LiabilitiesfromDiscontinuedOperationsShortTerm { get; set; }
+        public virtual decimal MiscShortTermLiabilities { get; set; }
+        public virtual decimal TotalCurrentLiabilities { get; set; }
+        public virtual decimal LongTermDebt { get; set; }
+        public virtual decimal LongTermBorrowings { get; set; }
+        public virtual decimal LongTermCapitalLeases { get; set; }
+        public virtual decimal OtherLongTermLiabilities { get; set; }
+        public virtual decimal AccruedLiabilities { get; set; }
+        public virtual decimal PensionLiabilities { get; set; }
+        public virtual decimal Pensions { get; set; }
+        public virtual decimal OtherPostRetirementBenefits { get; set; }
+        public virtual decimal DeferredCompensation { get; set; }
+        public virtual decimal DeferredRevenueLongTerm { get; set; }
+        public virtual decimal DeferredTaxLiabilitiesLongTerm { get; set; }
+        public virtual decimal LiabilitiesfromDerivativesHedgingLongTerm { get; set; }
+        public virtual decimal LiabilitiesfromDiscontinuedOperationsLongTerm { get; set; }
+        public virtual decimal MiscLongTermLiabilities { get; set; }
+        public virtual decimal TotalNoncurrentLiabilities { get; set; }
+        public virtual decimal TotalLiabilities { get; set; }
+        public virtual decimal PreferredEquity { get; set; }
+        public virtual decimal ShareCapitalAdditionalPaidInCapital { get; set; }
+        public virtual decimal CommonStock { get; set; }
+        public virtual decimal AdditionalPaidinCapital { get; set; }
+        public virtual decimal OtherShareCapital { get; set; }
+        public virtual decimal TreasuryStock { get; set; }
+        public virtual decimal RetainedEarnings { get; set; }
+        public virtual decimal OtherEquity { get; set; }
+        public virtual decimal EquityBeforeMinorityInterest { get; set; }
+        public virtual decimal MinorityInterest { get; set; }
+        public virtual decimal TotalEquity { get; set; }
+        public virtual decimal TotalLiabilitiesEquity { get; set; }
 
         /// <summary>
         /// Nettoumlaufvermögen
         /// NWC
         /// = Receivables + Inventories - Payables
         /// </summary>
-        public decimal NetWorkingCapital { get { return Receivables + Inventories - Payables; } }
+        public decimal NetWorkingCapital { get { return AccountsNotesReceivable + Inventories - AccountsPayable; } }
         /// <summary>
         /// Capital Employed
         /// = Total noncurrent Assets + Receivables + Inventories - Payables
         /// </summary>
-        public decimal CapitalEmployed { get { return TotalNonCurrentAssets + NetWorkingCapital; } }
+        public decimal CapitalEmployed { get { return TotalNoncurrentAssets + NetWorkingCapital; } }
 
         public BalanceSheet()
         {

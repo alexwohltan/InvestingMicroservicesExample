@@ -197,32 +197,32 @@ namespace DataImport
             statement.WeightedAverageShsOut = decimal.Parse(line[8]);
             statement.WeightedAverageShsOutDiluted = decimal.Parse(line[9]);
             statement.Revenue = decimal.Parse(line[10]);
-            statement.CostOfRevenue = decimal.Parse(line[11]);
+            statement.CostofRevenue = decimal.Parse(line[11]);
             statement.GrossProfit = decimal.Parse(line[12]);
             statement.OperatingExpenses = decimal.Parse(line[13]);
-            statement.SellingGeneralAndAdministrativeExpenses = decimal.Parse(line[14]);
-            statement.ResearchAndDevelopmentExpenses = decimal.Parse(line[15]);
+            statement.SellingGeneralAdministrative = decimal.Parse(line[14]);
+            statement.ResearchDevelopment = decimal.Parse(line[15]);
             statement.DepreciationAmortization = decimal.Parse(line[16]);
-            statement.OperatingIncome = decimal.Parse(line[17]);
-            statement.NonOperatingIncome = decimal.Parse(line[18]);
+            statement.OperatingIncomeLoss = decimal.Parse(line[17]);
+            statement.NonOperatingIncomeLoss = decimal.Parse(line[18]);
             statement.InterestExpense = decimal.Parse(line[19]);
-            statement.EarningsBeforeTaxAdj = decimal.Parse(line[20]);
-            statement.ExtraordinaryGains = decimal.Parse(line[21]);
-            statement.EarningsBeforeTax = decimal.Parse(line[22]);
-            statement.IncomeTaxExpense = decimal.Parse(line[23]);
-            statement.NetIncomeDiscontinuedOps = decimal.Parse(line[24]);
-            statement.ExtraordinaryGains = statement.ExtraordinaryGains == 0 ? decimal.Parse(line[25]) : statement.ExtraordinaryGains;
+            statement.PretaxIncomeLossAdj = decimal.Parse(line[20]);
+            statement.AbnormalGainsLosses = decimal.Parse(line[21]);
+            statement.PretaxIncomeLoss = decimal.Parse(line[22]);
+            statement.IncomeTaxExpenseBenefitNet = decimal.Parse(line[23]);
+            statement.DiscontinuedOperations = decimal.Parse(line[24]);
+            statement.AbnormalGainsLosses = statement.AbnormalGainsLosses == 0 ? decimal.Parse(line[25]) : statement.AbnormalGainsLosses;
             statement.NetIncome = decimal.Parse(line[26]);
-            statement.NetIncomeCom = decimal.Parse(line[27]);
+            statement.NetIncomeCommon = decimal.Parse(line[27]);
 
-            statement.EPS = statement.WeightedAverageShsOut != 0 ? statement.NetIncomeCom / statement.WeightedAverageShsOut : null;
-            statement.EPSDiluted = statement.WeightedAverageShsOutDiluted != 0 ? statement.NetIncomeCom / statement.WeightedAverageShsOutDiluted : null;
+            statement.EPS = statement.WeightedAverageShsOut != 0 ? statement.NetIncomeCommon / statement.WeightedAverageShsOut : null;
+            statement.EPSDiluted = statement.WeightedAverageShsOutDiluted != 0 ? statement.NetIncomeCommon / statement.WeightedAverageShsOutDiluted : null;
             statement.GrossMargin = statement.Revenue != 0 ? statement.GrossProfit / statement.Revenue : null;
-            statement.EBIT = statement.InterestExpense != 0 ? statement.EarningsBeforeTax + statement.InterestExpense : 0;
+            statement.EBIT = statement.InterestExpense != 0 ? statement.PretaxIncomeLoss + statement.InterestExpense : 0;
             statement.EBITDA = statement.DepreciationAmortization != 0 ? statement.EBIT + statement.DepreciationAmortization : 0;
             statement.EBITMargin = statement.Revenue != 0 ? statement.EBIT / statement.Revenue : null;
             statement.EBITDAMargin = statement.Revenue != 0 ? statement.EBITDA / statement.Revenue : null;
-            statement.EarningsBeforeTaxMargin = statement.Revenue != 0 ? statement.EarningsBeforeTaxAdj / statement.Revenue : null;
+            statement.EarningsBeforeTaxMargin = statement.Revenue != 0 ? statement.PretaxIncomeLossAdj / statement.Revenue : null;
 
             return statement;
         }
@@ -258,23 +258,23 @@ namespace DataImport
 
             statement.DepreciationAmortization = decimal.Parse(line[11]);
             statement.NonCashItems = decimal.Parse(line[12]);
-            statement.ChangeInWorkingCapital = decimal.Parse(line[13]);
-            statement.ChangeInAccountsReceivable = decimal.Parse(line[14]);
-            statement.ChangeInInventories = decimal.Parse(line[15]);
-            statement.ChangeInAccountsPayable = decimal.Parse(line[16]);
-            statement.ChangeInOther = decimal.Parse(line[17]);
-            statement.OperatingCashFlow = decimal.Parse(line[18]);
-            statement.CapitalExpenditure = decimal.Parse(line[19]);
-            statement.InvestmentPurchasesAndSales = decimal.Parse(line[20]);
-            statement.AcquisitionsAndDisposals = decimal.Parse(line[21]);
-            statement.InvestingCashFlow = decimal.Parse(line[22]);
-            statement.DividendPayments = decimal.Parse(line[23]);
-            statement.RepaymentOfDebt = decimal.Parse(line[24]);
-            statement.BuybacksOfShares = decimal.Parse(line[25]);
-            statement.FinancingCashFlow = decimal.Parse(line[26]);
-            statement.NetCashFlow = decimal.Parse(line[27]);
+            statement.ChangeinWorkingCapital = decimal.Parse(line[13]);
+            statement.ChangeinAccountsReceivable = decimal.Parse(line[14]);
+            statement.ChangeinInventories = decimal.Parse(line[15]);
+            statement.ChangeinAccountsPayable = decimal.Parse(line[16]);
+            statement.ChangeinOther = decimal.Parse(line[17]);
+            statement.NetCashfromOperatingActivities = decimal.Parse(line[18]);
+            statement.PurchaseofFixedAssets = decimal.Parse(line[19]);
+            //statement.InvestmentPurchasesAndSales = decimal.Parse(line[20]);
+            statement.NetCashfromAcquisitionsDivestitures = decimal.Parse(line[21]);
+            statement.NetCashfromInvestingActivities = decimal.Parse(line[22]);
+            statement.DividendsPaid = decimal.Parse(line[23]);
+            statement.CashfromRepaymentofDebt = decimal.Parse(line[24]);
+            statement.CashfromRepurchaseofEquity = decimal.Parse(line[25]);
+            statement.NetCashfromFinancingActivities = decimal.Parse(line[26]);
+            statement.NetChangeinCash = decimal.Parse(line[27]);
 
-            statement.FreeCashFlow = statement.OperatingCashFlow - statement.CapitalExpenditure;
+            statement.FreeCashFlow = statement.NetCashfromOperatingActivities - statement.PurchaseofFixedAssets;
 
             return statement;
         }
@@ -308,30 +308,28 @@ namespace DataImport
                     line[i] = "0";
             }
 
-            statement.CashAndCashEquivalents = decimal.Parse(line[10]);
-            statement.CashAndShortTermInvestments = decimal.Parse(line[10]); // SimFin only Reports one number for Cash, Cash Equivalents & Short Term Investments
+            statement.CashCashEquivalentsShortTermInvestments = decimal.Parse(line[10]);
+            statement.CashCashEquivalents = decimal.Parse(line[10]); // SimFin only Reports one number for Cash, Cash Equivalents & Short Term Investments
 
-            statement.Receivables = decimal.Parse(line[11]);
+            statement.AccountsNotesReceivable = decimal.Parse(line[11]);
             statement.Inventories = decimal.Parse(line[12]);
             statement.TotalCurrentAssets = decimal.Parse(line[13]);
-            statement.PropertyPlantAndEquipmentNet = decimal.Parse(line[14]);
+            statement.PropertyPlantEquipment = decimal.Parse(line[14]);
             statement.LongTermInvestments = decimal.Parse(line[15]);
-            statement.OtherAssets = decimal.Parse(line[16]);
-            statement.TotalNonCurrentAssets = decimal.Parse(line[17]);
+            statement.OtherLongTermAssets = decimal.Parse(line[16]);
+            statement.TotalNoncurrentAssets = decimal.Parse(line[17]);
             statement.TotalAssets = decimal.Parse(line[18]);
-            statement.Payables = decimal.Parse(line[19]);
+            statement.AccountsPayable = decimal.Parse(line[19]);
             statement.ShortTermDebt = decimal.Parse(line[20]);
             statement.TotalCurrentLiabilities = decimal.Parse(line[21]);
             statement.LongTermDebt = decimal.Parse(line[22]);
-            statement.TotalNonCurrentLiabilities = decimal.Parse(line[23]);
+            statement.TotalNoncurrentLiabilities = decimal.Parse(line[23]);
             statement.TotalLiabilities = decimal.Parse(line[24]);
-            statement.ShareCapitalAndAdditionalPaidInCapital = decimal.Parse(line[25]);
+            statement.ShareCapitalAdditionalPaidInCapital = decimal.Parse(line[25]);
             statement.TreasuryStock = decimal.Parse(line[26]);
             statement.RetainedEarnings = decimal.Parse(line[27]);
             statement.TotalEquity = decimal.Parse(line[28]);
-            statement.TotalLiabilitiesAndEquity = decimal.Parse(line[29]);
-
-            statement.TotalDebt = statement.ShortTermDebt + statement.LongTermDebt;
+            statement.TotalLiabilitiesEquity = decimal.Parse(line[29]);
 
             return statement;
         }

@@ -66,5 +66,71 @@ public class SimFinProfitLossStatement : SimFinFinancialStatement
     public decimal PreferredDividends { get; set; }
     public decimal OtherAdjustments { get; set; }
     public decimal NetIncomeCommon { get; set; }
+
+    public IncomeStatement ToIncomeStatement()
+    {
+        var incomeStatement = new IncomeStatement();
+
+        incomeStatement.Revenue = Revenue;
+        incomeStatement.SalesServicesRevenue = SalesServicesRevenue;
+        incomeStatement.FinancingRevenue = FinancingRevenue;
+        incomeStatement.OtherRevenue = OtherRevenue;
+        incomeStatement.CostofRevenue = CostofRevenue;
+        incomeStatement.CostofGoodsServices = CostofGoodsServices;
+        incomeStatement.CostofFinancingRevenue = CostofFinancingRevenue;
+        incomeStatement.CostofOtherRevenue = CostofOtherRevenue;
+        incomeStatement.GrossProfit = GrossProfit;
+        incomeStatement.OtherOperatingIncome = OtherOperatingIncome;
+        incomeStatement.OperatingExpenses = OperatingExpenses;
+        incomeStatement.SellingGeneralAdministrative = SellingGeneralAdministrative;
+        incomeStatement.SellingMarketing = SellingMarketing;
+        incomeStatement.GeneralAdministrative = GeneralAdministrative;
+        incomeStatement.ResearchDevelopment = ResearchDevelopment;
+        incomeStatement.DepreciationAmortization = DepreciationAmortization;
+        incomeStatement.ProvisionforDoubtfulAccounts = ProvisionforDoubtfulAccounts;
+        incomeStatement.OtherOperatingExpenses = OtherOperatingExpenses;
+        incomeStatement.OperatingIncomeLoss = OperatingIncomeLoss;
+        incomeStatement.NonOperatingIncomeLoss = NonOperatingIncomeLoss;
+        incomeStatement.InterestExpenseNet = InterestExpenseNet;
+        incomeStatement.InterestExpense = InterestExpense;
+        incomeStatement.InterestIncome = InterestIncome;
+        incomeStatement.OtherInvestmentIncomeLoss = OtherInvestmentIncomeLoss;
+        incomeStatement.ForeignExchangeGainLoss = ForeignExchangeGainLoss;
+        incomeStatement.IncomeLossfromAffiliates = IncomeLossfromAffiliates;
+        incomeStatement.OtherNonOperatingIncomeLoss = OtherNonOperatingIncomeLoss;
+        incomeStatement.PretaxIncomeLossAdj = PretaxIncomeLossAdj;
+        incomeStatement.AbnormalGainsLosses = AbnormalGainsLosses;
+        incomeStatement.AcquiredInProcessRD = AcquiredInProcessRD;
+        incomeStatement.MergerAcquisitionExpense = MergerAcquisitionExpense;
+        incomeStatement.AbnormalDerivatives = AbnormalDerivatives;
+        incomeStatement.DisposalofAssets = DisposalofAssets;
+        incomeStatement.EarlyExtinguishmentofDebt = EarlyExtinguishmentofDebt;
+        incomeStatement.AssetWriteDown = AssetWriteDown;
+        incomeStatement.ImpairmentofGoodwillIntangibles = ImpairmentofGoodwillIntangibles;
+        incomeStatement.SaleofBusiness = SaleofBusiness;
+        incomeStatement.LegalSettlement = LegalSettlement;
+        incomeStatement.RestructuringCharges = RestructuringCharges;
+        incomeStatement.SaleofInvestmentsUnrealizedInvestments = SaleofInvestmentsUnrealizedInvestments;
+        incomeStatement.InsuranceSettlement = InsuranceSettlement;
+        incomeStatement.OtherAbnormalItems = OtherAbnormalItems;
+        incomeStatement.PretaxIncomeLoss = PretaxIncomeLoss;
+        incomeStatement.IncomeTaxExpenseBenefitNet = IncomeTaxExpenseBenefitNet;
+        incomeStatement.CurrentIncomeTax = CurrentIncomeTax;
+        incomeStatement.DeferredIncomeTax = DeferredIncomeTax;
+        incomeStatement.TaxAllowanceCredit = TaxAllowanceCredit;
+        incomeStatement.IncomeLossfromAffiliatesNetofTaxes = IncomeLossfromAffiliatesNetofTaxes;
+        incomeStatement.IncomeLossfromContinuingOperations = IncomeLossfromContinuingOperations;
+        incomeStatement.NetExtraordinaryGainsLosses = NetExtraordinaryGainsLosses;
+        incomeStatement.DiscontinuedOperations = DiscontinuedOperations;
+        incomeStatement.AccountingChargesOther = AccountingChargesOther;
+        incomeStatement.IncomeLossInclMinorityInterest = IncomeLossInclMinorityInterest;
+        incomeStatement.MinorityInterest = MinorityInterest;
+        incomeStatement.NetIncome = NetIncome;
+        incomeStatement.PreferredDividends = PreferredDividends;
+        incomeStatement.OtherAdjustments = OtherAdjustments;
+        incomeStatement.NetIncomeCommon = NetIncomeCommon;
+
+        return incomeStatement;
+    }
 }
 

@@ -60,5 +60,65 @@ public class SimFinCashFlowStatement : SimFinFinancialStatement
     public decimal NetCashBeforeFX { get; set; }
     public decimal EffectofForeignExchangeRates { get; set; }
     public decimal NetChangeinCash { get; set; }
+
+    public CashFlowStatement ToCashFlowStatement()
+    {
+        var cashflowStatement = new CashFlowStatement();
+
+        cashflowStatement.NetIncomeStartingLine = NetIncomeStartingLine;
+        cashflowStatement.NetIncome = NetIncome;
+        cashflowStatement.NetIncomefromDiscontinuedOperations = NetIncomefromDiscontinuedOperations;
+        cashflowStatement.OtherAdjustments = OtherAdjustments;
+        cashflowStatement.DepreciationAmortization = DepreciationAmortization;
+        cashflowStatement.NonCashItems = NonCashItems;
+        cashflowStatement.StockBasedCompensation = StockBasedCompensation;
+        cashflowStatement.DeferredIncomeTaxes = DeferredIncomeTaxes;
+        cashflowStatement.OtherNonCashAdjustments = OtherNonCashAdjustments;
+        cashflowStatement.ChangeinWorkingCapital = ChangeinWorkingCapital;
+        cashflowStatement.ChangeinAccountsReceivable = ChangeinAccountsReceivable;
+        cashflowStatement.ChangeinInventories = ChangeinInventories;
+        cashflowStatement.ChangeinAccountsPayable = ChangeinAccountsPayable;
+        cashflowStatement.ChangeinOther = ChangeinOther;
+        cashflowStatement.NetCashfromDiscontinuedOperationsOperating = NetCashfromDiscontinuedOperationsOperating;
+        cashflowStatement.NetCashfromOperatingActivities = NetCashfromOperatingActivities;
+        cashflowStatement.ChangeinFixedAssetsIntangibles = ChangeinFixedAssetsIntangibles;
+        cashflowStatement.DispositionofFixedAssetsIntangibles = DispositionofFixedAssetsIntangibles;
+        cashflowStatement.DispositionofFixedAssets = DispositionofFixedAssets;
+        cashflowStatement.DispositionofIntangibleAssets = DispositionofIntangibleAssets;
+        cashflowStatement.AcquisitionofFixedAssetsIntangibles = AcquisitionofFixedAssetsIntangibles;
+        cashflowStatement.PurchaseofFixedAssets = PurchaseofFixedAssets;
+        cashflowStatement.AcquisitionofIntangibleAssets = AcquisitionofIntangibleAssets;
+        cashflowStatement.OtherChangeinFixedAssetsIntangibles = OtherChangeinFixedAssetsIntangibles;
+        cashflowStatement.NetChangeinLongTermInvestment = NetChangeinLongTermInvestment;
+        cashflowStatement.DecreaseinLongTermInvestment = DecreaseinLongTermInvestment;
+        cashflowStatement.IncreaseinLongTermInvestment = IncreaseinLongTermInvestment;
+        cashflowStatement.NetCashfromAcquisitionsDivestitures = NetCashfromAcquisitionsDivestitures;
+        cashflowStatement.NetCashfromDivestitures = NetCashfromDivestitures;
+        cashflowStatement.CashforAcquisitionofSubsidiaries = CashforAcquisitionofSubsidiaries;
+        cashflowStatement.CashforJointVentures = CashforJointVentures;
+        cashflowStatement.NetCashfromOtherAcquisitions = NetCashfromOtherAcquisitions;
+        cashflowStatement.OtherInvestingActivities = OtherInvestingActivities;
+        cashflowStatement.NetCashfromDiscontinuedOperationsInvesting = NetCashfromDiscontinuedOperationsInvesting;
+        cashflowStatement.NetCashfromInvestingActivities = NetCashfromInvestingActivities;
+        cashflowStatement.DividendsPaid = DividendsPaid;
+        cashflowStatement.CashfromRepaymentofDebt = CashfromRepaymentofDebt;
+        cashflowStatement.CashfromRepaymentofShortTermDebtNet = CashfromRepaymentofShortTermDebtNet;
+        cashflowStatement.CashfromRepaymentofLongTermDebtNet = CashfromRepaymentofLongTermDebtNet;
+        cashflowStatement.RepaymentsofLongTermDebt = RepaymentsofLongTermDebt;
+        cashflowStatement.CashfromLongTermDebt = CashfromLongTermDebt;
+        cashflowStatement.CashfromRepurchaseofEquity = CashfromRepurchaseofEquity;
+        cashflowStatement.IncreaseinCapitalStock = IncreaseinCapitalStock;
+        cashflowStatement.DecreaseinCapitalStock = DecreaseinCapitalStock;
+        cashflowStatement.OtherFinancingActivities = OtherFinancingActivities;
+        cashflowStatement.NetCashfromDiscontinuedOperationsFinancing = NetCashfromDiscontinuedOperationsFinancing;
+        cashflowStatement.NetCashfromFinancingActivities = NetCashfromFinancingActivities;
+        cashflowStatement.NetCashBeforeDiscOperationsandFX = NetCashBeforeDiscOperationsandFX;
+        cashflowStatement.ChangeinCashfromDiscOperationsandOther = ChangeinCashfromDiscOperationsandOther;
+        cashflowStatement.NetCashBeforeFX = NetCashBeforeFX;
+        cashflowStatement.EffectofForeignExchangeRates = EffectofForeignExchangeRates;
+        cashflowStatement.NetChangeinCash = NetChangeinCash;
+
+        return cashflowStatement;
+    }
 }
 

@@ -24,6 +24,7 @@ namespace FundamentalData
         public DbSet<Industry> Industries { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Filing> Filings { get; set; }
+        public DbSet<StockPrice> Prices { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -564,6 +565,66 @@ namespace FundamentalData
             await SaveChangesAsync();
 
             _eventBus.Publish(new DeletedFilingEvent { MarketName = market.Name, SectorName = sector.Name, IndustryName = industry.Name, CompanyTicker = company.Ticker, OldFiling = filing });
+        }
+        #endregion
+
+        #region StockPrice
+        public async Task<IEnumerable<StockPrice>> AddStockPrices(IEnumerable<StockPrice> prices, int companyId)
+        {
+            var company = await Companies.FindAsync(companyId);
+            var industry = await Industries.FindAsync(company.IndustryID);
+            var sector = await Sectors.FindAsync(industry.SectorID);
+            var market = await Markets.FindAsync(sector.MarketID);
+
+            if (company == null)
+                throw new ArgumentException(String.Format("Company with ID {0} does not exist", companyId));
+
+            if (company.Prices == null || company.Prices.Count() == 0)
+            {
+                company.Prices = new List<StockPrice>();
+                company.Prices.AddRange(prices);
+            }
+            else
+            {
+                var lastPriceDate = company.Prices.OrderBy(e => e.Date).Last().Date;
+                foreach (var price in prices.Where(e => e.Date > lastPriceDate))
+                {
+                    company.Prices.Add(price);
+                }
+            }
+
+            company.Prices.Sort((x,y) => x.Date.CompareTo(y.Date));
+
+            await SaveChangesAsync();
+
+            var newPrices = (await Companies.FindAsync(companyId)).Prices;
+
+            _eventBus.Publish(new UpdatedStockPricesEvent { MarketName = market.Name, SectorName = sector.Name, IndustryName = industry.Name, CompanyTicker = company.Ticker, NewPrices = newPrices.ToList() });
+
+            return newPrices;
+        }
+        public async Task<IEnumerable<StockPrice>> AddStockPrices(IEnumerable<StockPrice> prices, string ticker)
+        {
+            var companyId = (await GetCompany(ticker)).ID;
+            return await AddStockPrices(prices, companyId);
+        }
+
+        public async Task<IEnumerable<StockPrice>> GetPrices(int companyId)
+        {
+            return (await Companies.FindAsync(companyId)).Prices;
+        }
+        public async Task<IEnumerable<StockPrice>> GetPrices(string ticker)
+        {
+            return (await GetCompany(ticker)).Prices;
+        }
+
+        public async Task<IEnumerable<StockPrice>> UpdateStockPrices(IEnumerable<StockPrice> prices, int companyId)
+        {
+            return await AddStockPrices(prices, companyId);
+        }
+        public async Task<IEnumerable<StockPrice>> UpdateStockPrices(IEnumerable<StockPrice> prices, string ticker)
+        {
+            return await AddStockPrices(prices, ticker);
         }
         #endregion
 

@@ -93,5 +93,98 @@ public class SimFinBalanceSheet : SimFinFinancialStatement
     public decimal MinorityInterest { get; set; }
     public decimal TotalEquity { get; set; }
     public decimal TotalLiabilitiesEquity { get; set; }
+
+    public BalanceSheet ToBalanceSheet()
+    {
+        var balanceSheet = new BalanceSheet();
+
+        balanceSheet.CashCashEquivalentsShortTermInvestments = CashCashEquivalentsShortTermInvestments;
+        balanceSheet.CashCashEquivalents = CashCashEquivalents;
+        balanceSheet.ShortTermInvestments = ShortTermInvestments;
+        balanceSheet.AccountsNotesReceivable = AccountsNotesReceivable;
+        balanceSheet.AccountsReceivableNet = AccountsReceivableNet;
+        balanceSheet.NotesReceivableNet = NotesReceivableNet;
+        balanceSheet.UnbilledRevenues = UnbilledRevenues;
+        balanceSheet.Inventories = Inventories;
+        balanceSheet.RawMaterials = RawMaterials;
+        balanceSheet.WorkInProcess = WorkInProcess;
+        balanceSheet.FinishedGoods = FinishedGoods;
+        balanceSheet.OtherInventory = OtherInventory;
+        balanceSheet.OtherShortTermAssets = OtherShortTermAssets;
+        balanceSheet.PrepaidExpenses = PrepaidExpenses;
+        balanceSheet.DerivativeHedgingAssetsShortTerm = DerivativeHedgingAssetsShortTerm;
+        balanceSheet.AssetsHeldforSale = AssetsHeldforSale;
+        balanceSheet.DeferredTaxAssetsShortTerm = DeferredTaxAssetsShortTerm;
+        balanceSheet.IncomeTaxesReceivable = IncomeTaxesReceivable;
+        balanceSheet.DiscontinuedOperationsShortTerm = DiscontinuedOperationsShortTerm;
+        balanceSheet.MiscShortTermAssets = MiscShortTermAssets;
+        balanceSheet.TotalCurrentAssets = TotalCurrentAssets;
+        balanceSheet.PropertyPlantEquipmentNet = PropertyPlantEquipmentNet;
+        balanceSheet.PropertyPlantEquipment = PropertyPlantEquipment;
+        balanceSheet.AccumulatedDepreciation = AccumulatedDepreciation;
+        balanceSheet.LongTermInvestmentsReceivables = LongTermInvestmentsReceivables;
+        balanceSheet.LongTermInvestments = LongTermInvestments;
+        balanceSheet.LongTermMarketableSecurities = LongTermMarketableSecurities;
+        balanceSheet.LongTermReceivables = LongTermReceivables;
+        balanceSheet.OtherLongTermAssets = OtherLongTermAssets;
+        balanceSheet.IntangibleAssets = IntangibleAssets;
+        balanceSheet.Goodwill = Goodwill;
+        balanceSheet.OtherIntangibleAssets = OtherIntangibleAssets;
+        balanceSheet.PrepaidExpense = PrepaidExpense;
+        balanceSheet.DeferredTaxAssetsLongTerm = DeferredTaxAssetsLongTerm;
+        balanceSheet.DerivativeHedgingAssetsLongTerm = DerivativeHedgingAssetsLongTerm;
+        balanceSheet.PrepaidPensionCosts = PrepaidPensionCosts;
+        balanceSheet.DiscontinuedOperationsLongTerm = DiscontinuedOperationsLongTerm;
+        balanceSheet.InvestmentsinAffiliates = InvestmentsinAffiliates;
+        balanceSheet.MiscLongTermAssets = MiscLongTermAssets;
+        balanceSheet.TotalNoncurrentAssets = TotalNoncurrentAssets;
+        balanceSheet.TotalAssets = TotalAssets;
+        balanceSheet.PayablesAccruals = PayablesAccruals;
+        balanceSheet.AccountsPayable = AccountsPayable;
+        balanceSheet.AccruedTaxes = AccruedTaxes;
+        balanceSheet.InterestDividendsPayable = InterestDividendsPayable;
+        balanceSheet.OtherPayablesAccruals = OtherPayablesAccruals;
+        balanceSheet.ShortTermDebt = ShortTermDebt;
+        balanceSheet.ShortTermBorrowings = ShortTermBorrowings;
+        balanceSheet.ShortTermCapitalLeases = ShortTermCapitalLeases;
+        balanceSheet.CurrentPortionofLongTermDebt = CurrentPortionofLongTermDebt;
+        balanceSheet.OtherShortTermLiabilities = OtherShortTermLiabilities;
+        balanceSheet.DeferredRevenueShortTerm = DeferredRevenueShortTerm;
+        balanceSheet.LiabilitiesfromDerivativesHedgingShortTerm = LiabilitiesfromDerivativesHedgingShortTerm;
+        balanceSheet.DeferredTaxLiabilitiesShortTerm = DeferredTaxLiabilitiesShortTerm;
+        balanceSheet.LiabilitiesfromDiscontinuedOperationsShortTerm = LiabilitiesfromDiscontinuedOperationsShortTerm;
+        balanceSheet.MiscShortTermLiabilities = MiscShortTermLiabilities;
+        balanceSheet.TotalCurrentLiabilities = TotalCurrentLiabilities;
+        balanceSheet.LongTermDebt = LongTermDebt;
+        balanceSheet.LongTermBorrowings = LongTermBorrowings;
+        balanceSheet.LongTermCapitalLeases = LongTermCapitalLeases;
+        balanceSheet.OtherLongTermLiabilities = OtherLongTermLiabilities;
+        balanceSheet.AccruedLiabilities = AccruedLiabilities;
+        balanceSheet.PensionLiabilities = PensionLiabilities;
+        balanceSheet.Pensions = Pensions;
+        balanceSheet.OtherPostRetirementBenefits = OtherPostRetirementBenefits;
+        balanceSheet.DeferredCompensation = DeferredCompensation;
+        balanceSheet.DeferredRevenueLongTerm = DeferredRevenueLongTerm;
+        balanceSheet.DeferredTaxLiabilitiesLongTerm = DeferredTaxLiabilitiesLongTerm;
+        balanceSheet.LiabilitiesfromDerivativesHedgingLongTerm = LiabilitiesfromDerivativesHedgingLongTerm;
+        balanceSheet.LiabilitiesfromDiscontinuedOperationsLongTerm = LiabilitiesfromDiscontinuedOperationsLongTerm;
+        balanceSheet.MiscLongTermLiabilities = MiscLongTermLiabilities;
+        balanceSheet.TotalNoncurrentLiabilities = TotalNoncurrentLiabilities;
+        balanceSheet.TotalLiabilities = TotalLiabilities;
+        balanceSheet.PreferredEquity = PreferredEquity;
+        balanceSheet.ShareCapitalAdditionalPaidInCapital = ShareCapitalAdditionalPaidInCapital;
+        balanceSheet.CommonStock = CommonStock;
+        balanceSheet.AdditionalPaidinCapital = AdditionalPaidinCapital;
+        balanceSheet.OtherShareCapital = OtherShareCapital;
+        balanceSheet.TreasuryStock = TreasuryStock;
+        balanceSheet.RetainedEarnings = RetainedEarnings;
+        balanceSheet.OtherEquity = OtherEquity;
+        balanceSheet.EquityBeforeMinorityInterest = EquityBeforeMinorityInterest;
+        balanceSheet.MinorityInterest = MinorityInterest;
+        balanceSheet.TotalEquity = TotalEquity;
+        balanceSheet.TotalLiabilitiesEquity = TotalLiabilitiesEquity;
+
+        return balanceSheet;
+    }
 }
 
