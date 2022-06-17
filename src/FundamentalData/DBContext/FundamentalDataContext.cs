@@ -438,6 +438,9 @@ namespace FundamentalData
 
             company.Name = newCompany.Name;
             company.Ticker = newCompany.Ticker;
+            company.BusinessSummary = newCompany.BusinessSummary;
+            company.NumberEmployees = newCompany.NumberEmployees;
+            company.MonthFyEnd = newCompany.MonthFyEnd;
 
             foreach (var newFiling in newCompany.Filings)
             {
@@ -453,6 +456,8 @@ namespace FundamentalData
                 if (newFiling == null)
                     await DeleteFiling(oldFiling.ID);
             }
+
+            await UpdateStockPrices(newCompany.Prices, companyId);
 
             await SaveChangesAsync();
 

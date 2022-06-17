@@ -40,7 +40,39 @@
                 <td>Business Summary</td>
                 <td>@Model.CompanyData.BusinessSummary</td>
             </tr>
-        </table>
-    </div>
+            <tr>
+                <td>Filings</td>
+                <td>@if (Model.CompanyData.Filings == null)
+                {<p>NULL</p>}
+                else @Model.CompanyData.Filings.Count() </td>
+            </tr>
+            <tr>
+                <td>Prices</td>
+                <td>
+                    @if (Model.CompanyData.Prices == null)
+                    {<p>NULL</p>}
+                    else @Model.CompanyData.Prices.Count()
+            </td>
+        </tr>
+    </table>
+</div>
 </div>
 
+
+@if (Model.CompanyData.Prices != null && Model.CompanyData.Prices.Count() > 0)
+{
+    @await Html.PartialAsync("_Chart", new ChartModel()
+    {
+        ElementId = "StockChart1",
+        Type = ChartType.line,
+        Labels = Model.CompanyData.Prices.Select(e => e.Date.ToShortDateString()),
+        Values = Model.CompanyData.Prices.Select(e => e.AdjClose),
+        ValueLabel = Model.CompanyData.Ticker
+    })
+}
+
+
+@if (Model.CompanyData.Filings != null && Model.CompanyData.Filings.Count() > 0)
+{
+    @await Html.PartialAsync("FilingsView", Model.CompanyData.Filings)
+}

@@ -45,7 +45,7 @@ namespace DataImport.APIClients.SimFin
             };
 
             var result = await SendHttpRequest(HttpMethod.Get, "companies/general", requestParameters);
-            Debug.WriteLine(await result.Content.ReadAsStringAsync());
+
             var response = new SimFinGeneralCompanyInformationResponse();
 
             if (result.IsSuccessStatusCode)
@@ -60,7 +60,7 @@ namespace DataImport.APIClients.SimFin
             };
 
             var result = await SendHttpRequest(HttpMethod.Get, "companies/general", requestParameters);
-            Debug.WriteLine(await result.Content.ReadAsStringAsync());
+
             var response = new SimFinGeneralCompanyInformationResponse();
 
             if (result.IsSuccessStatusCode)

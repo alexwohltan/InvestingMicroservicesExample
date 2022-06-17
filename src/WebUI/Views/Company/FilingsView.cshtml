@@ -1,0 +1,174 @@
+﻿@model IList<DataStructures.FundamentalData.Filing>
+
+@{
+    DataStructures.FundamentalData.Filing MostRecentFiling = Model.OrderByDescending(e => e.FilingDate).First();
+    DataStructures.FundamentalData.Filing? Filing2 = Model.Count() >= 2 ? Model.OrderByDescending(e => e.FilingDate).ToList()[1] : null;
+    DataStructures.FundamentalData.Filing? Filing3 = Model.Count() >= 3 ? Model.OrderByDescending(e => e.FilingDate).ToList()[2] : null;
+    DataStructures.FundamentalData.Filing? Filing4 = Model.Count() >= 4 ? Model.OrderByDescending(e => e.FilingDate).ToList()[3] : null;
+}
+
+<div id="FilingsView">
+    <h3 class="display-6">Filings</h3>
+    <table class="table table-hover">
+        <tr style="text-align:right">
+            <th></th>
+            <th>@MostRecentFiling.FilingDate.ToLongDateString()</th>
+            @if (Filing2 != null)
+            {
+                <th>@Filing2.FilingDate.ToLongDateString()</th>
+            }
+            @if (Filing3 != null)
+            {
+                <th>@Filing3.FilingDate.ToLongDateString()</th>
+            }
+            @if (Filing4 != null)
+            {
+                <th>@Filing3.FilingDate.ToLongDateString()</th>
+            }
+        </tr>
+        <tr style="text-align:right">
+            <td style="text-align:left">Revenue</td>
+            <td>@((MostRecentFiling.IncomeStatement.Revenue / 1000).ToString("#,##0"))</td>
+            @if (Filing2 != null)
+            {
+                <td>@((Filing2.IncomeStatement.Revenue / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@((Filing3.IncomeStatement.Revenue / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing4 != null)
+            {
+                <td>@((Filing4.IncomeStatement.Revenue / 1000).ToString("#,##0"))</td>
+            }
+        </tr>
+        <tr style="text-align:right">
+            <td style="text-align:left">Cost of Revenue</td>
+            <td>@((MostRecentFiling.IncomeStatement.CostofRevenue / 1000).ToString("#,##0"))</td>
+            @if (Filing2 != null)
+            {
+                <td>@((Filing2.IncomeStatement.CostofRevenue / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@((Filing3.IncomeStatement.CostofRevenue / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing4 != null)
+            {
+                <td>@((Filing4.IncomeStatement.CostofRevenue / 1000).ToString("#,##0"))</td>
+            }
+        </tr>
+        <tr style="text-align:right">
+            <td style="text-align:left">Gross Profit</td>
+            <td>@((MostRecentFiling.IncomeStatement.GrossProfit / 1000).ToString("#,##0"))</td>
+            @if (Filing2 != null)
+            {
+                <td>@((Filing2.IncomeStatement.GrossProfit / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@((Filing3.IncomeStatement.GrossProfit / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing4 != null)
+            {
+                <td>@((Filing4.IncomeStatement.GrossProfit / 1000).ToString("#,##0"))</td>
+            }
+        </tr>
+        <tr style="text-align:right">
+            <td style="text-align:left">Operating Expenses</td>
+            <td>@((MostRecentFiling.IncomeStatement.OperatingExpenses / 1000).ToString("#,##0"))</td>
+            @if (Filing2 != null)
+            {
+                <td>@((Filing2.IncomeStatement.OperatingExpenses / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@((Filing3.IncomeStatement.OperatingExpenses / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing4 != null)
+            {
+                <td>@((Filing4.IncomeStatement.OperatingExpenses / 1000).ToString("#,##0"))</td>
+            }
+        </tr>
+        <tr style="text-align:right">
+            <td style="text-align:left">Operating Income (EBIT)</td>
+            <td>@((MostRecentFiling.IncomeStatement.OperatingIncomeLoss / 1000).ToString("#,##0"))</td>
+            @if (Filing2 != null)
+            {
+                <td>@((Filing2.IncomeStatement.OperatingIncomeLoss / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@((Filing3.IncomeStatement.OperatingIncomeLoss / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing4 != null)
+            {
+                <td>@((Filing4.IncomeStatement.OperatingIncomeLoss / 1000).ToString("#,##0"))</td>
+            }
+        </tr>
+        <tr style="text-align:right">
+            <td style="text-align:left">Non Operating Income</td>
+            <td>@((MostRecentFiling.IncomeStatement.NonOperatingIncomeLoss / 1000).ToString("#,##0"))</td>
+            @if (Filing2 != null)
+            {
+                <td>@((Filing2.IncomeStatement.NonOperatingIncomeLoss / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@((Filing3.IncomeStatement.NonOperatingIncomeLoss / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing4 != null)
+            {
+                <td>@((Filing4.IncomeStatement.NonOperatingIncomeLoss / 1000).ToString("#,##0"))</td>
+            }
+        </tr>
+        <tr style="text-align:right">
+            <td style="text-align:left">Pretax Income (EBT)</td>
+            <td>@((MostRecentFiling.IncomeStatement.PretaxIncomeLoss / 1000).ToString("#,##0"))</td>
+            @if (Filing2 != null)
+            {
+                <td>@((Filing2.IncomeStatement.PretaxIncomeLoss / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@((Filing3.IncomeStatement.PretaxIncomeLoss / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing4 != null)
+            {
+                <td>@((Filing4.IncomeStatement.PretaxIncomeLoss / 1000).ToString("#,##0"))</td>
+            }
+        </tr>
+        <tr style="text-align:right">
+            <td style="text-align:left">Net Income</td>
+            <td>@((MostRecentFiling.IncomeStatement.NetIncome / 1000).ToString("#,##0"))</td>
+            @if (Filing2 != null)
+            {
+                <td>@((Filing2.IncomeStatement.NetIncome / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@((Filing3.IncomeStatement.NetIncome / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing4 != null)
+            {
+                <td>@((Filing4.IncomeStatement.NetIncome / 1000).ToString("#,##0"))</td>
+            }
+        </tr>
+        <tr style="text-align:right">
+            <td style="text-align:left">Net Income Common Shareholders</td>
+            <td>@((MostRecentFiling.IncomeStatement.NetIncomeCommon / 1000).ToString("#,##0"))</td>
+            @if (Filing2 != null)
+            {
+                <td>@((Filing2.IncomeStatement.NetIncomeCommon / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@((Filing3.IncomeStatement.NetIncomeCommon / 1000).ToString("#,##0"))</td>
+            }
+            @if (Filing4 != null)
+            {
+                <td>@((Filing4.IncomeStatement.NetIncomeCommon / 1000).ToString("#,##0"))</td>
+            }
+        </tr>
+    </table>
+</div>

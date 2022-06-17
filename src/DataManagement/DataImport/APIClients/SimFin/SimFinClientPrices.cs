@@ -26,7 +26,7 @@ namespace DataImport.APIClients.SimFin
                     specialParameters = "&ratios";
 
             var result = await SendHttpRequest(HttpMethod.Get, "companies/prices", specialParameters, requestParameters);
-            Debug.WriteLine(await result.Content.ReadAsStringAsync());
+
             var response = new SimFinSharePriceResponse();
 
             if (result.IsSuccessStatusCode)
@@ -55,7 +55,7 @@ namespace DataImport.APIClients.SimFin
                     specialParameters = "&ratios";
 
             var result = await SendHttpRequest(HttpMethod.Get, "companies/prices", specialParameters, requestParameters);
-            Debug.WriteLine(await result.Content.ReadAsStringAsync());
+
             var response = new SimFinSharePriceResponse();
 
             if (result.IsSuccessStatusCode)
