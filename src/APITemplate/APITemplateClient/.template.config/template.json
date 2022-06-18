@@ -1,0 +1,36 @@
+﻿{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Alexander Wohltan",
+  "classifications": [],
+  "description": "",
+  "name": "APITemplateClient",
+  "defaultName": "APITemplateClient",
+  "identity": "MyTemplate.APITemplateClient.CSharp",
+  "groupIdentity": "MyTemplate.APITemplateClient",
+  "tags": {
+    "language": "C#",
+    "type": "project",
+    "vsmac-category": "other/net/general"
+  },
+  "shortName": "APITemplateClient",
+  "sourceName": "APITemplateClient",
+  "guids": [
+    "{6279F61D-9FA9-49A5-B847-9DA10981F28E}"
+  ],
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            ".vs/**/*"
+          ]
+        }
+      ]
+    }
+  ],
+  "primaryOutputs": [
+    {
+      "path": "APITemplateClient.csproj"
+    }
+  ]
+}

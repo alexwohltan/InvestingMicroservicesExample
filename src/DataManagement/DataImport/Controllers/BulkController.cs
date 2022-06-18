@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DataImport;
 
 [ApiController]
-[Route("api/Bulk")]
+[Route("Bulk")]
 public class BulkController : ControllerBase
 {
     private readonly ILogger<BulkController> _logger;

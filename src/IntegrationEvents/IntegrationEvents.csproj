@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MessageBroker\MessageBroker.csproj" />
     <ProjectReference Include="..\DataStructures\DataStructures.csproj" />
     <ProjectReference Include="..\EventBus\EventBus\EventBus.csproj" />
   </ItemGroup>

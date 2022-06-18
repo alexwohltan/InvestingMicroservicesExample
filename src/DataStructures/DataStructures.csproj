@@ -9,11 +9,13 @@
     <None Remove="Extensions\" />
     <None Remove="Benchmark\" />
     <None Remove="FundamentalData\" />
+    <None Remove="WorkdayAnalysis\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
     <Folder Include="Extensions\" />
     <Folder Include="Benchmark\" />
     <Folder Include="FundamentalData\" />
+    <Folder Include="WorkdayAnalysis\" />
   </ItemGroup>
 </Project>

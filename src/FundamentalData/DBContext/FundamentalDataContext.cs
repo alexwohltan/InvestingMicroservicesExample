@@ -433,6 +433,10 @@ namespace FundamentalData
         {
             var company = await Companies.FindAsync(companyId);
 
+            var industry = await Industries.FindAsync(company.IndustryID);
+            var sector = await Sectors.FindAsync(industry.SectorID);
+            var market = await Markets.FindAsync(sector.MarketID);
+
             if (company == null)
                 throw new ArgumentException(String.Format("Company with ID {0} not found.", companyId));
 
@@ -461,7 +465,11 @@ namespace FundamentalData
 
             await SaveChangesAsync();
 
-            return await Companies.FindAsync(companyId);
+            var newCompanyInDatabase = await Companies.FindAsync(companyId);
+
+            _eventBus.Publish(new UpdatedCompanyEvent() { NewCompany = newCompanyInDatabase, MarketName = market.Name, SectorName = sector.Name, IndustryName = industry.Name });
+
+            return newCompanyInDatabase;
         }
 
         public async Task DeleteCompany(int companyId)

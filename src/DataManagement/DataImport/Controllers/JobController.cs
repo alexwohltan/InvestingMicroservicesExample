@@ -2,7 +2,7 @@
 namespace DataImport.Controllers
 {
 	[ApiController]
-	[Route("api/Jobs", Name = "Background Jobs")]
+	[Route("Jobs", Name = "Background Jobs")]
 	public class JobController : ControllerBase
 	{
 		private readonly IImporter Importer;

@@ -26,6 +26,8 @@
                 <th>@Filing3.FilingDate.ToLongDateString()</th>
             }
         </tr>
+
+        <!-- INCOME STATEMENT -->
         <tr style="text-align:right">
             <td style="text-align:left">Revenue</td>
             <td>@((MostRecentFiling.IncomeStatement.Revenue / 1000).ToString("#,##0"))</td>

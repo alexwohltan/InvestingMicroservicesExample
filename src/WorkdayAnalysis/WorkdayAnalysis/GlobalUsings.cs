@@ -1,0 +1,13 @@
+﻿global using System;
+global using System.Diagnostics;
+global using Microsoft.AspNetCore;
+global using Microsoft.EntityFrameworkCore;
+global using EventBus;
+global using EventBus.Abstractions;
+global using EventBusRabbitMQ;
+global using RabbitMQ.Client;
+global using Autofac;
+global using Autofac.Extensions.DependencyInjection;
+global using IntegrationEvents;
+global using DataStructures.FundamentalData;
+global using DataStructures.WorkdayAnalysis;

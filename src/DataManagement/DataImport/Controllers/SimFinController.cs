@@ -2,7 +2,7 @@
 namespace DataImport.Controllers
 {
 	[ApiController]
-	[Route("api/SimFin")]
+	[Route("SimFin")]
 	public class SimFinController : ControllerBase
 	{
 		private readonly IImporter _importer;
