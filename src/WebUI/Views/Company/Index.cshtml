@@ -9,6 +9,7 @@
     <h1 class="display-4">@Model.CompanyData.Name</h1>
 </div>
 
+
 <div>
     <div id="GeneralInformation">
         <h3 class="display-6">General Information</h3>
@@ -32,7 +33,7 @@
             <tr>
                 <td>Industry</td>
                 <td>
-                    @if(Model.IndustryData != null)
+                    @if (Model.IndustryData != null)
                         @Model.IndustryData.IndustryName
                 </td>
             </tr>
@@ -118,15 +119,15 @@
             </tr>
 
             @foreach (var metricName in Model.IndustryData.Metrics
-                  .Where(e => e.MetricName == "ReturnOnEquity" ||
-                  e.MetricName == "ReturnOnSales" ||
-                  e.MetricName == "EBITMargin" ||
-                  e.MetricName == "EBITDAMargin" ||
-                  e.MetricName == "CapitalTurnover" ||
-                  e.MetricName == "TotalReturnOnInvestment" ||
-                  e.MetricName == "ReturnOnCapitalEmployed" ||
-                  e.MetricName == "CashflowTurnoverRatio")
-                  .Select(e => e.MetricName))
+                 .Where(e => e.MetricName == "ReturnOnEquity" ||
+                 e.MetricName == "ReturnOnSales" ||
+                 e.MetricName == "EBITMargin" ||
+                 e.MetricName == "EBITDAMargin" ||
+                 e.MetricName == "CapitalTurnover" ||
+                 e.MetricName == "TotalReturnOnInvestment" ||
+                 e.MetricName == "ReturnOnCapitalEmployed" ||
+                 e.MetricName == "CashflowTurnoverRatio")
+                 .Select(e => e.MetricName))
             {
                 <tr>
                     <td>
@@ -171,15 +172,15 @@
             </tr>
 
             @foreach (var metricName in Model.IndustryData.Metrics
-                  .Where(e => e.MetricName == "EquityRatio" ||
-                  e.MetricName == "Gearing" ||
-                  e.MetricName == "DynamicGearing" ||
-                  e.MetricName == "NetDebtoverEBITDA" ||
-                  e.MetricName == "CAPEXoverOperatingCashflow" ||
-                  e.MetricName == "CurrentAssetsoverTotalAssets" ||
-                  e.MetricName == "EquityToAssetRatio" ||
-                  e.MetricName == "EquityAndNoncurrentLiabilitiesToAssetRatio")
-                  .Select(e => e.MetricName))
+                 .Where(e => e.MetricName == "EquityRatio" ||
+                 e.MetricName == "Gearing" ||
+                 e.MetricName == "DynamicGearing" ||
+                 e.MetricName == "NetDebtoverEBITDA" ||
+                 e.MetricName == "CAPEXoverOperatingCashflow" ||
+                 e.MetricName == "CurrentAssetsoverTotalAssets" ||
+                 e.MetricName == "EquityToAssetRatio" ||
+                 e.MetricName == "EquityAndNoncurrentLiabilitiesToAssetRatio")
+                 .Select(e => e.MetricName))
             {
                 <tr>
                     <td>
@@ -211,4 +212,32 @@
 
         </table>
     </div>
+</div>
+
+<div id="UpdateButton">
+    <button type="button" onclick="updateCompany()" class="btn btn-light btn-sm" id="btn-update-company">Update @Model.CompanyData.Ticker</button>
+    <script>
+
+    function updateCompany() {
+        var formData = new FormData();
+        formData.append("ticker", "@Model.CompanyData.Ticker");
+        $.ajax({
+            type: 'PUT',
+            url: '@Url.Action("UpdateCompany")',
+                contentType: false,
+            processData: false,
+            cache: false,
+            data: formData,
+            success: successCallback,
+            error: errorCallback
+        });
+    }
+
+    function errorCallback() {
+        alert("Something went wrong.");
+    }
+    function successCallback(response) {
+        alert("Update started.");
+    }
+    </script>
 </div>

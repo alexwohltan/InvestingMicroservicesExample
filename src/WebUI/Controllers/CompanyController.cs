@@ -54,5 +54,13 @@ public class CompanyController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateCompany(string ticker)
+    {
+        var response = await _communicator.StartUpdateCompanyJob(ticker);
+
+        return Ok();
+    }
 }
 

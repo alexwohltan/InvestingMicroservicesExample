@@ -105,6 +105,34 @@ public class APIGatewayClient
 
     #endregion
 
+    #region Data Management
+
+    public async Task<string?> StartImportCompanyJob(string market, string sector, string industry, string ticker)
+    {
+        string? response = null;
+
+        var result = await SendHttpRequest(HttpMethod.Get, String.Format("Data/import/{0}/{1}/{2}/{3}",market, sector, industry, ticker));
+
+        if (result.IsSuccessStatusCode)
+            response = await result.Content.ReadAsStringAsync();
+
+        return response;
+    }
+
+    public async Task<string?> StartUpdateCompanyJob(string ticker)
+    {
+        string? response = null;
+
+        var result = await SendHttpRequest(HttpMethod.Get, String.Format("Data/update/{0}", ticker));
+
+        if (result.IsSuccessStatusCode)
+            response = await result.Content.ReadAsStringAsync();
+
+        return response;
+    }
+
+    #endregion
+
     private async Task<HttpResponseMessage> SendHttpRequest(HttpMethod method, string location, Dictionary<string, string> parameters = null, object bodyContent = null)
     {
         var builder = new UriBuilder(Hostname);

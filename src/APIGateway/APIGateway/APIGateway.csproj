@@ -26,5 +26,8 @@
     <ProjectReference Include="..\ExternalDataStructures\ExternalDataStructures.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
+    <ProjectReference Include="..\..\DataManagement\DataManagementClient\DataManagementClient.csproj">
+      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+    </ProjectReference>
   </ItemGroup>
 </Project>

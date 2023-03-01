@@ -63,6 +63,24 @@
                 return new FundamentalDataClient(hostname, port, baseUrl);
             });
 
+            services.AddSingleton<DataManagementHTTPClient.DataManagementClient>(serviceProvider =>
+            {
+                var hostname = "localhost";
+                var port = 7299;
+                var baseUrl = "";
+
+                if (!string.IsNullOrEmpty(Configuration["DataManagementHostname"]))
+                    hostname = Configuration["DataManagementHostname"];
+
+                if (!string.IsNullOrEmpty(Configuration["DataManagementPort"]))
+                    port = int.Parse(Configuration["DataManagementPort"]);
+
+                if (!string.IsNullOrEmpty(Configuration["DataManagementBaseUrl"]))
+                    baseUrl = Configuration["DataManagementBaseUrl"];
+
+                return new DataManagementHTTPClient.DataManagementClient(hostname, port, baseUrl);
+            });
+
             var container = new ContainerBuilder();
             container.Populate(services);
 

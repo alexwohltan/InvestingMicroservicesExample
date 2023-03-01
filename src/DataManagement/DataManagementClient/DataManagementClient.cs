@@ -31,7 +31,7 @@ public class DataManagementClient
             { "industryName", industryName }
         };
 
-        var result = await SendHttpRequest(HttpMethod.Get, "Jobs/companies/import/" + ticker, requestParameters);
+        var result = await SendHttpRequest(HttpMethod.Put, "Jobs/companies/import/" + ticker, requestParameters);
 
         var resultText = await result.Content.ReadAsStringAsync();
 
@@ -42,7 +42,7 @@ public class DataManagementClient
     }
     public async Task<string> StartUpdateCompanyJob(string ticker)
     {
-        var result = await SendHttpRequest(HttpMethod.Get, "Jobs/companies/update/" + ticker);
+        var result = await SendHttpRequest(HttpMethod.Put, "Jobs/companies/update/" + ticker);
 
         var resultText = await result.Content.ReadAsStringAsync();
 
