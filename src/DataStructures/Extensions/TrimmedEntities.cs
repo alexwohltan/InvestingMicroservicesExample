@@ -41,7 +41,7 @@ namespace DataStructures.FundamentalData
         }
         public static Sector WithoutCompanies(this Sector sector)
         {
-            var sectorTrimmed = new Sector { Name = sector.Name, ID = sector.ID };
+            var sectorTrimmed = new Sector { Name = sector.Name, ID = sector.ID, MarketID = sector.MarketID };
             sectorTrimmed.Industries = new List<Industry>();
             foreach (var ind in sector.Industries)
             {
@@ -51,7 +51,7 @@ namespace DataStructures.FundamentalData
         }
         public static Industry WithoutCompanies(this Industry industry)
         {
-            var industyTrimmed = new Industry { Name = industry.Name, ID = industry.ID };
+            var industyTrimmed = new Industry { Name = industry.Name, ID = industry.ID, SectorID = industry.SectorID };
             industyTrimmed.Companies = new List<Company>();
             return industyTrimmed;
         }

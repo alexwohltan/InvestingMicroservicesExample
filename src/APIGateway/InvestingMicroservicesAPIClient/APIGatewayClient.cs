@@ -90,6 +90,18 @@ public class APIGatewayClient
 
         return company;
     }
+    //// Depreciated
+    //public async Task<CompanyView?> GetCompanyWithBenchmarks(string ticker)
+    //{
+    //    CompanyView? company = null;
+
+    //    var result = await SendHttpRequest(HttpMethod.Get, String.Format("Companies/{0}/full", ticker));
+
+    //    if (result.IsSuccessStatusCode)
+    //        company = await result.Content.ReadFromJsonAsync<CompanyView>();
+
+    //    return company;
+    //}
 
     #endregion
 

@@ -1,7 +1,8 @@
-﻿@model ExternalDataStructures.CompanyView
+﻿@model CompanyBenchmarkModel
 
 @{
-    ViewData["Title"] = "Company Page";
+    ViewData["Title"] = String.Format("{0} | {1}", Model.CompanyData.Ticker, Model.CompanyData.Name);
+    DataStructures.FundamentalData.Filing MostRecentFiling = Model.CompanyData.Filings.OrderByDescending(e => e.FilingDate).First();
 }
 
 <div class="text-center">
@@ -29,6 +30,27 @@
                 <td>@Model.CompanyData.Name</td>
             </tr>
             <tr>
+                <td>Industry</td>
+                <td>
+                    @if(Model.IndustryData != null)
+                        @Model.IndustryData.IndustryName
+                </td>
+            </tr>
+            <tr>
+                <td>Sector</td>
+                <td>
+                    @if (Model.SectorData != null)
+                        @Model.SectorData.SectorName
+                </td>
+            </tr>
+            <tr>
+                <td>Market</td>
+                <td>
+                    @if (Model.MarketData != null)
+                        @Model.MarketData.MarketName
+                </td>
+            </tr>
+            <tr>
                 <td>Month FY End</td>
                 <td>@Model.CompanyData.MonthFyEnd</td>
             </tr>
@@ -42,9 +64,11 @@
             </tr>
             <tr>
                 <td>Filings</td>
-                <td>@if (Model.CompanyData.Filings == null)
-                {<p>NULL</p>}
-                else @Model.CompanyData.Filings.Count() </td>
+                <td>
+                    @if (Model.CompanyData.Filings == null)
+                    {<p>NULL</p>}
+                    else @Model.CompanyData.Filings.Count()
+                </td>
             </tr>
             <tr>
                 <td>Prices</td>
@@ -52,10 +76,10 @@
                     @if (Model.CompanyData.Prices == null)
                     {<p>NULL</p>}
                     else @Model.CompanyData.Prices.Count()
-            </td>
-        </tr>
-    </table>
-</div>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 
@@ -76,3 +100,115 @@
 {
     @await Html.PartialAsync("FilingsView", Model.CompanyData.Filings)
 }
+
+<div>
+    <div id="Metrics">
+        <h3 class="display-6">Metrics for Valuation</h3>
+
+        <!-- METRICS FOR PROFITABILITY AND RETURNS-->
+        <h5 class="display-8">Metrics for Profitability and Returns</h5>
+        <table class="table">
+            <tr>
+                <th></th>
+                <th>@Model.CompanyData.Ticker</th>
+                <th>@Model.IndustryData.IndustryName</th>
+                <th>@Model.SectorData.SectorName</th>
+                <th>@Model.MarketData.MarketName</th>
+                <th>Best Peers</th>
+            </tr>
+
+            @foreach (var metricName in Model.IndustryData.Metrics
+                  .Where(e => e.MetricName == "ReturnOnEquity" ||
+                  e.MetricName == "ReturnOnSales" ||
+                  e.MetricName == "EBITMargin" ||
+                  e.MetricName == "EBITDAMargin" ||
+                  e.MetricName == "CapitalTurnover" ||
+                  e.MetricName == "TotalReturnOnInvestment" ||
+                  e.MetricName == "ReturnOnCapitalEmployed" ||
+                  e.MetricName == "CashflowTurnoverRatio")
+                  .Select(e => e.MetricName))
+            {
+                <tr>
+                    <td>
+                        @metricName
+                    </td>
+                    <td>
+                        @String.Format("{0:P1}", MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling))
+                    </td>
+                    <td>
+                        @String.Format("{0:P1}", Model.IndustryData.Metrics.First(e => e.MetricName == metricName).Median)
+                    </td>
+                    <td>
+                        @String.Format("{0:P1}", Model.SectorData.Metrics.First(e => e.MetricName == metricName).Median)
+                    </td>
+                    <td>
+                        @String.Format("{0:P1}", Model.MarketData.Metrics.First(e => e.MetricName == metricName).Median)
+                    </td>
+                    <td>
+
+                        <ul>
+                            @foreach (var topCompName in Model.IndustryData.Metrics.First(e => e.MetricName == metricName).TopCompanies)
+                            {
+                                <li>@topCompName</li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+        <!-- METRICS FOR FINANCIAL STABILITY-->
+        <h5 class="display-8">Metrics for Financial Stability</h5>
+        <table class="table">
+            <tr>
+                <th></th>
+                <th>@Model.CompanyData.Ticker</th>
+                <th>@Model.IndustryData.IndustryName</th>
+                <th>@Model.SectorData.SectorName</th>
+                <th>@Model.MarketData.MarketName</th>
+                <th>Best Peers</th>
+            </tr>
+
+            @foreach (var metricName in Model.IndustryData.Metrics
+                  .Where(e => e.MetricName == "EquityRatio" ||
+                  e.MetricName == "Gearing" ||
+                  e.MetricName == "DynamicGearing" ||
+                  e.MetricName == "NetDebtoverEBITDA" ||
+                  e.MetricName == "CAPEXoverOperatingCashflow" ||
+                  e.MetricName == "CurrentAssetsoverTotalAssets" ||
+                  e.MetricName == "EquityToAssetRatio" ||
+                  e.MetricName == "EquityAndNoncurrentLiabilitiesToAssetRatio")
+                  .Select(e => e.MetricName))
+            {
+                <tr>
+                    <td>
+                        @metricName
+                    </td>
+                    <td>
+                        @String.Format("{0:P1}", MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling))
+                    </td>
+                    <td>
+                        @String.Format("{0:P1}", Model.IndustryData.Metrics.First(e => e.MetricName == metricName).Median)
+                    </td>
+                    <td>
+                        @String.Format("{0:P1}", Model.SectorData.Metrics.First(e => e.MetricName == metricName).Median)
+                    </td>
+                    <td>
+                        @String.Format("{0:P1}", Model.MarketData.Metrics.First(e => e.MetricName == metricName).Median)
+                    </td>
+                    <td>
+
+                        <ul>
+                            @foreach (var topCompName in Model.IndustryData.Metrics.First(e => e.MetricName == metricName).TopCompanies)
+                            {
+                                <li>@topCompName</li>
+                            }
+                        </ul>
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>

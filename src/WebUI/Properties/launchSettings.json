@@ -1,4 +1,4 @@
-﻿{
+{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
@@ -10,13 +10,13 @@
   "profiles": {
     "WebUI": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:7132;http://localhost:5195",
       "launchUrl": "/Company?ticker=WDAY",
+      "applicationUrl": "https://localhost:7132;http://localhost:5195",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": true
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -27,5 +27,3 @@
     }
   }
 }
-
-

@@ -60,6 +60,25 @@ namespace FundamentalData
             return (await _repository.GetCompanies(industryId)).Select(e => e.WithoutFilings());
         }
 
+        // GET: api/<controller>/5/Names
+        [HttpGet("{id}/Names", Name = "ResolveIndustrySectorMarketNameByIndustryID")]
+        public async virtual Task<IList<string>> ResolveName(int id)
+        {
+            var industry = await _repository.GetIndustry(id);
+            if (industry == null)
+                throw new ArgumentException("Industry with provided IndustryID not found.");
+
+            var sector = await _repository.GetSector(industry.SectorID);
+            if (sector == null)
+                throw new Exception("Sector not found"); // this should not happen. Industry should have a SectorID.
+
+            var market = await _repository.GetMarket(sector.MarketID);
+            if (market == null)
+                throw new Exception("Market not found"); // this should not happen. Sector should have a MarketID.
+
+            return new List<string>() { industry.Name, sector.Name, market.Name };
+        }
+
         // POST api/<controller>
         [HttpPost]
         [Consumes(MediaTypeNames.Application.Json)]

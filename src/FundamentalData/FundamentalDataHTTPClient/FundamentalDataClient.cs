@@ -306,6 +306,18 @@ public class FundamentalDataClient
         return industry;
     }
 
+    public async Task<IList<string>> ResolveIndustrySectorMarketName(int industryId)
+    {
+        List<string> names = null;
+
+        var result = await SendHttpRequest(HttpMethod.Get, "Industries/" + industryId + "/Names");
+
+        if (result.IsSuccessStatusCode)
+            names = await result.Content.ReadFromJsonAsync<List<string>>();
+
+        return names;
+    }
+
     public async Task<string> UpdateIndustry(int industryId, Industry newIndustry)
     {
         var requestParameters = new Dictionary<string, string> {

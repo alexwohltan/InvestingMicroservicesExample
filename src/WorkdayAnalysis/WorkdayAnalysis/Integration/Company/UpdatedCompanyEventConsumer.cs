@@ -73,7 +73,18 @@ public class UpdatedCompanyEventConsumer : IIntegrationEventHandler<UpdatedCompa
             });
         }
 
-        _Repository.UpdateAccount(account);
+        try
+        {
+            _Repository.UpdateAccount(account);
+        }
+        catch(Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+        }
+        finally
+        {
+
+        }
 
         return;
     }

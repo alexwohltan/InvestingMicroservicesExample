@@ -64,7 +64,7 @@ public class MarketController : Controller
     }
 
     [HttpGet("{marketName}/{sectorName}/{industryName}")]
-    public async Task<ExternalDataStructures.IndustryView> GetSector(string marketName, string sectorName, string industryName)
+    public async Task<ExternalDataStructures.IndustryView> GetIndustry(string marketName, string sectorName, string industryName)
     {
         var industryData = await _FundamentalDataClient.GetIndustry(marketName, sectorName, industryName);
 
