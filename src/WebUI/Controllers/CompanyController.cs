@@ -40,14 +40,10 @@ public class CompanyController : Controller
         return View(new CompanyBenchmarkModel() { CompanyData = company.CompanyData, IndustryData = industryBenchmark.BenchmarkData, SectorData = sectorBenchmark.BenchmarkData, MarketData = marketBenchmark.BenchmarkData });
     }
 
-    //public async Task<IActionResult> BenchmarkAsync()
-    //{
-    //    IndustryBenchmark = await _communicator.GetIndustry(CompanyView.MarketName, CompanyView.SectorName, CompanyView.IndustryName);
-    //    SectorBenchmark = await _communicator.GetSector(CompanyView.MarketName, CompanyView.SectorName);
-    //    MarketBenchmark = await _communicator.GetMarket(CompanyView.MarketName);
-
-    //    return PartialView(new CompanyBenchmarkModel() { CompanyData = CompanyView.CompanyData, IndustryData = IndustryBenchmark.BenchmarkData, SectorData = SectorBenchmark.BenchmarkData, MarketData = MarketBenchmark.BenchmarkData });
-    //}
+    public async Task<IActionResult> DiscountingFactorCalculation(int profitability, int financialStability, int capitalManagement, int businessModel, int marketConditions, int management)
+    {
+        throw new NotImplementedException();
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

@@ -9,213 +9,578 @@
     <h1 class="display-4">@Model.CompanyData.Name</h1>
 </div>
 
-
-<div>
-    <div id="GeneralInformation">
-        <h3 class="display-6">General Information</h3>
-        <table class="table table-hover">
-            <tr>
-                <th></th>
-                <th>General Information</th>
-            </tr>
-            <tr>
-                <td>ID</td>
-                <td>@Model.CompanyData.ID</td>
-            </tr>
-            <tr>
-                <td>Ticker</td>
-                <td>@Model.CompanyData.Ticker</td>
-            </tr>
-            <tr>
-                <td>Name</td>
-                <td>@Model.CompanyData.Name</td>
-            </tr>
-            <tr>
-                <td>Industry</td>
-                <td>
-                    @if (Model.IndustryData != null)
-                        @Model.IndustryData.IndustryName
-                </td>
-            </tr>
-            <tr>
-                <td>Sector</td>
-                <td>
-                    @if (Model.SectorData != null)
-                        @Model.SectorData.SectorName
-                </td>
-            </tr>
-            <tr>
-                <td>Market</td>
-                <td>
-                    @if (Model.MarketData != null)
-                        @Model.MarketData.MarketName
-                </td>
-            </tr>
-            <tr>
-                <td>Month FY End</td>
-                <td>@Model.CompanyData.MonthFyEnd</td>
-            </tr>
-            <tr>
-                <td>Number of Employees</td>
-                <td>@Model.CompanyData.NumberEmployees</td>
-            </tr>
-            <tr>
-                <td>Business Summary</td>
-                <td>@Model.CompanyData.BusinessSummary</td>
-            </tr>
-            <tr>
-                <td>Filings</td>
-                <td>
-                    @if (Model.CompanyData.Filings == null)
-                    {<p>NULL</p>}
-                    else @Model.CompanyData.Filings.Count()
-                </td>
-            </tr>
-            <tr>
-                <td>Prices</td>
-                <td>
-                    @if (Model.CompanyData.Prices == null)
-                    {<p>NULL</p>}
-                    else @Model.CompanyData.Prices.Count()
-                </td>
-            </tr>
-        </table>
-    </div>
+<div id="GeneralInformation">
+    <h3 class="display-6">General Information</h3>
+    <table class="table table-hover">
+        <tr>
+            <th></th>
+            <th>General Information</th>
+        </tr>
+        <tr>
+            <td>ID</td>
+            <td>@Model.CompanyData.ID</td>
+        </tr>
+        <tr>
+            <td>Ticker</td>
+            <td>@Model.CompanyData.Ticker</td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>@Model.CompanyData.Name</td>
+        </tr>
+        <tr>
+            <td>Industry</td>
+            <td>
+                @if (Model.IndustryData != null)
+                    @Model.IndustryData.IndustryName
+            </td>
+        </tr>
+        <tr>
+            <td>Sector</td>
+            <td>
+                @if (Model.SectorData != null)
+                    @Model.SectorData.SectorName
+            </td>
+        </tr>
+        <tr>
+            <td>Market</td>
+            <td>
+                @if (Model.MarketData != null)
+                    @Model.MarketData.MarketName
+            </td>
+        </tr>
+        <tr>
+            <td>Month FY End</td>
+            <td>@Model.CompanyData.MonthFyEnd</td>
+        </tr>
+        <tr>
+            <td>Number of Employees</td>
+            <td>@Model.CompanyData.NumberEmployees</td>
+        </tr>
+        <tr>
+            <td>Business Summary</td>
+            <td>@Model.CompanyData.BusinessSummary</td>
+        </tr>
+        <tr>
+            <td>Filings</td>
+            <td>
+                @if (Model.CompanyData.Filings == null)
+                {<p>NULL</p>}
+                else @Model.CompanyData.Filings.Count()
+            </td>
+        </tr>
+        <tr>
+            <td>Prices</td>
+            <td>
+                @if (Model.CompanyData.Prices == null)
+                {<p>NULL</p>}
+                else @Model.CompanyData.Prices.Count()
+            </td>
+        </tr>
+    </table>
 </div>
 
-
-@if (Model.CompanyData.Prices != null && Model.CompanyData.Prices.Count() > 0)
-{
-    @await Html.PartialAsync("_Chart", new ChartModel()
+<div id="StockPrices">
+    @if (Model.CompanyData.Prices != null && Model.CompanyData.Prices.Count() > 0)
     {
-        ElementId = "StockChart1",
-        Type = ChartType.line,
-        Labels = Model.CompanyData.Prices.Select(e => e.Date.ToShortDateString()),
-        Values = Model.CompanyData.Prices.Select(e => e.AdjClose),
-        ValueLabel = Model.CompanyData.Ticker
-    })
-}
-
-
-@if (Model.CompanyData.Filings != null && Model.CompanyData.Filings.Count() > 0)
-{
-    @await Html.PartialAsync("FilingsView", Model.CompanyData.Filings)
-}
-
-<div>
-    <div id="Metrics">
-        <h3 class="display-6">Metrics for Valuation</h3>
-
-        <!-- METRICS FOR PROFITABILITY AND RETURNS-->
-        <h5 class="display-8">Metrics for Profitability and Returns</h5>
-        <table class="table">
-            <tr>
-                <th></th>
-                <th>@Model.CompanyData.Ticker</th>
-                <th>@Model.IndustryData.IndustryName</th>
-                <th>@Model.SectorData.SectorName</th>
-                <th>@Model.MarketData.MarketName</th>
-                <th>Best Peers</th>
-            </tr>
-
-            @foreach (var metricName in Model.IndustryData.Metrics
-                 .Where(e => e.MetricName == "ReturnOnEquity" ||
-                 e.MetricName == "ReturnOnSales" ||
-                 e.MetricName == "EBITMargin" ||
-                 e.MetricName == "EBITDAMargin" ||
-                 e.MetricName == "CapitalTurnover" ||
-                 e.MetricName == "TotalReturnOnInvestment" ||
-                 e.MetricName == "ReturnOnCapitalEmployed" ||
-                 e.MetricName == "CashflowTurnoverRatio")
-                 .Select(e => e.MetricName))
-            {
-                <tr>
-                    <td>
-                        @metricName
-                    </td>
-                    <td>
-                        @String.Format("{0:P1}", MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling))
-                    </td>
-                    <td>
-                        @String.Format("{0:P1}", Model.IndustryData.Metrics.First(e => e.MetricName == metricName).Median)
-                    </td>
-                    <td>
-                        @String.Format("{0:P1}", Model.SectorData.Metrics.First(e => e.MetricName == metricName).Median)
-                    </td>
-                    <td>
-                        @String.Format("{0:P1}", Model.MarketData.Metrics.First(e => e.MetricName == metricName).Median)
-                    </td>
-                    <td>
-
-                        <ul>
-                            @foreach (var topCompName in Model.IndustryData.Metrics.First(e => e.MetricName == metricName).TopCompanies)
-                            {
-                                <li>@topCompName</li>
-                            }
-                        </ul>
-                    </td>
-                </tr>
-            }
-
-        </table>
-
-        <!-- METRICS FOR FINANCIAL STABILITY-->
-        <h5 class="display-8">Metrics for Financial Stability</h5>
-        <table class="table">
-            <tr>
-                <th></th>
-                <th>@Model.CompanyData.Ticker</th>
-                <th>@Model.IndustryData.IndustryName</th>
-                <th>@Model.SectorData.SectorName</th>
-                <th>@Model.MarketData.MarketName</th>
-                <th>Best Peers</th>
-            </tr>
-
-            @foreach (var metricName in Model.IndustryData.Metrics
-                 .Where(e => e.MetricName == "EquityRatio" ||
-                 e.MetricName == "Gearing" ||
-                 e.MetricName == "DynamicGearing" ||
-                 e.MetricName == "NetDebtoverEBITDA" ||
-                 e.MetricName == "CAPEXoverOperatingCashflow" ||
-                 e.MetricName == "CurrentAssetsoverTotalAssets" ||
-                 e.MetricName == "EquityToAssetRatio" ||
-                 e.MetricName == "EquityAndNoncurrentLiabilitiesToAssetRatio")
-                 .Select(e => e.MetricName))
-            {
-                <tr>
-                    <td>
-                        @metricName
-                    </td>
-                    <td>
-                        @String.Format("{0:P1}", MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling))
-                    </td>
-                    <td>
-                        @String.Format("{0:P1}", Model.IndustryData.Metrics.First(e => e.MetricName == metricName).Median)
-                    </td>
-                    <td>
-                        @String.Format("{0:P1}", Model.SectorData.Metrics.First(e => e.MetricName == metricName).Median)
-                    </td>
-                    <td>
-                        @String.Format("{0:P1}", Model.MarketData.Metrics.First(e => e.MetricName == metricName).Median)
-                    </td>
-                    <td>
-
-                        <ul>
-                            @foreach (var topCompName in Model.IndustryData.Metrics.First(e => e.MetricName == metricName).TopCompanies)
-                            {
-                                <li>@topCompName</li>
-                            }
-                        </ul>
-                    </td>
-                </tr>
-            }
-
-        </table>
-    </div>
+        @await Html.PartialAsync("_Chart", new ChartModel()
+        {
+            ElementId = "StockChart1",
+            Type = ChartType.line,
+            Labels = Model.CompanyData.Prices.Select(e => e.Date.ToShortDateString()),
+            Values = Model.CompanyData.Prices.Select(e => e.AdjClose),
+            ValueLabel = Model.CompanyData.Ticker
+        })
+    }
 </div>
+
+<div id="AnnualReports">
+    @if (Model.CompanyData.Filings != null && Model.CompanyData.Filings.Count() > 0)
+    {
+        @await Html.PartialAsync("_FilingsView", Model.CompanyData.Filings)
+    }
+</div>
+
+<hr />
+<br />
+<br />
+
+<div id="Valuation">
+    <form id="EvaluationForm">
+        <div id="Metrics">
+            <h3 class="display-6">Valuation</h3>
+
+
+            <!-- PROFITABILITY AND RETURNS-->
+            <div>
+                <h5 class="display-8">Profitability and Returns</h5>
+
+                <div id="MetricsProfitability">
+
+                    <table class="table">
+                        <tr>
+                            <th></th>
+                            <th>@Model.CompanyData.Ticker</th>
+                            <th>@Model.IndustryData.IndustryName</th>
+                            <th>@Model.SectorData.SectorName</th>
+                            <th>@Model.MarketData.MarketName</th>
+                            <th>Best Peers</th>
+                        </tr>
+
+                        @foreach (var metricName in Model.IndustryData.Metrics
+.Where(e => e.MetricName == "ReturnOnEquity" ||
+e.MetricName == "ReturnOnSales" ||
+e.MetricName == "EBITMargin" ||
+e.MetricName == "EBITDAMargin" ||
+e.MetricName == "CapitalTurnover" ||
+e.MetricName == "TotalReturnOnInvestment" ||
+e.MetricName == "ReturnOnCapitalEmployed" ||
+e.MetricName == "CashflowTurnoverRatio")
+.Select(e => e.MetricName))
+                        {
+
+                            if (MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling) != null)
+                            {
+
+                                decimal metricValueOfCompany = ((decimal)(MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling)));
+
+                                <tr>
+                                    <td>
+                                        @metricName
+                                    </td>
+                                    <td>
+                                        @String.Format("{0:P1}", metricValueOfCompany)
+                                    </td>
+                                    <td>
+                                        <p>Median: @String.Format("{0:P1}", Model.IndustryData.Metrics.First(e => e.MetricName == metricName).Median)</p>
+                                        <p>@Model.CompanyData.Ticker is better than <b>@Model.IndustryData.Metrics.First(e => e.MetricName == metricName).GetPercentileForValue(metricValueOfCompany)%</b> in the @Model.IndustryData.IndustryName Industry</p>
+                                    </td>
+                                    <td>
+                                        <p>Median: @String.Format("{0:P1}", Model.SectorData.Metrics.First(e => e.MetricName == metricName).Median)</p>
+                                        <p>@Model.CompanyData.Ticker is better than <b>@Model.SectorData.Metrics.First(e => e.MetricName == metricName).GetPercentileForValue(metricValueOfCompany)%</b> in the @Model.SectorData.SectorName Sector</p>
+                                    </td>
+                                    <td>
+                                        <p>Median: @String.Format("{0:P1}", Model.MarketData.Metrics.First(e => e.MetricName == metricName).Median)</p>
+                                        <p>@Model.CompanyData.Ticker is better than <b>@Model.MarketData.Metrics.First(e => e.MetricName == metricName).GetPercentileForValue(metricValueOfCompany)%</b> in the @Model.MarketData.MarketName market</p>
+                                    </td>
+                                    <td>
+
+                                        <ul>
+                                            @foreach (var topCompName in Model.IndustryData.Metrics.First(e => e.MetricName == metricName).TopCompanies)
+                                            {
+                                                <li>@topCompName</li>
+                                            }
+                                        </ul>
+                                    </td>
+                                </tr>
+                            }
+
+                        }
+
+                    </table>
+                </div>
+
+                <p>
+                    The overall idea behind our discounting factor is that we have a risk free return and if we invest our money we will need to gain more than this otherwise we would invest into the risk-free alternative.
+                    We want to find the return rate at which we think that the possible reward for this prospective investment outweighs the risk. Good companies (unrisky companies) have a low number (low discounting factor / opportunity cost) and bad companies have a high number.
+                    The best companies will only add a little bit to our discounting factor, good companies a little bit more, average and bad companies will add the most.
+
+                </p>
+                <p>
+                    At first we will start with the valuation of the Profitability of the company. Use the information above to evaluate the company. Below you can find some information what the metrics show you. (If some metrics are missig, this means that this metric is not available for this company.)
+                </p>
+                <ul>
+                    <li><p><b>Return on Equity</b> Companies in SP500: Median -> 15.2 % About 72 % of all companies are below 25%</p></li>
+                    <li><p><b>Return on Sales</b> Monopoly Cost Management</p></li>
+                    <li><p><b>EBIT/EBITDA Margin</b> For comparing companies in same industries/sectors under different tax authorities.</p></li>
+                    <li><p><b>Capital Turnover</b> How much revenue is generated by 1 Dollar capital? For comparing companies in same industries/sectors only. Highly dependent on business model. Also good for examination over time.</p></li>
+                    <li><p><b>Total Return on Investment</b> How much are the investors (shareholders + creditors) getting out of their investment?</p></li>
+                    <li><p><b>Return on Capital Employed</b> How much money is generated by the capital used for operations?</p></li>
+                    <li><p><b>Cashflow Turnover Ratio</b> How much cashflow is generated by 1 Dollar revenue? More = better</p></li>
+                </ul>
+
+                <br />
+                <div class="form-group col-md-6 offset-md-3" aria-describedby="profitabilityHelp">
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="profitabilityOptions" id="profitabilityRadio1" value="1" />
+                        <label class="form-check-label" for="profitabilityRadio1">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="profitabilityOptions" id="profitabilityRadio2" value="2" />
+                        <label class="form-check-label" for="profitabilityRadio2">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="profitabilityOptions" id="profitabilityRadio3" value="3" checked />
+                        <label class="form-check-label" for="profitabilityRadio3">3</label>
+                    </div>
+                    <small id="profitabilityHelp" class="form-text text-muted">Select a number between 1 and 3. 1 = top, 2 = good, 3 = average/bad</small>
+                </div>
+                <br />
+
+                <hr />
+            </div>
+
+
+
+            <!-- METRICS FOR FINANCIAL STABILITY-->
+            <div>
+                <h5 class="display-8">Financial Stability</h5>
+
+                <div id="MetricsFinancialStability">
+
+                    <table class="table">
+                        <tr>
+                            <th></th>
+                            <th>@Model.CompanyData.Ticker</th>
+                            <th>@Model.IndustryData.IndustryName</th>
+                            <th>@Model.SectorData.SectorName</th>
+                            <th>@Model.MarketData.MarketName</th>
+                            <th>Best Peers</th>
+                        </tr>
+
+                        @foreach (var metricName in Model.IndustryData.Metrics
+                           .Where(e => e.MetricName == "EquityRatio" ||
+                           e.MetricName == "Gearing" ||
+                           e.MetricName == "DynamicGearing" ||
+                           e.MetricName == "NetDebtoverEBITDA" ||
+                           e.MetricName == "CAPEXoverOperatingCashflow" ||
+                           e.MetricName == "CurrentAssetsoverTotalAssets" ||
+                           e.MetricName == "EquityToAssetRatio" ||
+                           e.MetricName == "EquityAndNoncurrentLiabilitiesToAssetRatio")
+                           .Select(e => e.MetricName))
+                        {
+
+                            if (MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling) != null)
+                            {
+
+                                decimal metricValueOfCompany = ((decimal)(MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling)));
+
+                                <tr>
+                                    <td>
+                                        @metricName
+                                    </td>
+                                    <td>
+                                        @String.Format("{0:P1}", metricValueOfCompany)
+                                    </td>
+                                    <td>
+                                        <p>Median: @String.Format("{0:P1}", Model.IndustryData.Metrics.First(e => e.MetricName == metricName).Median)</p>
+                                        <p>@Model.CompanyData.Ticker is better than <b>@Model.IndustryData.Metrics.First(e => e.MetricName == metricName).GetPercentileForValue(metricValueOfCompany)%</b> in the @Model.IndustryData.IndustryName Industry</p>
+                                    </td>
+                                    <td>
+                                        <p>Median: @String.Format("{0:P1}", Model.SectorData.Metrics.First(e => e.MetricName == metricName).Median)</p>
+                                        <p>@Model.CompanyData.Ticker is better than <b>@Model.SectorData.Metrics.First(e => e.MetricName == metricName).GetPercentileForValue(metricValueOfCompany)%</b> in the @Model.SectorData.SectorName Sector</p>
+                                    </td>
+                                    <td>
+                                        <p>Median: @String.Format("{0:P1}", Model.MarketData.Metrics.First(e => e.MetricName == metricName).Median)</p>
+                                        <p>@Model.CompanyData.Ticker is better than <b>@Model.MarketData.Metrics.First(e => e.MetricName == metricName).GetPercentileForValue(metricValueOfCompany)%</b> in the @Model.MarketData.MarketName market</p>
+                                    </td>
+                                    <td>
+
+                                        <ul>
+                                            @foreach (var topCompName in Model.IndustryData.Metrics.First(e => e.MetricName == metricName).TopCompanies)
+                                            {
+                                                <li>@topCompName</li>
+                                            }
+                                        </ul>
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                    </table>
+                </div>
+
+                <p>
+                    Next we will see if the company is financially stable. Everything is useless if the company goes bankrupt.
+                </p>
+                <ul>
+                    <li><p><b>Equity Ratio</b> More = safer</p></li>
+                    <li><p><b>Gearing</b> How much is the company in debt?</p></li>
+                    <li><p><b>Dynamic Gearing</b> How long until company is without debt? 2 years is good. More than 5 years is critical.</p></li>
+                    <li><p><b>Net Debt/EBITDA</b> Less than 1 = good. More than 3 = critical. More than 8 = will probably not be able to pay debt with cashflow.</p></li>
+                    <li><p><b>CAPEX over Operating Cashflow</b> How much needs the company to invest to keep their business model running?</p></li>
+                    <li><p><b>Current Assets over Total Assets</b> If this ratio is high the company is flexible and can adapt to changes in the market quickly.</p></li>
+                    <li><p><b>Equity to Asset Ratio</b> Should be at least between 70% and 90%.</p></li>
+                    <li><p><b>Equity and noncurrent Liabilities to Asset Ratio</b> Should be above 100%. 130% is good.</p></li>
+                </ul>
+
+                <br />
+                <div class="form-group col-md-6 offset-md-3" aria-describedby="financialStabilityHelp">
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="financialStabilityOptions" id="financialStabilityRadio1" value="1" />
+                        <label class="form-check-label" for="financialStabilityRadio1">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="financialStabilityOptions" id="financialStabilityRadio2" value="2" />
+                        <label class="form-check-label" for="financialStabilityRadio2">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="financialStabilityOptions" id="financialStabilityRadio3" value="3" checked />
+                        <label class="form-check-label" for="financialStabilityRadio3">3</label>
+                    </div>
+                    <small id="financialStabilityHelp" class="form-text text-muted">Select a number between 1 and 3. 1 = top, 2 = good, 3 = average/bad</small>
+                </div>
+                <br />
+
+                <hr />
+
+            </div>
+
+            <!-- WORKING CAPITAL MANAGEMENT-->
+            <div>
+                <h5 class="display-8">Working Capital Management</h5>
+                <div id="MetricsCapitalManagement">
+                    <table class="table">
+                        <tr>
+                            <th></th>
+                            <th>@Model.CompanyData.Ticker</th>
+                            <th>@Model.IndustryData.IndustryName</th>
+                            <th>@Model.SectorData.SectorName</th>
+                            <th>@Model.MarketData.MarketName</th>
+                            <th>Best Peers</th>
+                        </tr>
+
+                        @foreach (var metricName in Model.IndustryData.Metrics
+                           .Where(e => e.MetricName == "DebtorTerms" ||
+                           e.MetricName == "DaysPayableOutstanding" ||
+                           e.MetricName == "Liquidity1Degree" ||
+                           e.MetricName == "Liquidity2Degree" ||
+                           e.MetricName == "Liquidity3Degree" ||
+                           e.MetricName == "InventoryIntensity")
+                           .Select(e => e.MetricName))
+                        {
+
+                            if (MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling) != null)
+                            {
+
+                                decimal metricValueOfCompany = ((decimal)(MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling)));
+
+                                <tr>
+                                    <td>
+                                        @metricName
+                                    </td>
+                                    <td>
+                                        @String.Format("{0:P1}", metricValueOfCompany)
+                                    </td>
+                                    <td>
+                                        <p>Median: @String.Format("{0:P1}", Model.IndustryData.Metrics.First(e => e.MetricName == metricName).Median)</p>
+                                        <p>@Model.CompanyData.Ticker is better than <b>@Model.IndustryData.Metrics.First(e => e.MetricName == metricName).GetPercentileForValue(metricValueOfCompany)%</b> in the @Model.IndustryData.IndustryName Industry</p>
+                                    </td>
+                                    <td>
+                                        <p>Median: @String.Format("{0:P1}", Model.SectorData.Metrics.First(e => e.MetricName == metricName).Median)</p>
+                                        <p>@Model.CompanyData.Ticker is better than <b>@Model.SectorData.Metrics.First(e => e.MetricName == metricName).GetPercentileForValue(metricValueOfCompany)%</b> in the @Model.SectorData.SectorName Sector</p>
+                                    </td>
+                                    <td>
+                                        <p>Median: @String.Format("{0:P1}", Model.MarketData.Metrics.First(e => e.MetricName == metricName).Median)</p>
+                                        <p>@Model.CompanyData.Ticker is better than <b>@Model.MarketData.Metrics.First(e => e.MetricName == metricName).GetPercentileForValue(metricValueOfCompany)%</b> in the @Model.MarketData.MarketName market</p>
+                                    </td>
+                                    <td>
+
+                                        <ul>
+                                            @foreach (var topCompName in Model.IndustryData.Metrics.First(e => e.MetricName == metricName).TopCompanies)
+                                            {
+                                                <li>@topCompName</li>
+                                            }
+                                        </ul>
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                    </table>
+                </div>
+
+                <p>
+                    A profitable business is nothing if the cash runs out. We need to make sure that our prospective investment handles their cash well and they will not run into any problems.
+                </p>
+                <ul>
+                    <li><p><b>Debtor Terms and Days payable outstanding</b> Debtor Terms < Days payable outstanding (should be - the more the better)</p></li>
+                    <li><p><b>Liquidity 1st Degree</b> Should be about 10-20%. Can be higher if business model requires this.</p></li>
+                    <li><p><b>Liquidity 2nd Degree</b> Should be about 90-100%.</p></li>
+                    <li><p><b>Liquidity 3rd Degree</b> Should be about 120-170%.</p></li>
+                    <li><p><b>Inventory Intensity</b> Inventories are the hardest current asset to convert to cash. If the inventories are too high, the rentability will suffer.</p></li>
+                </ul>
+
+                <br />
+                <div class="form-group col-md-6 offset-md-3" aria-describedby="capitalManagementHelp">
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="capitalManagementOptions" id="capitalManagementRadio1" value="1" />
+                        <label class="form-check-label" for="capitalManagementRadio1">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="capitalManagementOptions" id="capitalManagementRadio2" value="2" />
+                        <label class="form-check-label" for="capitalManagementRadio2">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="capitalManagementOptions" id="capitalManagementRadio3" value="3" checked />
+                        <label class="form-check-label" for="capitalManagementRadio3">3</label>
+                    </div>
+                    <small id="capitalManagementHelp" class="form-text text-muted">Select a number between 1 and 3. 1 = top, 2 = good, 3 = average/bad</small>
+                </div>
+                <br />
+
+                <hr />
+
+            </div>
+
+            <!-- Business Model-->
+            <div>
+                <h5 class="display-8">Business Model</h5>
+                <p>We need to understand the business. Focus on the industries you understand. Are you able to explain their business model?</p>
+                <p>Does the business fall into one of these categories?</p>
+                <ul>
+                    <li>Produces short tem products with a known name (e.g. razor blades)</li>
+                    <li>Products that are always bought (or have to be bought) (e.g. glass bottles are needed also in bear markets)</li>
+                    <li>Products that can be sold with a high premium because of brand, technology or quality (e.g. luxury watches)</li>
+                    <li>Products that are in demand because of externals effects or regulations (e.g. fire-trucks)</li>
+                    <li>Companies that can scale easily without significatn additional costs (e.g. software or pharmaceuticals)</li>
+                    <li>The cheapest product on the market (e.g. Amazon or Walmart)</li>
+                    <li>Companies that profit from networks(e.g. LinkedIn or Willhaben)</li>
+                </ul>
+
+                <br />
+                <div class="form-group col-md-6 offset-md-3" aria-describedby="businessModelHelp">
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="businessModelOptions" id="businessModelRadio1" value="1" />
+                        <label class="form-check-label" for="businessModelRadio1">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="businessModelOptions" id="businessModelRadio2" value="2" />
+                        <label class="form-check-label" for="businessModelRadio2">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="businessModelOptions" id="businessModelRadio3" value="3" checked />
+                        <label class="form-check-label" for="businessModelRadio3">3</label>
+                    </div>
+                    <small id="businessModelHelp" class="form-text text-muted">Select a number between 1 and 3. 1 = top, 2 = good, 3 = average/bad</small>
+                </div>
+                <br />
+            </div>
+
+            <!-- Future / Competitive Landscape-->
+            <div>
+                <h5 class="display-8">Company's future / competitive landscape</h5>
+                <p>Are there political restraints? Can this change quickly?</p>
+                <p>Is the industry promising? Where is it headed?</p>
+                <p>How is the company performing compared to its competitors? Growing market share? Do they have a "moat" against their competition?</p>
+
+                <br />
+                <div class="form-group col-md-6 offset-md-3" aria-describedby="competitionHelp">
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="competitionOptions" id="competitionRadio1" value="1" />
+                        <label class="form-check-label" for="competitionRadio1">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="competitionOptions" id="competitionRadio2" value="2" />
+                        <label class="form-check-label" for="competitionRadio2">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="competitionOptions" id="competitionRadio3" value="3" checked />
+                        <label class="form-check-label" for="competitionRadio3">3</label>
+                    </div>
+                    <small id="competitionHelp" class="form-text text-muted">Select a number between 1 and 3. 1 = top, 2 = good, 3 = average/bad</small>
+                </div>
+                <br />
+            </div>
+
+            <!-- Management-->
+            <div>
+                <h5 class="display-8">Management / Leadership</h5>
+                <p>Is the management competent and straight up?</p>
+                <ul>
+                    <li>Low workforce turnover (especially in management team)</li>
+                    <li>Headquarters where the customer is or where the production resides</li>
+                    <li>No excessive compensation. Long-term targets/bonuses to ensure sustainable decisions.</li>
+                    <li>Board of directors knows the trade</li>
+                    <li>High rate of shareholders in the company</li>
+                </ul>
+
+                <br />
+                <div class="form-group col-md-6 offset-md-3" aria-describedby="managementHelp">
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="managementOptions" id="managementRadio1" value="1" />
+                        <label class="form-check-label" for="managementRadio1">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="managementOptions" id="managementRadio2" value="2" />
+                        <label class="form-check-label" for="managementRadio2">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input onchange="discountingFactorInputChanged(this)" class="form-check-input" type="radio" name="managementOptions" id="managementRadio3" value="3" checked />
+                        <label class="form-check-label" for="managementRadio3">3</label>
+                    </div>
+                    <small id="managementHelp" class="form-text text-muted">Select a number between 1 and 3. 1 = top, 2 = good, 3 = average/bad</small>
+                </div>
+                <br />
+            </div>
+
+
+            <div>
+                <h5 class="display-8">Discounting Factor</h5>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col"><input onchange="discountingFactorInputChanged(this)" id="riskFreeInput" type="number" min="0" max="20" step="0.5" value="8" /></div>
+                        <div class="col"><p> + </p></div>
+                        <div class="col"><input id="profitabilityInput" type="number" value="3" min="1" max="3" step="1" disabled /></div>
+                        <div class="col"><p> + </p></div>
+                        <div class="col"><input id="financialStabilityInput" type="number" value="3" min="1" max="3" step="1" disabled /></div>
+                        <div class="col"><p> + </p></div>
+                        <div class="col"><input id="capitalManagementInput" type="number" value="3" min="1" max="3" step="1" disabled /></div>
+                        <div class="col"><p> + </p></div>
+                        <div class="col"><input id="businessModelInput" type="number" value="3" min="1" max="3" step="1" disabled /></div>
+                        <div class="col"><p> + </p></div>
+                        <div class="col"><input id="competitionInput" type="number" value="3" min="1" max="3" step="1" disabled /></div>
+                        <div class="col"><p> + </p></div>
+                        <div class="col"><input id="managementInput" type="number" value="3" min="1" max="3" step="1" disabled /></div>
+                        <div class="col"><p> = </p></div>
+                        <div class="col"><input id="discountingFactorInput" type="text" value="26%" disabled /></div>
+                    </div>
+                    <label for="riskFreeInput">Risk-Free Return-Rate + Profitability + Stability + Cap. Mgmt. + Business + Competition + Management = Discounting Factor</label>
+                </div>
+            </div>
+
+            <script>
+                function discountingFactorInputChanged(sender) {
+                    var evaluationName = sender.id.replace('Radio1', '').replace('Radio2', '').replace('Radio3', '')
+
+                    switch (evaluationName) {
+                        case "profitability":
+                            document.getElementById("profitabilityInput").value = sender.value;
+                            break;
+                        case "financialStability":
+                            document.getElementById("financialStabilityInput").value = sender.value;
+                            break;
+                        case "capitalManagement":
+                            document.getElementById("capitalManagementInput").value = sender.value;
+                            break;
+                        case "businessModel":
+                            document.getElementById("businessModelInput").value = sender.value;
+                            break;
+                        case "competition":
+                            document.getElementById("competitionInput").value = sender.value;
+                            break;
+                        case "management":
+                            document.getElementById("managementInput").value = sender.value;
+                            break;
+                    }
+
+                    document.getElementById("discountingFactorInput").value = (parseFloat(document.getElementById("riskFreeInput").value) +
+                        parseInt(document.getElementById("profitabilityInput").value) +
+                        parseInt(document.getElementById("financialStabilityInput").value) +
+                        parseInt(document.getElementById("capitalManagementInput").value) +
+                        parseInt(document.getElementById("businessModelInput").value) +
+                        parseInt(document.getElementById("competitionInput").value) +
+                        parseInt(document.getElementById("managementInput").value)) + '%';
+                }
+            </script>
+
+        </div>
+    </form>
+</div>
+<hr />
 
 <div id="UpdateButton">
-    <button type="button" onclick="updateCompany()" class="btn btn-light btn-sm" id="btn-update-company">Update @Model.CompanyData.Ticker</button>
+    <button type="button" onclick="updateCompany()" class="btn btn-light btn-sm" id="btn-update-company">Update @Model.CompanyData.Ticker Company Information</button>
     <script>
 
     function updateCompany() {

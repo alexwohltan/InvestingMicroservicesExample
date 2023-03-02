@@ -116,6 +116,34 @@
             RecalculateValues();
         }
 
+        /// <summary>
+        /// Gives the percentile in which a number would be in this series.
+        /// </summary>
+        /// <param name="value">the number that should be compared to the values.</param>
+        /// <returns>number of percentile -> returns 25 for Percentile25, 0 = less than 1% of the values are higher than the provided value</returns>
+        public int GetPercentileForValue(decimal value)
+        {
+            if (value >= Percentile99)
+                return 99;
+            if (value >= Percentile95)
+                return 95;
+            if (value >= Percentile90)
+                return 90;
+            if (value >= Percentile75)
+                return 75;
+            if (value >= Median)
+                return 50;
+            if (value >= Percentile25)
+                return 25;
+            if (value >= Percentile10)
+                return 10;
+            if (value >= Percentile05)
+                return 5;
+            if (value >= Percentile01)
+                return 1;
+            return 0;
+        }
+
         private void RecalculateValues()
         {
             if (RawDataPoints == null)
@@ -143,7 +171,7 @@
 
             TopCompanies = RawDataPoints.Where(e => top5Values.Contains(e.Value)).Select(e => e.CompanyName).ToList();
             WorstCompanies = RawDataPoints.Where(e => worst5Values.Contains(e.Value)).Select(e => e.CompanyName).ToList();
-    }
+        }
 
         private decimal? GetMetricValueFromCompanyFundamentals(CompanyFundamentals company)
         {
