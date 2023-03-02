@@ -1,0 +1,314 @@
+﻿@model IList<DataStructures.FundamentalData.Filing>
+
+@{
+    DataStructures.FundamentalData.Filing MostRecentFiling = Model.OrderByDescending(e => e.FilingDate).First();
+    DataStructures.FundamentalData.Filing? Filing2 = Model.Count() >= 2 ? Model.OrderByDescending(e => e.FilingDate).ToList()[1] : null;
+    DataStructures.FundamentalData.Filing? Filing3 = Model.Count() >= 3 ? Model.OrderByDescending(e => e.FilingDate).ToList()[2] : null;
+    DataStructures.FundamentalData.Filing? Filing4 = Model.Count() >= 4 ? Model.OrderByDescending(e => e.FilingDate).ToList()[3] : null;
+}
+
+<div id="FutureFilingsView">
+    <h4 class="display-7">2. Future Cashflows</h4>
+    <p>We will now project the future cashflows of the company. For this, we will project the next 10 years. After 10 years we will use a calculated number (terminal value).</p>
+    <p>A linear growth of each of our values is already calculated. When you change a value, the following values will adjust (growing with the calculated growth rate).</p>
+
+    <table class="table small table-hover">
+        <tr>
+            <th></th>
+            @if (Filing4 != null)
+            {
+                <th>@Filing4.FilingDate.Year</th>
+            }
+            @if (Filing3 != null)
+            {
+                <th>@Filing3.FilingDate.Year</th>
+            }
+            @if (Filing2 != null)
+            {
+                <th>@Filing2.FilingDate.Year</th>
+            }
+            <th>@MostRecentFiling.FilingDate.Year</th>
+            <th>@(MostRecentFiling.FilingDate.Year + 1)</th>
+            <th>@(MostRecentFiling.FilingDate.Year + 2)</th>
+            <th>@(MostRecentFiling.FilingDate.Year + 3)</th>
+            <th>@(MostRecentFiling.FilingDate.Year + 4)</th>
+            <th>@(MostRecentFiling.FilingDate.Year + 5)</th>
+            <th>@(MostRecentFiling.FilingDate.Year + 6)</th>
+            <th>@(MostRecentFiling.FilingDate.Year + 7)</th>
+            <th>@(MostRecentFiling.FilingDate.Year + 8)</th>
+            <th>@(MostRecentFiling.FilingDate.Year + 9)</th>
+            <th>@(MostRecentFiling.FilingDate.Year + 10)</th>
+        </tr>
+        <tr>
+            <td>Revenue</td>
+            @if (Filing4 != null)
+            {
+                <td>@((Filing4.IncomeStatement.Revenue / 1000000).ToString("#,##0"))</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@((Filing3.IncomeStatement.Revenue / 1000000).ToString("#,##0"))</td>
+            }
+            @if (Filing2 != null)
+            {
+                <td>@((Filing2.IncomeStatement.Revenue / 1000000).ToString("#,##0"))</td>
+            }
+            <td>@((MostRecentFiling.IncomeStatement.Revenue / 1000000).ToString("#,##0"))</td>
+            <td><input id="revenueInput1" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="revenueInput2" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="revenueInput3" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="revenueInput4" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="revenueInput5" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="revenueInput6" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="revenueInput7" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="revenueInput8" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="revenueInput9" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="revenueInput10" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+        </tr>
+        <tr>
+            <td>Gross Profit</td>
+            @if (Filing4 != null)
+            {
+                <td>@((Filing4.IncomeStatement.GrossProfit / 1000000).ToString("#,##0"))</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@((Filing3.IncomeStatement.GrossProfit / 1000000).ToString("#,##0"))</td>
+            }
+            @if (Filing2 != null)
+            {
+                <td>@((Filing2.IncomeStatement.GrossProfit / 1000000).ToString("#,##0"))</td>
+            }
+            <td>@((MostRecentFiling.IncomeStatement.GrossProfit / 1000000).ToString("#,##0"))</td>
+            <td><input id="grossProfitInput1" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="grossProfitInput2" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="grossProfitInput3" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="grossProfitInput4" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="grossProfitInput5" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="grossProfitInput6" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="grossProfitInput7" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="grossProfitInput8" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="grossProfitInput9" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="grossProfitInput10" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+        </tr>
+        <tr>
+            <td>Net Income</td>
+            @if (Filing4 != null)
+            {
+                <td>@((Filing4.IncomeStatement.NetIncome / 1000000).ToString("#,##0"))</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@((Filing3.IncomeStatement.NetIncome / 1000000).ToString("#,##0"))</td>
+            }
+            @if (Filing2 != null)
+            {
+                <td>@((Filing2.IncomeStatement.NetIncome / 1000000).ToString("#,##0"))</td>
+            }
+            <td>@((MostRecentFiling.IncomeStatement.NetIncome / 1000000).ToString("#,##0"))</td>
+            <td><input id="netIncomeInput1" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="netIncomeInput2" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="netIncomeInput3" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="netIncomeInput4" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="netIncomeInput5" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="netIncomeInput6" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="netIncomeInput7" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="netIncomeInput8" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="netIncomeInput9" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="netIncomeInput10" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+        </tr>
+        <tr>
+            <td>Operating Cashflow</td>
+            @if (Filing4 != null)
+            {
+                <td>@((Filing4.CashflowStatement.NetCashfromOperatingActivities / 1000000).ToString("#,##0"))</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@((Filing3.CashflowStatement.NetCashfromOperatingActivities / 1000000).ToString("#,##0"))</td>
+            }
+            @if (Filing2 != null)
+            {
+                <td>@((Filing2.CashflowStatement.NetCashfromOperatingActivities / 1000000).ToString("#,##0"))</td>
+            }
+            <td>@((MostRecentFiling.CashflowStatement.NetCashfromOperatingActivities / 1000000).ToString("#,##0"))</td>
+            <td><input id="operatingCashflowInput1" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="operatingCashflowInput2" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="operatingCashflowInput3" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="operatingCashflowInput4" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="operatingCashflowInput5" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="operatingCashflowInput6" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="operatingCashflowInput7" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="operatingCashflowInput8" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="operatingCashflowInput9" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="operatingCashflowInput10" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+        </tr>
+        <tr>
+            <td>Free Cashflow</td>
+            @if (Filing4 != null)
+            {
+                <td>@((Filing4.CashflowStatement.FreeCashFlow / 1000000).ToString("#,##0"))</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@((Filing3.CashflowStatement.FreeCashFlow / 1000000).ToString("#,##0"))</td>
+            }
+            @if (Filing2 != null)
+            {
+                <td>@((Filing2.CashflowStatement.FreeCashFlow / 1000000).ToString("#,##0"))</td>
+            }
+            <td>@((MostRecentFiling.CashflowStatement.FreeCashFlow / 1000000).ToString("#,##0"))</td>
+            <td><input id="freeCashflowInput1" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="freeCashflowInput2" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="freeCashflowInput3" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="freeCashflowInput4" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="freeCashflowInput5" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="freeCashflowInput6" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="freeCashflowInput7" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="freeCashflowInput8" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="freeCashflowInput9" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="freeCashflowInput10" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+        </tr>
+    </table>
+    <p>Numbers in Millions.</p>
+
+</div>
+
+<script>
+
+    onStartCalculation();
+
+    function onStartCalculation() {
+        revenueCalculation();
+        grossProfitCalculation();
+        netIncomeCalculation();
+        operatingCashflowCalculation();
+        freeCashflowCalculation();
+    }
+
+    function xArrayFunction() {
+        return [@string.Join(",", Model.OrderBy(e => e.FilingDate).Select(e => e.FiscalYear))];
+    }
+    function revenueArray() {
+        return [@string.Join(",", Model.OrderBy(e => e.FilingDate).Select(e => e.IncomeStatement.Revenue))];
+    }
+    function grossProfitArray() {
+        return [@string.Join(",", Model.OrderBy(e => e.FilingDate).Select(e => e.IncomeStatement.GrossProfit))];
+    }
+    function netIncomeArray() {
+        return [@string.Join(",", Model.OrderBy(e => e.FilingDate).Select(e => e.IncomeStatement.NetIncome))];
+    }
+    function operatingCashflowArray() {
+        return [@string.Join(",", Model.OrderBy(e => e.FilingDate).Select(e => e.CashflowStatement.NetCashfromOperatingActivities))];
+    }
+    function freeCashflowArray() {
+        return [@string.Join(",", Model.OrderBy(e => e.FilingDate).Select(e => e.CashflowStatement.FreeCashFlow))];
+    }
+
+    function revenueCalculation() {
+        var propertyName = "revenue";
+        futureFilingCalculationOnStart(revenueArray(), propertyName);
+    }
+    function grossProfitCalculation() {
+        var propertyName = "grossProfit";
+        futureFilingCalculationOnStart(grossProfitArray(), propertyName);
+    }
+    function netIncomeCalculation() {
+        var propertyName = "netIncome";
+        futureFilingCalculationOnStart(netIncomeArray(), propertyName);
+    }
+    function operatingCashflowCalculation() {
+        var propertyName = "operatingCashflow";
+        futureFilingCalculationOnStart(operatingCashflowArray(), propertyName);
+    }
+    function freeCashflowCalculation() {
+        var propertyName = "freeCashflow";
+        futureFilingCalculationOnStart(freeCashflowArray(), propertyName);
+    }
+
+
+    function futureFilingCalculationOnStart(yArray, propertyName) {
+        var xArray = xArrayFunction();
+
+        var currentYear = @MostRecentFiling.FiscalYear;
+
+        for (let i = 0; i < 10; i++) {
+            var offset = i + 1;
+            var workingYear = currentYear + offset;
+
+            var inputName = propertyName + "Input" + offset;
+
+            var slope = linearRegressionSlope(xArray, yArray);
+            var intercept = linearRegressionIntercept(xArray, yArray, slope);
+            var calculatedValue = workingYear * slope + intercept;
+
+            document.getElementById(inputName).value = Math.round(calculatedValue / 1000000);
+        }
+    }
+
+    function filingCalculationChanged(sender) {
+        var senderColumn = sender.id.slice(-1);
+        var senderCategory = sender.id.replace(senderColumn, "");
+
+        if (senderColumn < 10) {
+            
+            var slope = 0;
+
+            switch (senderCategory) {
+                case "revenueInput":
+                    slope = linearRegressionSlope(xArrayFunction(), revenueArray());
+                    break;
+                case "grossProfitInput":
+                    slope = linearRegressionSlope(xArrayFunction(), revenueArray());
+                    break;
+                case "netIncomeInput":
+                    slope = linearRegressionSlope(xArrayFunction(), revenueArray());
+                    break;
+                case "operatingCashflowInput":
+                    slope = linearRegressionSlope(xArrayFunction(), revenueArray());
+                    break;
+                case "freeCashflowInput":
+                    slope = linearRegressionSlope(xArrayFunction(), revenueArray());
+                    break;
+            }
+
+            for (let i = parseInt(senderColumn) + 1; i <= 10; i++) {
+                document.getElementById(senderCategory + i).value = parseFloat(document.getElementById(senderCategory + parseInt(i - 1)).value) + Math.round(slope / 1000000);
+            }
+        }
+    }
+
+    function linearRegressionSlope(xArray, yArray) {
+        // Calculate Sums
+        var xSum = 0, ySum = 0, xxSum = 0, xySum = 0;
+        var count = xArray.length;
+        for (var i = 0, len = count; i < count; i++) {
+            xSum += xArray[i];
+            ySum += yArray[i];
+            xxSum += xArray[i] * xArray[i];
+            xySum += xArray[i] * yArray[i];
+        }
+
+        // Calculate slope
+        var slope = (count * xySum - xSum * ySum) / (count * xxSum - xSum * xSum);
+
+        return slope;
+    }
+
+    function linearRegressionIntercept(xArray, yArray, slope){
+        // Calculate Sums
+        var xSum = 0, ySum = 0, xxSum = 0, xySum = 0;
+        var count = xArray.length;
+        for (var i = 0, len = count; i < count; i++) {
+            xSum += xArray[i];
+            ySum += yArray[i];
+            xxSum += xArray[i] * xArray[i];
+            xySum += xArray[i] * yArray[i];
+        }
+
+        // Calculate intercept
+        var intercept = (ySum / count) - (slope * xSum) / count;
+
+        return intercept;
+    }
+</script>

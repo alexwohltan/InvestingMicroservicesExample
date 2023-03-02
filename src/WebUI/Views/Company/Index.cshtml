@@ -110,6 +110,22 @@
         <div id="Metrics">
             <h3 class="display-6">Valuation</h3>
 
+            <p>
+                Our evaluation consists of the following steps:
+            </p>
+            <ol>
+                <li>Determine the discounting factor.</li>
+                <li>Project future cashflows.</li>
+                <li>Calculate the fair value for the company.</li>
+            </ol>
+
+            <p>
+                The overall idea behind our discounting factor is that we have a risk free return and if we invest our money we will need to gain more than this otherwise we would invest into the risk-free alternative.
+                We want to find the return rate at which we think that the possible reward for this prospective investment outweighs the risk. Good companies (unrisky companies) have a low number (low discounting factor / opportunity cost) and bad companies have a high number.
+                The best companies will only add a little bit to our discounting factor, good companies a little bit more, average and bad companies will add the most.
+
+            </p>
+
 
             <!-- PROFITABILITY AND RETURNS-->
             <div>
@@ -181,12 +197,6 @@ e.MetricName == "CashflowTurnoverRatio")
                 </div>
 
                 <p>
-                    The overall idea behind our discounting factor is that we have a risk free return and if we invest our money we will need to gain more than this otherwise we would invest into the risk-free alternative.
-                    We want to find the return rate at which we think that the possible reward for this prospective investment outweighs the risk. Good companies (unrisky companies) have a low number (low discounting factor / opportunity cost) and bad companies have a high number.
-                    The best companies will only add a little bit to our discounting factor, good companies a little bit more, average and bad companies will add the most.
-
-                </p>
-                <p>
                     At first we will start with the valuation of the Profitability of the company. Use the information above to evaluate the company. Below you can find some information what the metrics show you. (If some metrics are missig, this means that this metric is not available for this company.)
                 </p>
                 <ul>
@@ -239,15 +249,15 @@ e.MetricName == "CashflowTurnoverRatio")
                         </tr>
 
                         @foreach (var metricName in Model.IndustryData.Metrics
-                           .Where(e => e.MetricName == "EquityRatio" ||
-                           e.MetricName == "Gearing" ||
-                           e.MetricName == "DynamicGearing" ||
-                           e.MetricName == "NetDebtoverEBITDA" ||
-                           e.MetricName == "CAPEXoverOperatingCashflow" ||
-                           e.MetricName == "CurrentAssetsoverTotalAssets" ||
-                           e.MetricName == "EquityToAssetRatio" ||
-                           e.MetricName == "EquityAndNoncurrentLiabilitiesToAssetRatio")
-                           .Select(e => e.MetricName))
+                         .Where(e => e.MetricName == "EquityRatio" ||
+                         e.MetricName == "Gearing" ||
+                         e.MetricName == "DynamicGearing" ||
+                         e.MetricName == "NetDebtoverEBITDA" ||
+                         e.MetricName == "CAPEXoverOperatingCashflow" ||
+                         e.MetricName == "CurrentAssetsoverTotalAssets" ||
+                         e.MetricName == "EquityToAssetRatio" ||
+                         e.MetricName == "EquityAndNoncurrentLiabilitiesToAssetRatio")
+                         .Select(e => e.MetricName))
                         {
 
                             if (MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling) != null)
@@ -341,13 +351,13 @@ e.MetricName == "CashflowTurnoverRatio")
                         </tr>
 
                         @foreach (var metricName in Model.IndustryData.Metrics
-                           .Where(e => e.MetricName == "DebtorTerms" ||
-                           e.MetricName == "DaysPayableOutstanding" ||
-                           e.MetricName == "Liquidity1Degree" ||
-                           e.MetricName == "Liquidity2Degree" ||
-                           e.MetricName == "Liquidity3Degree" ||
-                           e.MetricName == "InventoryIntensity")
-                           .Select(e => e.MetricName))
+                         .Where(e => e.MetricName == "DebtorTerms" ||
+                         e.MetricName == "DaysPayableOutstanding" ||
+                         e.MetricName == "Liquidity1Degree" ||
+                         e.MetricName == "Liquidity2Degree" ||
+                         e.MetricName == "Liquidity3Degree" ||
+                         e.MetricName == "InventoryIntensity")
+                         .Select(e => e.MetricName))
                         {
 
                             if (MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling) != null)
@@ -513,13 +523,14 @@ e.MetricName == "CashflowTurnoverRatio")
                 </div>
                 <br />
             </div>
+            <hr />
 
 
             <div>
-                <h5 class="display-8">Discounting Factor</h5>
+                <h4 class="display-7">1. Discounting Factor</h4>
                 <div class="form-group">
                     <div class="row">
-                        <div class="col"><input onchange="discountingFactorInputChanged(this)" id="riskFreeInput" type="number" min="0" max="20" step="0.5" value="8" /></div>
+                        <div class="col"><input onchange="discountingFactorInputChanged(this)" id="riskFreeInput" type="number" min="0" max="20" step="0.5" value="4.5" /></div>
                         <div class="col"><p> + </p></div>
                         <div class="col"><input id="profitabilityInput" type="number" value="3" min="1" max="3" step="1" disabled /></div>
                         <div class="col"><p> + </p></div>
@@ -539,8 +550,7 @@ e.MetricName == "CashflowTurnoverRatio")
                 </div>
             </div>
 
-            <script>
-                function discountingFactorInputChanged(sender) {
+            <script>function discountingFactorInputChanged(sender) {
                     var evaluationName = sender.id.replace('Radio1', '').replace('Radio2', '').replace('Radio3', '')
 
                     switch (evaluationName) {
@@ -571,14 +581,24 @@ e.MetricName == "CashflowTurnoverRatio")
                         parseInt(document.getElementById("businessModelInput").value) +
                         parseInt(document.getElementById("competitionInput").value) +
                         parseInt(document.getElementById("managementInput").value)) + '%';
+                }</script>
+            <hr />
+
+            <div id="FutureFilings">
+                @if (Model.CompanyData.Filings != null && Model.CompanyData.Filings.Count() > 0)
+                {
+                    @await Html.PartialAsync("_FutureFilingsView", Model.CompanyData.Filings)
                 }
-            </script>
+            </div>
 
         </div>
     </form>
 </div>
 <hr />
 
+
+
+<hr />
 <div id="UpdateButton">
     <button type="button" onclick="updateCompany()" class="btn btn-light btn-sm" id="btn-update-company">Update @Model.CompanyData.Ticker Company Information</button>
     <script>
