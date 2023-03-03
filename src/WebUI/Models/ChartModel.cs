@@ -35,7 +35,8 @@ namespace WebUI
 
     public enum ChartType
     {
-        line
+        line,
+        bar
     }
 
     public static class Extensions

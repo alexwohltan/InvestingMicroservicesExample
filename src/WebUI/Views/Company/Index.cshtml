@@ -581,6 +581,8 @@ e.MetricName == "CashflowTurnoverRatio")
                         parseInt(document.getElementById("businessModelInput").value) +
                         parseInt(document.getElementById("competitionInput").value) +
                         parseInt(document.getElementById("managementInput").value)) + '%';
+
+                    recalculateDCF();
                 }</script>
             <hr />
 
@@ -590,6 +592,141 @@ e.MetricName == "CashflowTurnoverRatio")
                     @await Html.PartialAsync("_FutureFilingsView", Model.CompanyData.Filings)
                 }
             </div>
+
+            <div id="Calculation">
+                <p>Now we calculate the value of our company. As the future cashflows have less value to us than cashflows today, we will discount them with our discounting factor.</p>
+                <p>At the end of this period we will calculate the terminal value (all the cashflows coming after our prediction added and discounted).</p>
+                <table class="table small table-hover">
+                    <tr>
+                        <th></th>
+                        <th>@(MostRecentFiling.FiscalYear + 1)</th>
+                        <th>@(MostRecentFiling.FiscalYear + 2)</th>
+                        <th>@(MostRecentFiling.FiscalYear + 3)</th>
+                        <th>@(MostRecentFiling.FiscalYear + 4)</th>
+                        <th>@(MostRecentFiling.FiscalYear + 5)</th>
+                        <th>@(MostRecentFiling.FiscalYear + 6)</th>
+                        <th>@(MostRecentFiling.FiscalYear + 7)</th>
+                        <th>@(MostRecentFiling.FiscalYear + 8)</th>
+                        <th>@(MostRecentFiling.FiscalYear + 9)</th>
+                        <th>@(MostRecentFiling.FiscalYear + 10)</th>
+                        <th>Terminal Value</th>
+                    </tr>
+                    <tr>
+                        <td>Nominal Value</td>
+                        @for (int i = 0; i < 10; i++)
+                        {
+                            <td id="nominalValue@(i+1)"></td>
+
+                        }
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Present Value</td>
+                        @for (int i = 0; i < 10; i++)
+                        {
+                            <td id="presentValue@(i+1)"></td>
+
+                        }
+                        <td id="terminalValue1"></td>
+                    </tr>
+                </table>
+                <p>Numbers in Thousands</p>
+
+                <table>
+                    <tr>
+                        <td><b>Firm Value</b></td>
+                        <td id="firmValue1"></td>
+                    </tr>
+                    <tr>
+                        <td>+ Excess Cash</td>
+                        <td>@((MostRecentFiling.BalanceSheet.CashCashEquivalents / 1000).ToString("#,##0"))</td>
+                    </tr>
+                    <tr>
+                        <td>- Existing Debt and Minority Interest</td>
+                        <td>@(((MostRecentFiling.BalanceSheet.LongTermDebt + MostRecentFiling.BalanceSheet.ShortTermDebt + MostRecentFiling.BalanceSheet.MinorityInterest) / 1000).ToString("#,##0"))</td>
+                    </tr>
+                    <tr>
+                        <td><b>= Equity Value</b></td>
+                        <td id="equityValue1"></td>
+                    </tr>
+                    <tr>
+                        <td>Margin of Safety</td>
+                        <td id="safetyMargin1"></td>
+                    </tr>
+                    <tr class="table-active">
+                        <td><b>Fair Value</b></td>
+                        <td id="fairValue1"></td>
+                    </tr>
+                </table>
+
+                @if (Model.CompanyData.Prices != null && Model.CompanyData.Prices.Count() != 0)
+                {
+                    <table>
+
+                        <tr>
+                            <td> </td>
+                        </tr>
+                        <tr>
+                            <td>Shares Outstanding</td>
+                            <td>@(MostRecentFiling.IncomeStatement.WeightedAverageShsOut / 1000)</td>
+
+                        </tr>
+                        <tr>
+                            <td>Stock Price</td>
+                            <td>@Model.CompanyData.Prices.OrderByDescending(e => e.Date).First().AdjClose</td>
+                        </tr>
+                        <tr>
+                            <td><b>Market Cap (in Thsd)</b></td>
+                            <td id="marketCap">@(((decimal)(MostRecentFiling.IncomeStatement.WeightedAverageShsOut * Model.CompanyData.Prices.OrderByDescending(e => e.Date).First().AdjClose) / 1000).ToString("#,##0"))</td>
+                        </tr>
+                        
+                    </table>
+                }
+                    <script>
+                    recalculateDCF();
+
+                    function recalculateDCF() {
+                        var discountingFactor = parseFloat(document.getElementById("discountingFactorInput").value) / 100;
+
+                        var sumFCFs = 0;
+
+                        for (var i = 0; i < 10; i++) {
+                            var millions = parseFloat(document.getElementById("freeCashflowInput" + parseInt(i + 1)).value);
+                            var thousands = millions * 1000;
+
+                            var presentValueThousands = Math.round(thousands / Math.pow((1 + discountingFactor), (i + 1)));
+
+                            sumFCFs += presentValueThousands;
+
+                            // regex/replace just adds thousand separator
+                            document.getElementById("nominalValue" + parseInt(i + 1)).innerHTML = thousands.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                            document.getElementById("presentValue" + parseInt(i + 1)).innerHTML = presentValueThousands.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        }
+
+                        var terminalGrowthRate = 0.02;
+                        var freeCashFlowForTerminalValue = (parseFloat(document.getElementById("freeCashflowInput10").value) * 1000) * (1 + terminalGrowthRate);
+
+                        var terminalvalue = Math.round(freeCashFlowForTerminalValue / (discountingFactor - terminalGrowthRate));
+
+                        sumFCFs += terminalvalue;
+
+                        var excessCash = @MostRecentFiling.BalanceSheet.CashCashEquivalents / 1000;
+                        var debtAndMinorityInterest = @(MostRecentFiling.BalanceSheet.LongTermDebt + MostRecentFiling.BalanceSheet.ShortTermDebt + MostRecentFiling.BalanceSheet.MinorityInterest) / 1000;
+
+                        var equityValue = sumFCFs + excessCash - debtAndMinorityInterest;
+
+                        var safetyNet = 0.50;
+
+                        var fairValue = equityValue - (equityValue * safetyNet);
+
+                        document.getElementById("terminalValue1").innerHTML = terminalvalue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        document.getElementById("firmValue1").innerHTML = sumFCFs.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        document.getElementById("equityValue1").innerHTML = equityValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                        document.getElementById("safetyMargin1").innerHTML = parseFloat(safetyNet * 100) + "%";
+                        document.getElementById("fairValue1").innerHTML = fairValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    }
+                    </script>
+                </div>
 
         </div>
     </form>
