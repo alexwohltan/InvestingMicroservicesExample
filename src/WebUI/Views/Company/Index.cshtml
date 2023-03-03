@@ -635,7 +635,7 @@ e.MetricName == "CashflowTurnoverRatio")
 
                 <table>
                     <tr>
-                        <td><b>Firm Value</b></td>
+                        <td><b>Enterprise Value</b></td>
                         <td id="firmValue1"></td>
                     </tr>
                     <tr>
@@ -658,11 +658,11 @@ e.MetricName == "CashflowTurnoverRatio")
                         <td><b>Fair Value</b></td>
                         <td id="fairValue1"></td>
                     </tr>
-                </table>
+                
 
                 @if (Model.CompanyData.Prices != null && Model.CompanyData.Prices.Count() != 0)
-                {
-                    <table>
+                    {
+
 
                         <tr>
                             <td> </td>
@@ -680,9 +680,9 @@ e.MetricName == "CashflowTurnoverRatio")
                             <td><b>Market Cap (in Thsd)</b></td>
                             <td id="marketCap">@(((decimal)(MostRecentFiling.IncomeStatement.WeightedAverageShsOut * Model.CompanyData.Prices.OrderByDescending(e => e.Date).First().AdjClose) / 1000).ToString("#,##0"))</td>
                         </tr>
-
+                    }
                     </table>
-                }
+                
                 <script>
                     recalculateDCF();
 
