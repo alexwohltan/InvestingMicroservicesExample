@@ -10,8 +10,6 @@
 <div id="FutureFilingsView">
     <h4 class="display-7">2. Future Cashflows</h4>
     <p>We will now project the future cashflows of the company. For this, we will project the next 10 years. After 10 years we will use a calculated number (terminal value).</p>
-    <p>A linear growth of each of our values is already calculated. When you change a value, the following values will adjust (growing with the calculated growth rate).</p>
-    <br />
     <p>Free Cashflow is calculated with the following formula:</p>
     <p><b>Net Sales / Revenue</b></p>
     <p>- Cost of Goods Sold / Cost of Revenue</p>
@@ -24,7 +22,14 @@
     <p>- Capital Expenditures / Investments</p>
     <p><b>= Free Cashflow</b></p>
     <br />
+    <p>The revenue is calculated with a growth rate that is defined by us. Normally we go for something like 5%. The initial value is the historical growth rate of the company's revenue. The other values are calculated as historic percentages of the revenue.</p>
 
+    
+    <div class="form-group">
+        <label for="revenueGrowthRate1">Revenue Growth Rate (in %)</label>
+        <input id="revenueGrowthRate1" onchange="revenueGrowthRateChanged(this)" type="number" step="0.5" min="-50" max="100" />
+        <small class="form-text text-muted">Use a realistic value. Normally a value of 5% is reasonable.</small>
+    </div>
 
     <table class="table small table-hover">
         <tr>
@@ -293,10 +298,23 @@
     }
 
     function firstCalculationOnStart() {
+        document.getElementById("revenueGrowthRate1").value = Math.round(historicalRevenueGrowthRate * 100);
+
+        recalculateCompleteFilingsView();
+    }
+
+    function revenueGrowthRateChanged() {
+        recalculateCompleteFilingsView();
+    }
+
+    function recalculateCompleteFilingsView() {
         let firstField = document.getElementById("revenue" + "Input" + 1);
-        firstField.value = @MostRecentFiling.IncomeStatement.Revenue * parseFloat(1 + historicalRevenueGrowthRate) / 1000000;
+
+        firstField.value = Math.round(@MostRecentFiling.IncomeStatement.Revenue * parseFloat(1 + (document.getElementById("revenueGrowthRate1").value / 100)) / 1000000);
 
         calculateRemainingFields(firstField.id, 1);
+
+        recalculateDCF();
     }
 
     function filingCalculationChanged(sender) {
@@ -327,7 +345,7 @@
                     nameOfNextField = (categoryOfField + (parseInt(columnOfField) + 1));
 
                     let nextField = document.getElementById(nameOfNextField);
-                    nextField.value = Math.round(thisField.value * (1 + historicalRevenueGrowthRate));
+                    nextField.value = Math.round(thisField.value * (1 + (document.getElementById("revenueGrowthRate1").value / 100)));
                 }
                 else {
                     nameOfNextField = "costOfrevenue" + "Input" + columnOfChange;
@@ -431,164 +449,4 @@
         }
         return sum / series.length;
     }
-
-    @*onStartCalculation();
-
-    function onStartCalculation() {
-        revenueCalculation();
-        costOfrevenueCalculation();
-        operatingExpensesCalculation();
-        operatingIncomeCalculation();
-        netIncomeCalculation();
-        operatingCashflowCalculation();
-        freeCashflowCalculation();
-    }
-
-    function xArrayFunction() {
-        return [@string.Join(",", Model.OrderBy(e => e.FilingDate).Select(e => e.FiscalYear))];
-    }
-    function revenueArray() {
-        return [@string.Join(",", Model.OrderBy(e => e.FilingDate).Select(e => e.IncomeStatement.Revenue))];
-    }
-    function costOfrevenueArray() {
-        return [@string.Join(",", Model.OrderBy(e => e.FilingDate).Select(e => e.IncomeStatement.CostofRevenue))];
-    }
-    function operatingExpensesArray() {
-        return [@string.Join(",", Model.OrderBy(e => e.FilingDate).Select(e => e.IncomeStatement.OperatingExpenses))];
-    }
-    function operatingIncomeArray() {
-        return [@string.Join(",", Model.OrderBy(e => e.FilingDate).Select(e => e.IncomeStatement.OperatingIncomeLoss))];
-    }
-    function netIncomeArray() {
-        return [@string.Join(",", Model.OrderBy(e => e.FilingDate).Select(e => e.IncomeStatement.NetIncome))];
-    }
-    function operatingCashflowArray() {
-        return [@string.Join(",", Model.OrderBy(e => e.FilingDate).Select(e => e.CashflowStatement.NetCashfromOperatingActivities))];
-    }
-    function freeCashflowArray() {
-        return [@string.Join(",", Model.OrderBy(e => e.FilingDate).Select(e => e.CashflowStatement.FreeCashFlow))];
-    }
-
-    function revenueCalculation() {
-        var propertyName = "revenue";
-        futureFilingCalculationOnStart(revenueArray(), propertyName);
-    }
-    function costOfrevenueCalculation() {
-        var propertyName = "costOfrevenue";
-        futureFilingCalculationOnStart(costOfrevenueArray(), propertyName);
-    }
-    function operatingExpensesCalculation() {
-        var propertyName = "operatingExpenses";
-        futureFilingCalculationOnStart(operatingExpensesArray(), propertyName);
-    }
-    function operatingIncomeCalculation() {
-        var propertyName = "operatingIncome";
-        futureFilingCalculationOnStart(operatingIncomeArray(), propertyName);
-    }
-    function netIncomeCalculation() {
-        var propertyName = "netIncome";
-        futureFilingCalculationOnStart(netIncomeArray(), propertyName);
-    }
-    function operatingCashflowCalculation() {
-        var propertyName = "operatingCashflow";
-        futureFilingCalculationOnStart(operatingCashflowArray(), propertyName);
-    }
-    function freeCashflowCalculation() {
-        var propertyName = "freeCashflow";
-        futureFilingCalculationOnStart(freeCashflowArray(), propertyName);
-    }
-
-
-    function futureFilingCalculationOnStart(yArray, propertyName) {
-        var xArray = xArrayFunction();
-
-        var currentYear = @MostRecentFiling.FiscalYear;
-
-        for (let i = 0; i < 10; i++) {
-            var offset = i + 1;
-            var workingYear = currentYear + offset;
-
-            var inputName = propertyName + "Input" + offset;
-
-            var slope = linearRegressionSlope(xArray, yArray);
-            var intercept = linearRegressionIntercept(xArray, yArray, slope);
-            var calculatedValue = workingYear * slope + intercept;
-
-            document.getElementById(inputName).value = Math.round(calculatedValue / 1000000);
-        }
-    }*@
-
-    //function filingCalculationChanged(sender) {
-    //    var senderColumn = sender.id.slice(-1);
-    //    var senderCategory = sender.id.replace(senderColumn, "");
-
-    //    if (senderColumn < 10) {
-
-    //        var slope = 0;
-
-    //        switch (senderCategory) {
-    //            case "revenue" + "Input":
-    //                slope = linearRegressionSlope(xArrayFunction(), revenueArray());
-    //                break;
-    //            case "costOfrevenue" + "Input":
-    //                slope = linearRegressionSlope(xArrayFunction(), costOfrevenueArray());
-    //                break;
-    //            case "operatingExpenses" + "Input":
-    //                slope = linearRegressionSlope(xArrayFunction(), operatingExpensesArray());
-    //                break;
-    //            case "operatingIncome" + "Input":
-    //                slope = linearRegressionSlope(xArrayFunction(), operatingIncomeArray());
-    //                break;
-    //            case "netIncome" + "Input":
-    //                slope = linearRegressionSlope(xArrayFunction(), netIncomeArray());
-    //                break;
-    //            case "operatingCashflow" + "Input":
-    //                slope = linearRegressionSlope(xArrayFunction(), operatingCashflowArray());
-    //                break;
-    //            case "freeCashflow" + "Input":
-    //                slope = linearRegressionSlope(xArrayFunction(), freeCashflowArray());
-    //                break;
-    //        }
-
-    //        for (let i = parseInt(senderColumn) + 1; i <= 10; i++) {
-    //            document.getElementById(senderCategory + i).value = parseFloat(document.getElementById(senderCategory + parseInt(i - 1)).value) + Math.round(slope / 1000000);
-    //        }
-    //    }
-
-    //    recalculateDCF();
-    //}
-
-    //function linearRegressionSlope(xArray, yArray) {
-    //    // Calculate Sums
-    //    var xSum = 0, ySum = 0, xxSum = 0, xySum = 0;
-    //    var count = xArray.length;
-    //    for (var i = 0, len = count; i < count; i++) {
-    //        xSum += xArray[i];
-    //        ySum += yArray[i];
-    //        xxSum += xArray[i] * xArray[i];
-    //        xySum += xArray[i] * yArray[i];
-    //    }
-
-    //    // Calculate slope
-    //    var slope = (count * xySum - xSum * ySum) / (count * xxSum - xSum * xSum);
-
-    //    return slope;
-    //}
-
-    //function linearRegressionIntercept(xArray, yArray, slope){
-    //    // Calculate Sums
-    //    var xSum = 0, ySum = 0, xxSum = 0, xySum = 0;
-    //    var count = xArray.length;
-    //    for (var i = 0, len = count; i < count; i++) {
-    //        xSum += xArray[i];
-    //        ySum += yArray[i];
-    //        xxSum += xArray[i] * xArray[i];
-    //        xySum += xArray[i] * yArray[i];
-    //    }
-
-    //    // Calculate intercept
-    //    var intercept = (ySum / count) - (slope * xSum) / count;
-
-    //    return intercept;
-    //}
 </script>
