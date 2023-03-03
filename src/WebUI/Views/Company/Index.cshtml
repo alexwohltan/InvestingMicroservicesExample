@@ -594,6 +594,7 @@ e.MetricName == "CashflowTurnoverRatio")
             </div>
 
             <div id="Calculation">
+                <!-- Source: https://corporate-finance.org/unternehmensbewertung-mit-excel-unternehmenswert-bestimmen/ -->
                 <p>Now we calculate the value of our company. As the future cashflows have less value to us than cashflows today, we will discount them with our discounting factor.</p>
                 <p>At the end of this period we will calculate the terminal value (all the cashflows coming after our prediction added and discounted).</p>
                 <table class="table small table-hover">
@@ -679,10 +680,10 @@ e.MetricName == "CashflowTurnoverRatio")
                             <td><b>Market Cap (in Thsd)</b></td>
                             <td id="marketCap">@(((decimal)(MostRecentFiling.IncomeStatement.WeightedAverageShsOut * Model.CompanyData.Prices.OrderByDescending(e => e.Date).First().AdjClose) / 1000).ToString("#,##0"))</td>
                         </tr>
-                        
+
                     </table>
                 }
-                    <script>
+                <script>
                     recalculateDCF();
 
                     function recalculateDCF() {
@@ -725,8 +726,8 @@ e.MetricName == "CashflowTurnoverRatio")
                         document.getElementById("safetyMargin1").innerHTML = parseFloat(safetyNet * 100) + "%";
                         document.getElementById("fairValue1").innerHTML = fairValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                     }
-                    </script>
-                </div>
+                </script>
+            </div>
 
         </div>
     </form>

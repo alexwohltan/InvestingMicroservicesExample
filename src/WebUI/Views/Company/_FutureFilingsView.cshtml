@@ -244,7 +244,195 @@
 
 <script>
 
-    onStartCalculation();
+    let historicalRevenueGrowthRate = calculateAverageRevenueGrowthRateFromHistoricalData();
+    let historicalCostOfRevenuePercentage = calculateAverageCostOfRevenuePercentageFromHistoricalData();
+    let historicalOperatingExpensesPercentage = calculateAverageOperatingExpensesPercentageFromHistoricalData();
+    // Operating Income = Revenue - CostOfRevenue - OperatingExpenses
+    let historicalNetIncomeToOperatingIncomePercentage = calculateAverageNetIncomeToOperatingIncomePercentageFromHistoricalData();
+    let historicalOperatingCFNetIncomePercentage = calculateAverageOperatingCFNetIncomePercentageFromHistoricalData();
+    let historicalFCFOperatingCashflowPercentage = calculateAverageFCFOperatingCFPercentageFromHistoricalData();
+
+    firstCalculationOnStart();
+
+    // calculates the average annual growth rate of the revenue
+    function calculateAverageRevenueGrowthRateFromHistoricalData() {
+        var revenues = [@string.Join(",", Model.OrderBy(e => e.FilingDate).Select(e => e.IncomeStatement.Revenue))];
+
+        var sumOfGrowthRates = 0;
+
+        for (let i = 1; i < revenues.length; i++) {
+            sumOfGrowthRates += (revenues[i] - revenues[i - 1]) / revenues[i - 1];
+        }
+
+        return sumOfGrowthRates / (revenues.length - 1);
+    }
+    // calculates the average percentage of cost of revenue / revenue
+    function calculateAverageCostOfRevenuePercentageFromHistoricalData() {
+        var costOfRevenueRatios = [@string.Join(",", Model.Select(e => e.IncomeStatement.CostofRevenue / e.IncomeStatement.Revenue))];
+        return calculateAverageOfSeries(costOfRevenueRatios);
+    }
+    // calculates the average percentage of operating expenses / revenue
+    function calculateAverageOperatingExpensesPercentageFromHistoricalData() {
+        var operationExpenseRatios = [@string.Join(",", Model.Select(e => e.IncomeStatement.OperatingExpenses / e.IncomeStatement.Revenue))];
+        return calculateAverageOfSeries(operationExpenseRatios);
+    }
+    // calculates the average percentage of Net Income / Operating Income
+    function calculateAverageNetIncomeToOperatingIncomePercentageFromHistoricalData() {
+        var netIncomeOperatingIncomeRatios = [@string.Join(",", Model.Select(e => e.IncomeStatement.NetIncome / e.IncomeStatement.OperatingIncomeLoss))];
+        return calculateAverageOfSeries(netIncomeOperatingIncomeRatios);
+    }
+    // calculates the average percentage of Operating Cashflow / NetIncome
+    function calculateAverageOperatingCFNetIncomePercentageFromHistoricalData() {
+        var operatingCFNetIncomeRatios = [@string.Join(",", Model.Select(e => e.CashflowStatement.NetCashfromOperatingActivities / e.IncomeStatement.NetIncome))];
+        return calculateAverageOfSeries(operatingCFNetIncomeRatios);
+    }
+    // calculates the average percentage of Free Cashflow / Operating Cashflow
+    function calculateAverageFCFOperatingCFPercentageFromHistoricalData() {
+        var FCFOperatingCFRatios = [@string.Join(",", Model.Select(e => e.CashflowStatement.FreeCashFlow / e.CashflowStatement.NetCashfromOperatingActivities))];
+        return calculateAverageOfSeries(FCFOperatingCFRatios);
+    }
+
+    function firstCalculationOnStart() {
+        let firstField = document.getElementById("revenue" + "Input" + 1);
+        firstField.value = @MostRecentFiling.IncomeStatement.Revenue * parseFloat(1 + historicalRevenueGrowthRate) / 1000000;
+
+        calculateRemainingFields(firstField.id, 1);
+    }
+
+    function filingCalculationChanged(sender) {
+        var senderColumn = sender.id.slice(-1);
+        if (senderColumn === "0") senderColumn = "10";
+
+        calculateRemainingFields(sender.id, senderColumn);
+
+        recalculateDCF();
+    }
+
+    // calculates the value for every field that is right or below
+    // parameters:
+    // name of the field that needs to be updated e.g.netIncomeInput4
+    // number of the column that started the change (triggered the on-change event)
+    function calculateRemainingFields(nameOfField, columnOfChange) {
+        let columnOfField = nameOfField.slice(-1);
+        if (columnOfField === "0") columnOfField = "10";
+        let categoryOfField = nameOfField.replace(columnOfField, "");
+
+        let thisField = document.getElementById(nameOfField);
+
+        let nameOfNextField = "";
+
+        switch (categoryOfField) {
+            case "revenue" + "Input":
+                if (columnOfField != "10") {
+                    nameOfNextField = (categoryOfField + (parseInt(columnOfField) + 1));
+
+                    let nextField = document.getElementById(nameOfNextField);
+                    nextField.value = Math.round(thisField.value * (1 + historicalRevenueGrowthRate));
+                }
+                else {
+                    nameOfNextField = "costOfrevenue" + "Input" + columnOfChange;
+
+                    let nextField = document.getElementById(nameOfNextField);
+                    nextField.value = Math.round(document.getElementById("revenue" + "Input" + columnOfChange).value * historicalCostOfRevenuePercentage);
+                }
+                calculateRemainingFields(nameOfNextField, columnOfChange);
+                break;
+            case "costOfrevenue" + "Input":
+                if (columnOfField != "10") {
+                    nameOfNextField = (categoryOfField + (parseInt(columnOfField) + 1));
+
+                    let nextField = document.getElementById(nameOfNextField);
+                    nextField.value = Math.round(document.getElementById("revenue" + "Input" + (parseInt(columnOfField) + 1)).value * historicalCostOfRevenuePercentage);
+                }
+                else {
+                    nameOfNextField = "operatingExpenses" + "Input" + columnOfChange;
+
+                    let nextField = document.getElementById(nameOfNextField);
+                    nextField.value = Math.round(document.getElementById("revenue" + "Input" + columnOfChange).value * historicalOperatingExpensesPercentage);
+                }
+                calculateRemainingFields(nameOfNextField, columnOfChange);
+                break;
+            case "operatingExpenses" + "Input":
+                if (columnOfField != "10") {
+                    nameOfNextField = (categoryOfField + (parseInt(columnOfField) + 1));
+
+                    let nextField = document.getElementById(nameOfNextField);
+                    nextField.value = Math.round(document.getElementById("revenue" + "Input" + (parseInt(columnOfField) + 1)).value * historicalOperatingExpensesPercentage);
+                }
+                else {
+                    nameOfNextField = "operatingIncome" + "Input" + columnOfChange;
+
+                    let nextField = document.getElementById(nameOfNextField);
+                    nextField.value = Math.round(parseFloat(document.getElementById("revenue" + "Input" + columnOfChange).value) + parseFloat(document.getElementById("costOfrevenue" + "Input" + columnOfChange).value) + parseFloat(document.getElementById("operatingExpenses" + "Input" + columnOfChange).value));
+                }
+                calculateRemainingFields(nameOfNextField, columnOfChange);
+                break;
+            case "operatingIncome" + "Input":
+                if (columnOfField != "10") {
+                    nameOfNextField = (categoryOfField + (parseInt(columnOfField) + 1));
+
+                    let nextField = document.getElementById(nameOfNextField);
+                    nextField.value = Math.round(parseFloat(document.getElementById("revenue" + "Input" + (parseInt(columnOfField) + 1)).value) + parseFloat(document.getElementById("costOfrevenue" + "Input" + (parseInt(columnOfField) + 1)).value) + parseFloat(document.getElementById("operatingExpenses" + "Input" + (parseInt(columnOfField) + 1)).value));
+                }
+                else {
+                    nameOfNextField = "netIncome" + "Input" + columnOfChange;
+
+                    let nextField = document.getElementById(nameOfNextField);
+                    nextField.value = Math.round(document.getElementById("operatingIncome" + "Input" + columnOfChange).value * historicalNetIncomeToOperatingIncomePercentage);
+                }
+                calculateRemainingFields(nameOfNextField, columnOfChange);
+                break;
+            case "netIncome" + "Input":
+                if (columnOfField != "10") {
+                    nameOfNextField = (categoryOfField + (parseInt(columnOfField) + 1));
+
+                    let nextField = document.getElementById(nameOfNextField);
+                    nextField.value = Math.round(document.getElementById("operatingIncome" + "Input" + (parseInt(columnOfField) + 1)).value * historicalNetIncomeToOperatingIncomePercentage);
+                }
+                else {
+                    nameOfNextField = "operatingCashflow" + "Input" + columnOfChange;
+
+                    let nextField = document.getElementById(nameOfNextField);
+                    nextField.value = Math.round(document.getElementById("netIncome" + "Input" + columnOfChange).value * historicalOperatingCFNetIncomePercentage);
+                }
+                calculateRemainingFields(nameOfNextField, columnOfChange);
+                break;
+            case "operatingCashflow" + "Input":
+                if (columnOfField != "10") {
+                    nameOfNextField = (categoryOfField + (parseInt(columnOfField) + 1));
+
+                    let nextField = document.getElementById(nameOfNextField);
+                    nextField.value = Math.round(document.getElementById("netIncome" + "Input" + (parseInt(columnOfField) + 1)).value * historicalOperatingCFNetIncomePercentage);
+                }
+                else {
+                    nameOfNextField = "freeCashflow" + "Input" + columnOfChange;
+
+                    let nextField = document.getElementById(nameOfNextField);
+                    nextField.value = Math.round(document.getElementById("operatingCashflow" + "Input" + columnOfChange).value * historicalFCFOperatingCashflowPercentage);
+                }
+                calculateRemainingFields(nameOfNextField, columnOfChange);
+                break;
+            case "freeCashflow" + "Input":
+                if (columnOfField != "10") {
+                    nameOfNextField = (categoryOfField + (parseInt(columnOfField) + 1));
+
+                    let nextField = document.getElementById(nameOfNextField);
+                    nextField.value = Math.round(document.getElementById("operatingCashflow" + "Input" + (parseInt(columnOfField) + 1)).value * historicalFCFOperatingCashflowPercentage);
+                    calculateRemainingFields(nameOfNextField, columnOfChange);
+                }
+                break;
+        }
+    }
+
+    function calculateAverageOfSeries(series) {
+        var sum = 0;
+        for (let i = 0; i < series.length; i++) {
+            sum += parseFloat(series[i]);
+        }
+        return sum / series.length;
+    }
+
+    @*onStartCalculation();
 
     function onStartCalculation() {
         revenueCalculation();
@@ -328,79 +516,79 @@
 
             document.getElementById(inputName).value = Math.round(calculatedValue / 1000000);
         }
-    }
+    }*@
 
-    function filingCalculationChanged(sender) {
-        var senderColumn = sender.id.slice(-1);
-        var senderCategory = sender.id.replace(senderColumn, "");
+    //function filingCalculationChanged(sender) {
+    //    var senderColumn = sender.id.slice(-1);
+    //    var senderCategory = sender.id.replace(senderColumn, "");
 
-        if (senderColumn < 10) {
+    //    if (senderColumn < 10) {
 
-            var slope = 0;
+    //        var slope = 0;
 
-            switch (senderCategory) {
-                case "revenue" + "Input":
-                    slope = linearRegressionSlope(xArrayFunction(), revenueArray());
-                    break;
-                case "costOfrevenue" + "Input":
-                    slope = linearRegressionSlope(xArrayFunction(), costOfrevenueArray());
-                    break;
-                case "operatingExpenses" + "Input":
-                    slope = linearRegressionSlope(xArrayFunction(), operatingExpensesArray());
-                    break;
-                case "operatingIncome" + "Input":
-                    slope = linearRegressionSlope(xArrayFunction(), operatingIncomeArray());
-                    break;
-                case "netIncome" + "Input":
-                    slope = linearRegressionSlope(xArrayFunction(), netIncomeArray());
-                    break;
-                case "operatingCashflow" + "Input":
-                    slope = linearRegressionSlope(xArrayFunction(), operatingCashflowArray());
-                    break;
-                case "freeCashflow" + "Input":
-                    slope = linearRegressionSlope(xArrayFunction(), freeCashflowArray());
-                    break;
-            }
+    //        switch (senderCategory) {
+    //            case "revenue" + "Input":
+    //                slope = linearRegressionSlope(xArrayFunction(), revenueArray());
+    //                break;
+    //            case "costOfrevenue" + "Input":
+    //                slope = linearRegressionSlope(xArrayFunction(), costOfrevenueArray());
+    //                break;
+    //            case "operatingExpenses" + "Input":
+    //                slope = linearRegressionSlope(xArrayFunction(), operatingExpensesArray());
+    //                break;
+    //            case "operatingIncome" + "Input":
+    //                slope = linearRegressionSlope(xArrayFunction(), operatingIncomeArray());
+    //                break;
+    //            case "netIncome" + "Input":
+    //                slope = linearRegressionSlope(xArrayFunction(), netIncomeArray());
+    //                break;
+    //            case "operatingCashflow" + "Input":
+    //                slope = linearRegressionSlope(xArrayFunction(), operatingCashflowArray());
+    //                break;
+    //            case "freeCashflow" + "Input":
+    //                slope = linearRegressionSlope(xArrayFunction(), freeCashflowArray());
+    //                break;
+    //        }
 
-            for (let i = parseInt(senderColumn) + 1; i <= 10; i++) {
-                document.getElementById(senderCategory + i).value = parseFloat(document.getElementById(senderCategory + parseInt(i - 1)).value) + Math.round(slope / 1000000);
-            }
-        }
+    //        for (let i = parseInt(senderColumn) + 1; i <= 10; i++) {
+    //            document.getElementById(senderCategory + i).value = parseFloat(document.getElementById(senderCategory + parseInt(i - 1)).value) + Math.round(slope / 1000000);
+    //        }
+    //    }
 
-        recalculateDCF();
-    }
+    //    recalculateDCF();
+    //}
 
-    function linearRegressionSlope(xArray, yArray) {
-        // Calculate Sums
-        var xSum = 0, ySum = 0, xxSum = 0, xySum = 0;
-        var count = xArray.length;
-        for (var i = 0, len = count; i < count; i++) {
-            xSum += xArray[i];
-            ySum += yArray[i];
-            xxSum += xArray[i] * xArray[i];
-            xySum += xArray[i] * yArray[i];
-        }
+    //function linearRegressionSlope(xArray, yArray) {
+    //    // Calculate Sums
+    //    var xSum = 0, ySum = 0, xxSum = 0, xySum = 0;
+    //    var count = xArray.length;
+    //    for (var i = 0, len = count; i < count; i++) {
+    //        xSum += xArray[i];
+    //        ySum += yArray[i];
+    //        xxSum += xArray[i] * xArray[i];
+    //        xySum += xArray[i] * yArray[i];
+    //    }
 
-        // Calculate slope
-        var slope = (count * xySum - xSum * ySum) / (count * xxSum - xSum * xSum);
+    //    // Calculate slope
+    //    var slope = (count * xySum - xSum * ySum) / (count * xxSum - xSum * xSum);
 
-        return slope;
-    }
+    //    return slope;
+    //}
 
-    function linearRegressionIntercept(xArray, yArray, slope){
-        // Calculate Sums
-        var xSum = 0, ySum = 0, xxSum = 0, xySum = 0;
-        var count = xArray.length;
-        for (var i = 0, len = count; i < count; i++) {
-            xSum += xArray[i];
-            ySum += yArray[i];
-            xxSum += xArray[i] * xArray[i];
-            xySum += xArray[i] * yArray[i];
-        }
+    //function linearRegressionIntercept(xArray, yArray, slope){
+    //    // Calculate Sums
+    //    var xSum = 0, ySum = 0, xxSum = 0, xySum = 0;
+    //    var count = xArray.length;
+    //    for (var i = 0, len = count; i < count; i++) {
+    //        xSum += xArray[i];
+    //        ySum += yArray[i];
+    //        xxSum += xArray[i] * xArray[i];
+    //        xySum += xArray[i] * yArray[i];
+    //    }
 
-        // Calculate intercept
-        var intercept = (ySum / count) - (slope * xSum) / count;
+    //    // Calculate intercept
+    //    var intercept = (ySum / count) - (slope * xSum) / count;
 
-        return intercept;
-    }
+    //    return intercept;
+    //}
 </script>
