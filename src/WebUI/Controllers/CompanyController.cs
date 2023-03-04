@@ -37,7 +37,7 @@ public class CompanyController : Controller
 
         //CompanyView = company;
 
-        return View(new CompanyBenchmarkModel() { CompanyData = company.CompanyData, IndustryData = industryBenchmark.BenchmarkData, SectorData = sectorBenchmark.BenchmarkData, MarketData = marketBenchmark.BenchmarkData });
+        return View("CompanyView", new CompanyBenchmarkModel() { CompanyData = company.CompanyData, IndustryData = industryBenchmark.BenchmarkData, SectorData = sectorBenchmark.BenchmarkData, MarketData = marketBenchmark.BenchmarkData });
     }
 
     public async Task<IActionResult> DiscountingFactorCalculation(int profitability, int financialStability, int capitalManagement, int businessModel, int marketConditions, int management)

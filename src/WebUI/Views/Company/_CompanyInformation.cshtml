@@ -1,0 +1,64 @@
+﻿@model CompanyBenchmarkModel
+
+<div id="GeneralInformation">
+    <h3 class="display-6">General Information</h3>
+    <table class="table table-hover">
+        <tr>
+            <th></th>
+            <th>General Information</th>
+        </tr>
+        <tr>
+            <td>ID</td>
+            <td>@Model.CompanyData.ID</td>
+        </tr>
+        <tr>
+            <td>Ticker</td>
+            <td>@Model.CompanyData.Ticker</td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td>@Model.CompanyData.Name</td>
+        </tr>
+        <tr>
+            <td>Industry</td>
+            <td>
+                @if (Model.IndustryData != null)
+                    @Model.IndustryData.IndustryName
+            </td>
+        </tr>
+        <tr>
+            <td>Sector</td>
+            <td>
+                @if (Model.SectorData != null)
+                    @Model.SectorData.SectorName
+            </td>
+        </tr>
+        <tr>
+            <td>Market</td>
+            <td>
+                @if (Model.MarketData != null)
+                    @Model.MarketData.MarketName
+            </td>
+        </tr>
+        <tr>
+            <td>Month FY End</td>
+            <td>@Model.CompanyData.MonthFyEnd</td>
+        </tr>
+        <tr>
+            <td>Number of Employees</td>
+            <td>@Model.CompanyData.NumberEmployees</td>
+        </tr>
+        <tr>
+            <td>Business Summary</td>
+            <td>@Model.CompanyData.BusinessSummary</td>
+        </tr>
+        <tr>
+            <td>Stock Price</td>
+            <td>
+                @if (Model.CompanyData.Prices == null)
+                {<p>No Data available.</p>}
+                else @Model.CompanyData.Prices.OrderByDescending(e => e.Date).First().AdjClose
+            </td>
+        </tr>
+    </table>
+</div>

@@ -20,6 +20,7 @@
     <None Remove="Swashbuckle.AspNetCore.Swagger" />
     <None Remove="Swashbuckle.AspNetCore" />
     <None Remove="Views\Company\" />
+    <None Remove="Views\Company\Valuation\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="6.4.0" />
@@ -29,5 +30,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Company\" />
+    <Folder Include="Views\Company\Valuation\" />
   </ItemGroup>
 </Project>

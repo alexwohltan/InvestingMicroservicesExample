@@ -1,0 +1,69 @@
+﻿@model CompanyBenchmarkModel
+
+@{
+    ViewData["Title"] = String.Format("{0} | {1}", Model.CompanyData.Ticker, Model.CompanyData.Name);
+    DataStructures.FundamentalData.Filing MostRecentFiling = Model.CompanyData.Filings.OrderByDescending(e => e.FilingDate).First();
+}
+
+<div class="text-center">
+    <h1 class="display-4">@Model.CompanyData.Name</h1>
+</div>
+
+<!-- GENERAL INFORMATION -->
+<section>
+    @await Html.PartialAsync("_CompanyInformation", Model)
+</section>
+
+<!-- STOCK PRICE CHART -->
+<section>
+    <div id="StockPrices">
+        @if (Model.CompanyData.Prices != null && Model.CompanyData.Prices.Count() > 0)
+        {
+            @await Html.PartialAsync("_Chart", new ChartModel()
+            {
+                ElementId = "StockChart1",
+                Type = ChartType.line,
+                Labels = Model.CompanyData.Prices.Select(e => e.Date.ToShortDateString()),
+                Values = Model.CompanyData.Prices.Select(e => e.AdjClose),
+                ValueLabel = Model.CompanyData.Ticker
+            })
+        }
+    </div>
+</section>
+
+<!-- VALUATION -->
+<section>
+    @if (Model.CompanyData.Prices != null && Model.CompanyData.Prices.Count() > 0)
+    {
+        @await Html.PartialAsync("Valuation/_Valuation", Model)
+    }
+</section>
+
+<hr />
+<div id="UpdateButton">
+    <button type="button" onclick="updateCompany()" class="btn btn-light btn-sm" id="btn-update-company">Update @Model.CompanyData.Ticker Company Information</button>
+    <script>
+
+    function updateCompany() {
+        var formData = new FormData();
+        formData.append("ticker", "@Model.CompanyData.Ticker");
+        $.ajax({
+            type: 'PUT',
+            url: '@Url.Action("UpdateCompany")',
+                contentType: false,
+            processData: false,
+            cache: false,
+            data: formData,
+            success: successCallback,
+            error: errorCallback
+        });
+    }
+
+    function errorCallback() {
+        alert("Something went wrong.");
+    }
+    function successCallback(response) {
+        alert("Update started.");
+    }
+    </script>
+</div>

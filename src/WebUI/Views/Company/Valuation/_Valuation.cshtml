@@ -1,0 +1,10 @@
+﻿@model CompanyBenchmarkModel
+
+
+<div id="Valuation">
+    <h3 class="display-6">Valuation</h3>
+    @if (Model.CompanyData.Prices != null && Model.CompanyData.Prices.Count() > 0)
+    {
+        @await Html.PartialAsync("Valuation/_FairPriceEarningsRatio", Model)
+    }
+</div>

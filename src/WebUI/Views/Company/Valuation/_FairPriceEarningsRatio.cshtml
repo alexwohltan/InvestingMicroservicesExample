@@ -1,0 +1,318 @@
+﻿@model CompanyBenchmarkModel
+
+@{
+    DataStructures.FundamentalData.Filing MostRecentFiling = Model.CompanyData.Filings.OrderByDescending(e => e.FilingDate).First();
+}
+
+
+<div id="FairPriceEarningsRatioView">
+    <h5>Fair Price to Earnings Ratio</h5>
+    <!-- General Description -->
+    <div>
+        <p>The following ideas and calculations are based on the book "Unternehmensbewertung & Kennzahlenanalyse" by Nicolas Schidlin. He introduces the "Fair Price to Earnings Ratio" as a simple way to evaluate companies/stocks. The method is building the ratio based on company specific multiples that the evaluator decides. Contrary to discounted cashflow methods and other scientific calculations (e.g. CAPM, WACC, etc.), the "Fair Price to Earnings Ratio" does not include complex formulas and uses instead a pragmatic approach. The idea is, that forecasting future results and metrics is a significant part of Valuation, but the first and foremost part is the evaluation of the underlying business model. You can think of this like a "qualitative evaluation approach".</p>
+        <p>To calculate the "Fair Price to Earnings Ratio" we will introduce a set of valuation aspects. The evaluator will grade the company in these aspects and the resulting numbers will be added. In the graphic below the relevant valuation aspects are shown.</p>
+        <div style="width: 50%">
+            <div class="d-flex justify-content-center"><div class="d-flex justify-content-center border" style="width: 50%"><p>Unique Considerations</p></div></div>
+            <div class="d-flex justify-content-center"><div class="d-flex justify-content-center border" style="width: 60%"><p>Growth</p></div></div>
+            <div class="d-flex justify-content-center"><div class="d-flex justify-content-center border" style="width: 70%"><p>Profitability</p></div></div>
+            <div class="d-flex justify-content-center"><div class="d-flex justify-content-center border" style="width: 80%"><p>Market Position</p></div></div>
+            <div class="d-flex justify-content-center"><div class="d-flex justify-content-center border" style="width: 90%"><p>Financial Stability</p></div></div>
+        </div>
+        <p>Our "Fair Price to Earnings Ratio"is based on the following assumption:</p>
+        <p>Fair Price to Earnings Ratio = Risk Component + Growth Factor</p>
+        <p>The risk part is crucial to our calculation (and also to other calculations e.g. DCF) and will be based on the three "base layers" -> Financial Stability, Market Position and Profitablity</p>
+    </div>
+    <!-- Baseline -->
+    <div id="baselineFPER">
+        <h6>Baseline</h6>
+        <p>When calculating the "Fair Price to Earnings Ratio" we can start with a baseline value (Minimum) where healthy companies normally do not fall below. Nicolas Schmidlin uses in his book a value of 7. He found that stocks with a Price to Earnings Ratio below 10 are normally only stocks in slow growing sectors with high competition. He states in normal market phases there are seldom companies below 7. The idea is that the worst stocks have a Price to Earnings Ratio of 7 and the prospective investment gets points added for "good characteristics".</p>
+        <table class="table">
+            <tr>
+                <td style="width: 10%"></td>
+                <td>
+                    <div class="form-group">
+                        <label for="baselineFPER1">Baseline for Fair Price to Earnings Ratio</label>
+                        <input type="number" class="form-control" id="baselineFPER1" onchange="updateFPER()" aria-describedby="baselineFPER1Help" min="4" max="10" step="0.5" value="7" style="text-align:center" />
+                        <small id="baselineFPER1Help" class="form-text text-muted">In normal market conditions this will be around 7.</small>
+                    </div>
+                </td>
+                <td style="text-align: center; vertical-align: middle; width: 50%">
+                    <p id="fper1"></p>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- Financial Stability -->
+    <div id="finStabFPER">
+        <h6>Financial Stability</h6>
+        <p>Financial Stability is the base of every company. Without it, market position, profitability or growth expectations are worthless. The main metrics we will look at are Gearing, Dynamic Gearing and the Equity Ratio. We can give up to 3 points for financial stability. (3 = best, 0 = worst)</p>
+
+        <table class="table">
+            <tr>
+                <th>Metric</th>
+                <th>@Model.CompanyData.Ticker</th>
+                <th>@Model.IndustryData.IndustryName</th>
+                <th>@Model.SectorData.SectorName</th>
+                <th>@Model.MarketData.MarketName</th>
+            </tr>
+
+            @foreach (var metricName in Model.IndustryData.Metrics
+   .Where(e => e.MetricName == "EquityRatio" ||
+   e.MetricName == "Gearing" ||
+   e.MetricName == "DynamicGearing")
+   .Select(e => e.MetricName))
+                {
+
+                    if (MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling) != null)
+                    {
+
+                        decimal metricValueOfCompany = ((decimal)(MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling)));
+
+                    <tr>
+                        <td>
+                            @metricName
+                        </td>
+                        <td>
+                            @String.Format("{0:P1}", metricValueOfCompany)
+                        </td>
+                        <td>
+                            <p>Median: @String.Format("{0:P1}", Model.IndustryData.Metrics.First(e => e.MetricName == metricName).Median)</p>
+                            <p>@Model.CompanyData.Ticker is better than <b>@Model.IndustryData.Metrics.First(e => e.MetricName == metricName).GetPercentileForValue(metricValueOfCompany)%</b> in the @Model.IndustryData.IndustryName Industry</p>
+                        </td>
+                        <td>
+                            <p>Median: @String.Format("{0:P1}", Model.SectorData.Metrics.First(e => e.MetricName == metricName).Median)</p>
+                            <p>@Model.CompanyData.Ticker is better than <b>@Model.SectorData.Metrics.First(e => e.MetricName == metricName).GetPercentileForValue(metricValueOfCompany)%</b> in the @Model.SectorData.SectorName Sector</p>
+                        </td>
+                        <td>
+                            <p>Median: @String.Format("{0:P1}", Model.MarketData.Metrics.First(e => e.MetricName == metricName).Median)</p>
+                            <p>@Model.CompanyData.Ticker is better than <b>@Model.MarketData.Metrics.First(e => e.MetricName == metricName).GetPercentileForValue(metricValueOfCompany)%</b> in the @Model.MarketData.MarketName market</p>
+                        </td>
+                    </tr>
+                    }
+                }
+
+        </table>
+        <table class="table">
+            <tr>
+                <td style="width: 10%"></td>
+                <td>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="finStabRadios" id="finStabRadio0" onchange="updateFPER()" value="0" checked />
+                            <label class="form-check-label" for="finStabRadio0">0 (Worst)</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="finStabRadios" id="finStabRadio1" onchange="updateFPER()" value="1" />
+                            <label class="form-check-label" for="finStabRadio1">1</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="finStabRadios" id="finStabRadio2" onchange="updateFPER()" value="2" />
+                            <label class="form-check-label" for="finStabRadio2">2</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="finStabRadios" id="finStabRadio3" onchange="updateFPER()" value="3" />
+                            <label class="form-check-label" for="finStabRadio3">3 (Best)</label>
+                        </div>
+                    </div>
+                </td>
+                <td style="text-align: center; vertical-align: middle; width: 50%">
+                    <p id="fper2"></p>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- Market Position & Profitability -->
+    <div id="marketAndProfFPER">
+        <h6>Market Position & Profitability</h6>
+        <p>To determine the <b>market position</b> of a company it is important to evaluate the company's power compared to other stakeholders (customers, suppliers, competitiors). Furthermore, possible market entry barriers as well as the predictability of the business model must be evaluated.</p>
+        <ul>
+            <li>Rivalry in the market</li>
+            <li>Threat of new competitors</li>
+            <li>Negotiation power of suppliers</li>
+            <li>Negotiation power of customers</li>
+            <li>Threat of substitute products</li>
+        </ul>
+        <p>Aside from the financial stability and the market position it is inherent that the company is profitable. The more the better. Many old government-owned business had a monopoly. Their market position was great but they were not profitable and therefore not interesting for investors. Only by efficiently and effectively using the market position and the available ressources can value for investors be generated. The best metric for profitability is the "Return on Capital Employed". The higher this metric, the higher the income of the company per unit of capital. </p>
+
+        <table class="table">
+            <tr>
+                <th>Metric</th>
+                <th>@Model.CompanyData.Ticker</th>
+                <th>@Model.IndustryData.IndustryName</th>
+                <th>@Model.SectorData.SectorName</th>
+                <th>@Model.MarketData.MarketName</th>
+            </tr>
+            @{
+
+                decimal metricValueOfCompanyROCE = ((decimal)(MostRecentFiling.GetType().GetProperty("ReturnOnCapitalEmployed").GetValue(MostRecentFiling)));
+
+                <tr>
+                    <td>
+                        Return on Capital Employed
+                    </td>
+                    <td>
+                        @String.Format("{0:P1}", metricValueOfCompanyROCE)
+                    </td>
+                    <td>
+                        <p>Median: @String.Format("{0:P1}", Model.IndustryData.Metrics.First(e => e.MetricName == "ReturnOnCapitalEmployed").Median)</p>
+                        <p>@Model.CompanyData.Ticker is better than <b>@Model.IndustryData.Metrics.First(e => e.MetricName == "ReturnOnCapitalEmployed").GetPercentileForValue(metricValueOfCompanyROCE)%</b> in the @Model.IndustryData.IndustryName Industry</p>
+                    </td>
+                    <td>
+                        <p>Median: @String.Format("{0:P1}", Model.SectorData.Metrics.First(e => e.MetricName == "ReturnOnCapitalEmployed").Median)</p>
+                        <p>@Model.CompanyData.Ticker is better than <b>@Model.SectorData.Metrics.First(e => e.MetricName == "ReturnOnCapitalEmployed").GetPercentileForValue(metricValueOfCompanyROCE)%</b> in the @Model.SectorData.SectorName Sector</p>
+                    </td>
+                    <td>
+                        <p>Median: @String.Format("{0:P1}", Model.MarketData.Metrics.First(e => e.MetricName == "ReturnOnCapitalEmployed").Median)</p>
+                        <p>@Model.CompanyData.Ticker is better than <b>@Model.MarketData.Metrics.First(e => e.MetricName == "ReturnOnCapitalEmployed").GetPercentileForValue(metricValueOfCompanyROCE)%</b> in the @Model.MarketData.MarketName market</p>
+                    </td>
+                </tr>
+            }
+        </table>
+
+        <p>The market position will be multiplicated with the profitability. See in the table below. </p>
+
+        <table class="table">
+            <tr>
+                <td style="width: 10%"></td>
+                <td>
+                    <table class="table">
+                        <tr>
+                            <th colspan="2">Market Position</th>
+                            <th></th>
+                            <th colspan="2">Profitability</th>
+                        </tr>
+                        <tr>
+                            <td>Position</td>
+                            <td>Points</td>
+                            <td rowspan="6" style="text-align: center; vertical-align: middle;">Multiplicated with ...</td>
+                            <td>ROCE</td>
+                            <td>Points</td>
+                        </tr>
+                        <tr>
+                            <td>Bad</td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="marketRadios" id="marketRadio0" onchange="updateFPER()" value="0" checked />
+                                    <label class="form-check-label" for="marketRadio0">0</label>
+                                </div>
+                            </td>
+                            <td>0 - 5 %</td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="profitabilityRadios" id="profitabilityRadio0" onchange="updateFPER()" value="0" checked />
+                                    <label class="form-check-label" for="profitabilityRadio0">0</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Average</td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="marketRadios" id="marketRadio1" onchange="updateFPER()" value="1" />
+                                    <label class="form-check-label" for="marketRadio1">1</label>
+                                </div>
+                            </td>
+                            <td>5 - 10 %</td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="profitabilityRadios" id="profitabilityRadio1" onchange="updateFPER()" value="1" />
+                                    <label class="form-check-label" for="profitabilityRadio1">1</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Good</td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="marketRadios" id="marketRadio2" onchange="updateFPER()" value="2" />
+                                    <label class="form-check-label" for="marketRadio2">2</label>
+                                </div>
+                            </td>
+                            <td>10 - 15 %</td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="profitabilityRadios" id="profitabilityRadio2" onchange="updateFPER()" value="2" />
+                                    <label class="form-check-label" for="profitabilityRadio2">2</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Very Good</td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="marketRadios" id="marketRadio3" onchange="updateFPER()" value="3" />
+                                    <label class="form-check-label" for="marketRadio3">3</label>
+                                </div>
+                            </td>
+                            <td>15 - 20 %</td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="profitabilityRadios" id="profitabilityRadio3" onchange="updateFPER()" value="3" />
+                                    <label class="form-check-label" for="profitabilityRadio3">3</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Top</td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="marketRadios" id="marketRadio4" onchange="updateFPER()" value="4" />
+                                    <label class="form-check-label" for="marketRadio4">4</label>
+                                </div>
+                            </td>
+                            <td>> 20 %</td>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="profitabilityRadios" id="profitabilityRadio4" onchange="updateFPER()" value="4" />
+                                    <label class="form-check-label" for="profitabilityRadio4">4</label>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="text-align: center; vertical-align: middle; width: 50%">
+                    <p id="fper3"></p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script>function updateFPER() {
+
+            let baseline = parseFloat(document.getElementById("baselineFPER1").value);
+            let finStab = 0;
+            let marketPosition = 0;
+            let profitability = 0;
+
+            for (let i = 0; i < document.getElementById("finStabFPER").getElementsByClassName("form-check-input").length; i++) {
+                let inputItem = document.getElementById("finStabFPER").getElementsByClassName("form-check-input")[i];
+
+                if (inputItem.name === "finStabRadios" && inputItem.checked)
+                    finStab = parseFloat(inputItem.value);
+            }
+            for (let i = 0; i < document.getElementById("marketAndProfFPER").getElementsByClassName("form-check-input").length; i++) {
+                let inputItem = document.getElementById("marketAndProfFPER").getElementsByClassName("form-check-input")[i];
+
+                if (inputItem.name === "marketRadios" && inputItem.checked)
+                    marketPosition = parseFloat(inputItem.value);
+            }
+            for (let i = 0; i < document.getElementById("marketAndProfFPER").getElementsByClassName("form-check-input").length; i++) {
+                let inputItem = document.getElementById("marketAndProfFPER").getElementsByClassName("form-check-input")[i];
+
+                if (inputItem.name === "profitabilityRadios" && inputItem.checked)
+                    profitability = parseFloat(inputItem.value);
+            }
+
+            document.getElementById("fper1").innerHTML = "FPER: " + baseline;
+            document.getElementById("fper2").innerHTML = "FPER: " + (baseline + finStab);
+            document.getElementById("fper3").innerHTML = "FPER: " + (baseline + finStab + (marketPosition * profitability));
+        }
+
+        updateFPER();</script>
+</div>
