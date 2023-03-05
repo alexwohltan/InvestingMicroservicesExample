@@ -2,6 +2,10 @@
 
 @{
     DataStructures.FundamentalData.Filing MostRecentFiling = Model.CompanyData.Filings.OrderByDescending(e => e.FilingDate).First();
+    DataStructures.FundamentalData.Filing? Filing2 = Model.CompanyData.Filings.Count() >= 2 ? Model.CompanyData.Filings.OrderByDescending(e => e.FilingDate).ToList()[1] : null;
+    DataStructures.FundamentalData.Filing? Filing3 = Model.CompanyData.Filings.Count() >= 3 ? Model.CompanyData.Filings.OrderByDescending(e => e.FilingDate).ToList()[2] : null;
+    DataStructures.FundamentalData.Filing? Filing4 = Model.CompanyData.Filings.Count() >= 4 ? Model.CompanyData.Filings.OrderByDescending(e => e.FilingDate).ToList()[3] : null;
+    DataStructures.FundamentalData.Filing? Filing5 = Model.CompanyData.Filings.Count() >= 5 ? Model.CompanyData.Filings.OrderByDescending(e => e.FilingDate).ToList()[4] : null;
 }
 
 
@@ -12,15 +16,15 @@
         <p>The following ideas and calculations are based on the book "Unternehmensbewertung & Kennzahlenanalyse" by Nicolas Schidlin. He introduces the "Fair Price to Earnings Ratio" as a simple way to evaluate companies/stocks. The method is building the ratio based on company specific multiples that the evaluator decides. Contrary to discounted cashflow methods and other scientific calculations (e.g. CAPM, WACC, etc.), the "Fair Price to Earnings Ratio" does not include complex formulas and uses instead a pragmatic approach. The idea is, that forecasting future results and metrics is a significant part of Valuation, but the first and foremost part is the evaluation of the underlying business model. You can think of this like a "qualitative evaluation approach".</p>
         <p>To calculate the "Fair Price to Earnings Ratio" we will introduce a set of valuation aspects. The evaluator will grade the company in these aspects and the resulting numbers will be added. In the graphic below the relevant valuation aspects are shown.</p>
         <div style="width: 50%">
-            <div class="d-flex justify-content-center"><div class="d-flex justify-content-center border" style="width: 50%"><p>Unique Considerations</p></div></div>
-            <div class="d-flex justify-content-center"><div class="d-flex justify-content-center border" style="width: 60%"><p>Growth</p></div></div>
-            <div class="d-flex justify-content-center"><div class="d-flex justify-content-center border" style="width: 70%"><p>Profitability</p></div></div>
-            <div class="d-flex justify-content-center"><div class="d-flex justify-content-center border" style="width: 80%"><p>Market Position</p></div></div>
-            <div class="d-flex justify-content-center"><div class="d-flex justify-content-center border" style="width: 90%"><p>Financial Stability</p></div></div>
+            <div class="d-flex justify-content-center"><div class="d-flex justify-content-center border bg-primary text-light" style="width: 50%"><p>Unique Considerations</p></div></div>
+            <div class="d-flex justify-content-center"><div class="d-flex justify-content-center border bg-primary text-light" style="width: 60%"><p>Growth</p></div></div>
+            <div class="d-flex justify-content-center"><div class="d-flex justify-content-center border bg-secondary text-light" style="width: 70%"><p>Profitability</p></div></div>
+            <div class="d-flex justify-content-center"><div class="d-flex justify-content-center border bg-secondary text-light" style="width: 80%"><p>Market Position</p></div></div>
+            <div class="d-flex justify-content-center"><div class="d-flex justify-content-center border bg-secondary text-light" style="width: 90%"><p>Financial Stability</p></div></div>
         </div>
         <p>Our "Fair Price to Earnings Ratio"is based on the following assumption:</p>
         <p>Fair Price to Earnings Ratio = Risk Component + Growth Factor</p>
-        <p>The risk part is crucial to our calculation (and also to other calculations e.g. DCF) and will be based on the three "base layers" -> Financial Stability, Market Position and Profitablity</p>
+        <p>In the graphic above the "risk layers" are grey and the "growth layers" are blue. The risk part is crucial to our calculation (and also to other calculations e.g. DCF) and will be based on the three "base layers" -> Financial Stability, Market Position and Profitablity.</p>
     </div>
     <!-- Baseline -->
     <div id="baselineFPER">
@@ -57,16 +61,16 @@
             </tr>
 
             @foreach (var metricName in Model.IndustryData.Metrics
-   .Where(e => e.MetricName == "EquityRatio" ||
-   e.MetricName == "Gearing" ||
-   e.MetricName == "DynamicGearing")
-   .Select(e => e.MetricName))
+.Where(e => e.MetricName == "EquityRatio" ||
+e.MetricName == "Gearing" ||
+e.MetricName == "DynamicGearing")
+.Select(e => e.MetricName))
+            {
+
+                if (MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling) != null)
                 {
 
-                    if (MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling) != null)
-                    {
-
-                        decimal metricValueOfCompany = ((decimal)(MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling)));
+                    decimal metricValueOfCompany = ((decimal)(MostRecentFiling.GetType().GetProperty(metricName).GetValue(MostRecentFiling)));
 
                     <tr>
                         <td>
@@ -88,8 +92,8 @@
                             <p>@Model.CompanyData.Ticker is better than <b>@Model.MarketData.Metrics.First(e => e.MetricName == metricName).GetPercentileForValue(metricValueOfCompany)%</b> in the @Model.MarketData.MarketName market</p>
                         </td>
                     </tr>
-                    }
                 }
+            }
 
         </table>
         <table class="table">
@@ -282,37 +286,479 @@
             </tr>
         </table>
     </div>
+    <!-- Growth -->
+    <div id="growthFPER">
+        <h6>Growth</h6>
+        <p>Growth is the most important factor for the Price to Earnings Ratio. The problem is that high-growth companies are often operating in quite unpredictable new markets and therefore hard to predict. Because of this the growth factor is the most error-prone factor and should be evaluated carefully. Because of this it is better to be cautios and miss some opportunities instead of investing in a bad investment. We should look at the growth rate over at least 5 years which could be the first indication for the actual possible growth of the company. But be careful, growth rates in the double digit area are not often sustainable. Always look at the complete product life cycle. Early stage products and markets often show high growth rates, but after some time these rates stagnate or fall again after introducing subsititues or new inventions. </p>
+        <p>As we are trying to find a "Fair Price to Earnings Ratio" the base number we will look at are the earnings (earnings growth rate). We will now look at the growth of the earnings of the company.</p>
 
-    <script>function updateFPER() {
+        <table class="table table-hover">
+            <tr>
+                <th>Metric</th>
+                @if (Filing5 != null)
+                {
+                    <th>@Filing5.FiscalYear</th>
+                }
+                @if (Filing4 != null)
+                {
+                <th>@Filing4.FiscalYear</th>
+                }
+                @if (Filing3 != null)
+                {
+                <th>@Filing3.FiscalYear</th>
+                }
+                @if (Filing2 != null)
+                {
+                <th>@Filing2.FiscalYear</th>
+                }
+                <th>@MostRecentFiling.FiscalYear</th>
+            </tr>
+            <tr>
+                <td>Revenue</td>
+                @if (Filing5 != null)
+                {
+                    <td>@((Filing5.IncomeStatement.Revenue / 1000).ToString("#,##0"))</td>
+                }
+                @if (Filing4 != null)
+                {
+                <td>@((Filing4.IncomeStatement.Revenue / 1000).ToString("#,##0"))</td>
+                }
+                @if (Filing3 != null)
+                {
+                <td>@((Filing3.IncomeStatement.Revenue / 1000).ToString("#,##0"))</td>
+                }
+                @if (Filing2 != null)
+                {
+                <td>@((Filing2.IncomeStatement.Revenue / 1000).ToString("#,##0"))</td>
+                }
+                <td>@((MostRecentFiling.IncomeStatement.Revenue / 1000).ToString("#,##0"))</td>
+            </tr>
+            <tr>
+                <th>Revenue Growth</th>
+                @if (Filing5 != null)
+                {
+                    <td></td>
+                }
+                @if (Filing4 != null)
+                {
+                <td>
+                    @if (Filing5 != null)
+                    {
+                        @string.Format("{0:P1}", (Filing4.IncomeStatement.Revenue / Filing5.IncomeStatement.Revenue) - 1);
+                    }
+                </td>
+                }
+                @if (Filing3 != null)
+                {
+                <td>
+                    @if (Filing4 != null)
+                    {
+                        @string.Format("{0:P1}", (Filing3.IncomeStatement.Revenue / Filing4.IncomeStatement.Revenue) - 1);
+                    }
+                </td>
+                }
+                @if (Filing2 != null)
+                {
+                <td>
+                    @if (Filing3 != null)
+                    {
+                        @string.Format("{0:P1}", (Filing2.IncomeStatement.Revenue / Filing3.IncomeStatement.Revenue) - 1);
+                    }
+                </td>
+                }
+                <td>
+                    @if (Filing2 != null)
+                    {
+                        @string.Format("{0:P1}", (MostRecentFiling.IncomeStatement.Revenue / Filing2.IncomeStatement.Revenue) - 1);
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Operating Income</td>
+                @if (Filing5 != null)
+                {
+                    <td>@((Filing5.IncomeStatement.OperatingIncomeLoss / 1000).ToString("#,##0"))</td>
+                }
+                @if (Filing4 != null)
+                {
+                <td>@((Filing4.IncomeStatement.OperatingIncomeLoss / 1000).ToString("#,##0"))</td>
+                }
+                @if (Filing3 != null)
+                {
+                <td>@((Filing3.IncomeStatement.OperatingIncomeLoss / 1000).ToString("#,##0"))</td>
+                }
+                @if (Filing2 != null)
+                {
+                <td>@((Filing2.IncomeStatement.OperatingIncomeLoss / 1000).ToString("#,##0"))</td>
+                }
+                <td>@((MostRecentFiling.IncomeStatement.OperatingIncomeLoss / 1000).ToString("#,##0"))</td>
+            </tr>
+            <tr>
+                <th>Operating Income Growth</th>
+                @if (Filing5 != null)
+                {
+                    <td></td>
+                }
+                @if (Filing4 != null)
+                {
+                <td>
+                    @if (Filing5 != null)
+                    {
+                        @string.Format("{0:P1}", (Filing4.IncomeStatement.OperatingIncomeLoss / Filing5.IncomeStatement.OperatingIncomeLoss) - 1);
+                    }
+                </td>
+                }
+                @if (Filing3 != null)
+                {
+                <td>
+                    @if (Filing4 != null)
+                    {
+                        @string.Format("{0:P1}", (Filing3.IncomeStatement.OperatingIncomeLoss / Filing4.IncomeStatement.OperatingIncomeLoss) - 1);
+                    }
+                </td>
+                }
+                @if (Filing2 != null)
+                {
+                <td>
+                    @if (Filing3 != null)
+                    {
+                        @string.Format("{0:P1}", (Filing2.IncomeStatement.OperatingIncomeLoss / Filing3.IncomeStatement.OperatingIncomeLoss) - 1);
+                    }
+                </td>
+                }
+                <td>
+                    @if (Filing2 != null)
+                    {
+                        @string.Format("{0:P1}", (MostRecentFiling.IncomeStatement.OperatingIncomeLoss / Filing2.IncomeStatement.OperatingIncomeLoss) - 1);
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Earnings</td>
+                @if (Filing5 != null)
+                {
+                    <td>@((Filing5.IncomeStatement.NetIncome / 1000).ToString("#,##0"))</td>
+                }
+                if (Filing4 != null)
+                {
+                <td>@((Filing4.IncomeStatement.NetIncome / 1000).ToString("#,##0"))</td>
+                }
+                if (Filing3 != null)
+                {
+                <td>@((Filing3.IncomeStatement.NetIncome / 1000).ToString("#,##0"))</td>
+                }
+                if (Filing2 != null)
+                {
+                <td>@((Filing2.IncomeStatement.NetIncome / 1000).ToString("#,##0"))</td>
+                }
+                <td>@((MostRecentFiling.IncomeStatement.NetIncome / 1000).ToString("#,##0"))</td>
+            </tr>
+            <tr>
+                <th>Earnings Growth</th>
+                @if (Filing5 != null)
+                {
+                    <td></td>
+                }
+                @if (Filing4 != null)
+                {
+                <td>
+                    @if (Filing5 != null)
+                    {
+                        @string.Format("{0:P1}", (Filing4.IncomeStatement.NetIncome / Filing5.IncomeStatement.NetIncome) - 1);
+                    }
+                </td>
+                }
+                @if (Filing3 != null)
+                {
+                <td>
+                    @if (Filing4 != null)
+                    {
+                        @string.Format("{0:P1}", (Filing3.IncomeStatement.NetIncome / Filing4.IncomeStatement.NetIncome) - 1);
+                    }
+                </td>
+                }
+                @if (Filing2 != null)
+                {
+                <td>
+                    @if (Filing3 != null)
+                    {
+                        @string.Format("{0:P1}", (Filing2.IncomeStatement.NetIncome / Filing3.IncomeStatement.NetIncome) - 1);
+                    }
+                </td>
+                }
+                <td>
+                    @if (Filing2 != null)
+                    {
+                        @string.Format("{0:P1}", (MostRecentFiling.IncomeStatement.NetIncome / Filing2.IncomeStatement.NetIncome) - 1);
+                    }
+                </td>
+            </tr>
+        </table>
+        <p>As the Growth rate of the earnings / net income is the most important for this calculation, we will now calculate the Compound Annual Growth Rate (CAGR) of the earnings.</p>
+        <table class="table">
+            <tr>
+                <td style="width: 10%"></td>
+                <td>
+                    CAGR = ((Earnings year n / Earnings year 1) ^ (1 / n-1)) - 1
+                </td>
+                <td style="text-align: center; vertical-align: middle; width: 50%">
+                    @if (Model.CompanyData.Filings.Count() >= 5)
+                    {
 
-            let baseline = parseFloat(document.getElementById("baselineFPER1").value);
-            let finStab = 0;
-            let marketPosition = 0;
-            let profitability = 0;
+                                @string.Format("CAGR = {0:P1}", (Math.Pow((double)(MostRecentFiling.IncomeStatement.NetIncome / Filing5.IncomeStatement.NetIncome), ((double)1 / (5 - 1))) - 1));
+                                }
+                                else if (Model.CompanyData.Filings.Count() < 3)
+                            {
+                                @string.Format("Not Enough Data");
+                            }
+                            else
+                            {
+                                @string.Format("CAGR = {0:P1}", (Math.Pow((double)(MostRecentFiling.IncomeStatement.NetIncome / Model.CompanyData.Filings.OrderBy(e => e.FilingDate).First().IncomeStatement.NetIncome), (1 / (Model.CompanyData.Filings.Count() - 1))) - 1));
+                            }
+                        </td>
+                    </tr>
+                </table>
+                <p>The points for growth are awarded as shown in the table below.</p>
+                <table class="table" style="vertical-align: middle">
+                    <tr>
+                        <td style="width: 10%"></td>
+                        <td>
 
-            for (let i = 0; i < document.getElementById("finStabFPER").getElementsByClassName("form-check-input").length; i++) {
-                let inputItem = document.getElementById("finStabFPER").getElementsByClassName("form-check-input")[i];
+                            <table class="table">
+                                <tr>
+                                    <th>Growth</th>
+                                    <th>Points</th>
+                                    <th>Comments</th>
+                                </tr>
+                                <tr>
+                                    <td rowspan="3">Negative</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="growthRadios" id="growthRadio_3" onchange="updateFPER()" value="-3" />
+                                            <label class="form-check-label" for="growthRadio_3">- 3</label>
+                                        </div>
+                                    </td>
+                                    <td rowspan="3">Depending on the growth decrease.</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="growthRadios" id="growthRadio_2" onchange="updateFPER()" value="-2" />
+                                            <label class="form-check-label" for="growthRadio_2">- 2</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="growthRadios" id="growthRadio_1" onchange="updateFPER()" value="-1" />
+                                            <label class="form-check-label" for="growthRadio_1">- 1</label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>0 - 3 %</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="growthRadios" id="growthRadio0" onchange="updateFPER()" value="0" checked />
+                                            <label class="form-check-label" for="growthRadio0">0</label>
+                                        </div>
+                                    </td>
+                                    <td>Growth Rate = Inflation.</td>
+                                </tr>
+                                <tr>
+                                    <td>3 - 5 %</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="growthRadios" id="growthRadio1" onchange="updateFPER()" value="0.5" />
+                                            <label class="form-check-label" for="growthRadio1">0.5</label>
+                                        </div>
+                                    </td>
+                                    <td>Slow, but steady growth.</td>
+                                </tr>
+                                <tr>
+                                    <td>5 - 7 %</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="growthRadios" id="growthRadio2" onchange="updateFPER()" value="1.5" />
+                                            <label class="form-check-label" for="growthRadio2">1.5</label>
+                                        </div>
+                                    </td>
+                                    <td>Quite above average growth.</td>
+                                </tr>
+                                <tr>
+                                    <td>7 - 10 %</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="growthRadios" id="growthRadio3" onchange="updateFPER()" value="2.5" />
+                                            <label class="form-check-label" for="growthRadio3">2.5</label>
+                                        </div>
+                                    </td>
+                                    <td>Above average growth.</td>
+                                </tr>
+                                <tr>
+                                    <td>10 - 15 %</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="growthRadios" id="growthRadio4" onchange="updateFPER()" value="3.5" />
+                                            <label class="form-check-label" for="growthRadio4">3.5</label>
+                                        </div>
+                                    </td>
+                                    <td>High growth rate. Doubling every 5 years.</td>
+                                </tr>
+                                <tr>
+                                    <td>15 - 20 %</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="growthRadios" id="growthRadio5" onchange="updateFPER()" value="4.5" />
+                                            <label class="form-check-label" for="growthRadio5">4.5</label>
+                                        </div>
+                                    </td>
+                                    <td>Very high growth rate. Doubling every 4 years.</td>
+                                </tr>
+                                <tr>
+                                    <td>20 - 25 %</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="growthRadios" id="growthRadio6" onchange="updateFPER()" value="5.5" />
+                                            <label class="form-check-label" for="growthRadio6">5.5</label>
+                                        </div>
+                                    </td>
+                                    <td>Outstanding growth rate. Doubling every 3 years.</td>
+                                </tr>
 
-                if (inputItem.name === "finStabRadios" && inputItem.checked)
-                    finStab = parseFloat(inputItem.value);
-            }
-            for (let i = 0; i < document.getElementById("marketAndProfFPER").getElementsByClassName("form-check-input").length; i++) {
-                let inputItem = document.getElementById("marketAndProfFPER").getElementsByClassName("form-check-input")[i];
+                            </table>
 
-                if (inputItem.name === "marketRadios" && inputItem.checked)
-                    marketPosition = parseFloat(inputItem.value);
-            }
-            for (let i = 0; i < document.getElementById("marketAndProfFPER").getElementsByClassName("form-check-input").length; i++) {
-                let inputItem = document.getElementById("marketAndProfFPER").getElementsByClassName("form-check-input")[i];
 
-                if (inputItem.name === "profitabilityRadios" && inputItem.checked)
-                    profitability = parseFloat(inputItem.value);
-            }
+                        </td>
+                        <td style="text-align: center; vertical-align: middle; width: 50%">
+                            <p id="fper4"></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <!-- Unique Considerations -->
+                        <div id="individualityFPER">
+                            <h6>Unique Considerations</h6>
+                            <p>Every company is different and should be evaluated individually. Especially with this building block system, there is not much room for individuality. A company could have a lot of cash reserves which are not needed for their operations. These cash reserves should then be added to the valuation.</p>
+                            <table class="table">
+                                <tr>
+                                    <td style="width: 10%"></td>
+                                    <td>
+                                        <div class="form-group">
+                                            <label for="individualityFPER1">Individual Points</label>
+                                            <input type="number" class="form-control" id="individualityFPER1" onchange="updateFPER()" min="0" max="3" step="0.5" value="0" style="text-align:center" />
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle; width: 50%">
+                                        <p id="fper5"></p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <br />
+                        <!-- Result -->
+                        <div id="resultFPER">
+                            <h6>Result</h6>
+                            <table class="table">
+                                <tr>
+                                    <td style="width: 10%"></td>
+                                    <td>
+                                        <table class="table">
+                                            <tr>
+                                                <th>Component</th>
+                                                <th>Value</th>
+                                            </tr>
+                                            <tr>
+                                                <td>Baseline</td>
+                                                <td id="fper1_2"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Financial Stability</td>
+                                                <td id="fper2_2"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Market Position</td>
+                                                <td id="fper3_2"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Profitability</td>
+                                                <td id="fper3_3"></td>
+                                            </tr>
+                                            <tr class="font-weight-bold">
+                                                <td>Risk Component</td>
+                                                <td id="fper_risk"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Growth</td>
+                                                <td id="fper4_2"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Unique Considerations</td>
+                                                <td id="fper5_2"></td>
+                                            </tr>
+                                            <tr class="font-weight-bold">
+                                                <td>Fair Price to Earnings Ratio</td>
+                                                <td id="fper_result"></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle; width: 50%">
+                                        <p>Current Price to Earnings Ratio = @Math.Round((double)(Model.CompanyData.Prices.OrderByDescending(e => e.Date).First().AdjClose / MostRecentFiling.IncomeStatement.EPSDiluted), 1)</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
 
-            document.getElementById("fper1").innerHTML = "FPER: " + baseline;
-            document.getElementById("fper2").innerHTML = "FPER: " + (baseline + finStab);
-            document.getElementById("fper3").innerHTML = "FPER: " + (baseline + finStab + (marketPosition * profitability));
-        }
+                        <script>function updateFPER() {
 
-        updateFPER();</script>
+                                let baseline = parseFloat(document.getElementById("baselineFPER1").value);
+                                let finStab = 0;
+                                let marketPosition = 0;
+                                let profitability = 0;
+                                let growth = 0;
+                                let individuality = parseFloat(document.getElementById("individualityFPER1").value);
+
+                                for (let i = 0; i < document.getElementById("finStabFPER").getElementsByClassName("form-check-input").length; i++) {
+                                    let inputItem = document.getElementById("finStabFPER").getElementsByClassName("form-check-input")[i];
+
+                                    if (inputItem.name === "finStabRadios" && inputItem.checked)
+                                        finStab = parseFloat(inputItem.value);
+                                }
+                                for (let i = 0; i < document.getElementById("marketAndProfFPER").getElementsByClassName("form-check-input").length; i++) {
+                                    let inputItem = document.getElementById("marketAndProfFPER").getElementsByClassName("form-check-input")[i];
+
+                                    if (inputItem.name === "marketRadios" && inputItem.checked)
+                                        marketPosition = parseFloat(inputItem.value);
+                                }
+                                for (let i = 0; i < document.getElementById("marketAndProfFPER").getElementsByClassName("form-check-input").length; i++) {
+                                    let inputItem = document.getElementById("marketAndProfFPER").getElementsByClassName("form-check-input")[i];
+
+                                    if (inputItem.name === "profitabilityRadios" && inputItem.checked)
+                                        profitability = parseFloat(inputItem.value);
+                                }
+                                for (let i = 0; i < document.getElementById("growthFPER").getElementsByClassName("form-check-input").length; i++) {
+                                    let inputItem = document.getElementById("growthFPER").getElementsByClassName("form-check-input")[i];
+
+                                    if (inputItem.name === "growthRadios" && inputItem.checked)
+                                        growth = parseFloat(inputItem.value);
+                                }
+
+                                document.getElementById("fper1").innerHTML = "FPER: " + baseline;
+                                document.getElementById("fper2").innerHTML = "FPER: " + (baseline + finStab);
+                                document.getElementById("fper3").innerHTML = "FPER: " + (baseline + finStab + (marketPosition * profitability));
+                                document.getElementById("fper4").innerHTML = "FPER: " + (baseline + finStab + (marketPosition * profitability) + growth);
+                                document.getElementById("fper5").innerHTML = "FPER: " + (baseline + finStab + (marketPosition * profitability) + growth + individuality);
+
+                                document.getElementById("fper1_2").innerHTML = "FPER: " + baseline;
+                                document.getElementById("fper2_2").innerHTML = "FPER: " + finStab;
+                                document.getElementById("fper3_2").innerHTML = "FPER: " + marketPosition;
+                                document.getElementById("fper3_3").innerHTML = "FPER: " + profitability;
+                                document.getElementById("fper_risk").innerHTML = "FPER: " + (baseline + finStab + (marketPosition * profitability));
+                                document.getElementById("fper4_2").innerHTML = "FPER: " + growth;
+                                document.getElementById("fper5_2").innerHTML = "FPER: " + individuality;
+                                document.getElementById("fper_result").innerHTML = "FPER: " + (baseline + finStab + (marketPosition * profitability) + growth + individuality);
+                            }
+
+                            updateFPER();</script>
 </div>
