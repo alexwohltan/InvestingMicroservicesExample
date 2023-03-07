@@ -133,7 +133,7 @@ namespace DataStructures.FundamentalData
         /// = IncomeTaxExpense / EBT
         /// </summary>
         [JsonIgnore]
-        public virtual decimal TaxRate => IncomeTaxExpenseBenefitNet / PretaxIncomeLoss;
+        public virtual decimal TaxRate => PretaxIncomeLoss >= 0 ? (-IncomeTaxExpenseBenefitNet) / PretaxIncomeLoss : (-IncomeTaxExpenseBenefitNet) / (-PretaxIncomeLoss);
 
         public virtual decimal CurrentIncomeTax { get; set; }
         public virtual decimal DeferredIncomeTax { get; set; }

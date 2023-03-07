@@ -27,7 +27,7 @@ namespace DataStructures.FundamentalData
         public virtual decimal DispositionofFixedAssets { get; set; }
         public virtual decimal DispositionofIntangibleAssets { get; set; }
         public virtual decimal AcquisitionofFixedAssetsIntangibles { get; set; }
-        public virtual decimal PurchaseofFixedAssets { get; set; }
+        public virtual decimal PurchaseofFixedAssets { get; set; } // CAPEX
         public virtual decimal AcquisitionofIntangibleAssets { get; set; }
         public virtual decimal OtherChangeinFixedAssetsIntangibles { get; set; }
         public virtual decimal NetChangeinLongTermInvestment { get; set; }

@@ -7,4 +7,8 @@
     {
         @await Html.PartialAsync("Valuation/_FairPriceEarningsRatio", Model)
     }
+    @if (Model.CompanyData.Prices != null && Model.CompanyData.Prices.Count() > 0)
+    {
+        @await Html.PartialAsync("Valuation/_DiscountedCashflowEquityMethod", Model)
+    }
 </div>

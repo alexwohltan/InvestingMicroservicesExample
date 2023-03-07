@@ -1,0 +1,17 @@
+﻿@model CompanyBenchmarkModel
+
+@{
+    DataStructures.FundamentalData.Filing Filing1 = Model.CompanyData.Filings.OrderByDescending(e => e.FilingDate).First();
+    DataStructures.FundamentalData.Filing? Filing2 = Model.CompanyData.Filings.Count() >= 2 ? Model.CompanyData.Filings.OrderByDescending(e => e.FilingDate).ToList()[1] : null;
+    DataStructures.FundamentalData.Filing? Filing3 = Model.CompanyData.Filings.Count() >= 3 ? Model.CompanyData.Filings.OrderByDescending(e => e.FilingDate).ToList()[2] : null;
+    DataStructures.FundamentalData.Filing? Filing4 = Model.CompanyData.Filings.Count() >= 4 ? Model.CompanyData.Filings.OrderByDescending(e => e.FilingDate).ToList()[3] : null;
+    DataStructures.FundamentalData.Filing? Filing5 = Model.CompanyData.Filings.Count() >= 5 ? Model.CompanyData.Filings.OrderByDescending(e => e.FilingDate).ToList()[4] : null;
+}
+
+<div id="FairPriceEarningsRatioView">
+    <h5>Discounted Cashflow Model (Equity Method)</h5>
+
+    <h6>Determining the Free Cashflows / Owners Earnings</h6>
+    <p>We need to forecast the Owners Earnings (Free Cashflow) for the next 5-10 years. Free Cashflow is calculated as follows.</p>
+    @await Html.PartialAsync("Valuation/_FreeCashflowCalculation", Model)
+</div>
