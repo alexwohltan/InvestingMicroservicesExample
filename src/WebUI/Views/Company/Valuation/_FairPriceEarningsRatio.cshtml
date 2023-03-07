@@ -703,8 +703,27 @@ e.MetricName == "DynamicGearing")
                                             </tr>
                                         </table>
                                     </td>
-                                    <td style="text-align: center; vertical-align: middle; width: 50%">
-                                        <p>Current Price to Earnings Ratio = @Math.Round((double)(Model.CompanyData.Prices.OrderByDescending(e => e.Date).First().AdjClose / MostRecentFiling.IncomeStatement.EPSDiluted), 1)</p>
+                                    <td style="width: 10%"></td>
+                                    <td style="text-align: center; vertical-align: middle; width: 40%">
+                                        @*<p>Current Price to Earnings Ratio = @Math.Round((double)(Model.CompanyData.Prices.OrderByDescending(e => e.Date).First().AdjClose / MostRecentFiling.IncomeStatement.EPSDiluted), 1)</p>*@
+
+                                        <table>
+                                            <tr>
+                                                <td class="border-bottom">Current Price</td>
+                                                <td class="border-bottom">
+                                                    @string.Format("{0:#,##0.00}", Model.CompanyData.Prices.OrderByDescending(e => e.Date).First().AdjClose)
+                                                </td>
+                                                <td rowspan="2" style="text-align: center; vertical-align: middle; width: 20%">=</td>
+                                                <td id="currentPER1" rowspan="2" style="text-align: center; vertical-align: middle; width: 30%"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Earnings per Share (expected)</td>
+                                                <td>
+                                                    <input type="number" class="form-control" id="expectedEPS_FPER1" onchange="updatePER()" style="text-align:center; width: 4rem" value="@MostRecentFiling.IncomeStatement.EPSDiluted" />
+                                                </td>
+
+                                            </tr>
+                                        </table>
                                     </td>
                                 </tr>
                             </table>
@@ -760,5 +779,17 @@ e.MetricName == "DynamicGearing")
                                 document.getElementById("fper_result").innerHTML = "FPER: " + (baseline + finStab + (marketPosition * profitability) + growth + individuality);
                             }
 
-                            updateFPER();</script>
+                            updateFPER();
+
+                            function updatePER() {
+                                let currentPrice = @Model.CompanyData.Prices.OrderByDescending(e => e.Date).First().AdjClose;
+                                let expectedEPS = parseFloat(document.getElementById("expectedEPS_FPER1").value);
+
+                                let PER = Math.round(currentPrice / expectedEPS);
+
+                                document.getElementById("currentPER1").innerHTML = PER;
+                            }
+
+                            updatePER();
+    </script>
 </div>
