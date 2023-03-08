@@ -117,6 +117,21 @@ namespace DataStructures.FundamentalData
         public virtual decimal InsuranceSettlement { get; set; }
         public virtual decimal OtherAbnormalItems { get; set; }
 
+        // revenue
+        // revenueCost
+        // operatingExp
+        // ebit
+        // interest
+        // ebt
+        // tax
+        // netIncome
+        // depAmor
+        // nonCash
+        // changeWC
+        // ocf
+        // capex
+        // fcf
+
         /// <summary>
         /// Ergebnis vor Steuern (NOPLAT?)
         /// EBT

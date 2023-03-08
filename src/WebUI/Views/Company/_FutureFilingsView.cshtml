@@ -8,23 +8,8 @@
 }
 
 <div id="FutureFilingsView">
-    <h4 class="display-7">2. Future Cashflows</h4>
-    <p>We will now project the future cashflows of the company. For this, we will project the next 10 years. After 10 years we will use a calculated number (terminal value).</p>
-    <p>Free Cashflow is calculated with the following formula:</p>
-    <p><b>Net Sales / Revenue</b></p>
-    <p>- Cost of Goods Sold / Cost of Revenue</p>
-    <p>- Selling, General and Administrative Costs, Research & Development / Operating Expenses</p>
-    <p><b>= Operating Profit</b></p>
-    <p>- Taxes</p>
-    <p>+ Depreciation / - Appreciation</p>
-    <p><b>= Operating Cashflow</b></p>
-    <p>- Additions to Net Working Capital / Investments in short term assets</p>
-    <p>- Capital Expenditures / Investments</p>
-    <p><b>= Free Cashflow</b></p>
-    <br />
-    <p>The revenue is calculated with a growth rate that is defined by us. Normally we go for something like 5%. The initial value is the historical growth rate of the company's revenue. The other values are calculated as historic percentages of the revenue.</p>
+    <p>The revenue is estimated with a growth rate. Normally we go for something like 5-10%. The initial value is the historical growth rate of the company's revenue. The other values are calculated as historic percentages of the revenue.</p>
 
-    
     <div class="form-group">
         <label for="revenueGrowthRate1">Revenue Growth Rate (in %)</label>
         <input id="revenueGrowthRate1" onchange="revenueGrowthRateChanged(this)" type="number" step="0.5" min="-50" max="100" />
@@ -32,6 +17,7 @@
     </div>
 
     <table class="table small table-hover">
+        <caption>Future Owners Earnings. Numbers in Millions.</caption>
         <tr>
             <th></th>
             @if (Filing4 != null)
@@ -137,7 +123,7 @@
             <td><input id="operatingExpensesInput10" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
         </tr>
         <tr>
-            <td>Operating Income</td>
+            <td>Operating Income (EBIT)</td>
             @if (Filing4 != null)
             {
                 <td>@((Filing4.IncomeStatement.OperatingIncomeLoss / 1000000).ToString("#,##0"))</td>
@@ -161,6 +147,32 @@
             <td><input id="operatingIncomeInput8" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
             <td><input id="operatingIncomeInput9" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
             <td><input id="operatingIncomeInput10" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+        </tr>
+        <tr>
+            <td>Pretax Income (EBT)</td>
+            @if (Filing4 != null)
+            {
+                <td>@((Filing4.IncomeStatement.PretaxIncomeLoss / 1000000).ToString("#,##0"))</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@((Filing3.IncomeStatement.PretaxIncomeLoss / 1000000).ToString("#,##0"))</td>
+            }
+            @if (Filing2 != null)
+            {
+                <td>@((Filing2.IncomeStatement.PretaxIncomeLoss / 1000000).ToString("#,##0"))</td>
+            }
+            <td>@((MostRecentFiling.IncomeStatement.PretaxIncomeLoss / 1000000).ToString("#,##0"))</td>
+            <td><input id="ebtInput1" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="ebtInput2" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="ebtInput3" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="ebtInput4" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="ebtInput5" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="ebtInput6" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="ebtInput7" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="ebtInput8" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="ebtInput9" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
+            <td><input id="ebtInput10" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
         </tr>
         <tr>
             <td>Net Income</td>
@@ -241,18 +253,14 @@
             <td><input id="freeCashflowInput10" style="width: 100%" onchange="filingCalculationChanged(this)" type="number" step="10" /></td>
         </tr>
     </table>
-    <p>Numbers in Millions.</p>
 
-
-
-</div>
-
-<script>
+    <script>
 
     let historicalRevenueGrowthRate = calculateAverageRevenueGrowthRateFromHistoricalData();
     let historicalCostOfRevenuePercentage = calculateAverageCostOfRevenuePercentageFromHistoricalData();
     let historicalOperatingExpensesPercentage = calculateAverageOperatingExpensesPercentageFromHistoricalData();
     // Operating Income = Revenue - CostOfRevenue - OperatingExpenses
+    let historicalEBTtoOperatingIncomePercentage = calculateAverageEBTtoEBITPercentageFromHistoricalData();
     let historicalNetIncomeToOperatingIncomePercentage = calculateAverageNetIncomeToOperatingIncomePercentageFromHistoricalData();
     let historicalOperatingCFNetIncomePercentage = calculateAverageOperatingCFNetIncomePercentageFromHistoricalData();
     let historicalFCFOperatingCashflowPercentage = calculateAverageFCFOperatingCFPercentageFromHistoricalData();
@@ -280,6 +288,11 @@
     function calculateAverageOperatingExpensesPercentageFromHistoricalData() {
         var operationExpenseRatios = [@string.Join(",", Model.Select(e => e.IncomeStatement.OperatingExpenses / e.IncomeStatement.Revenue))];
         return calculateAverageOfSeries(operationExpenseRatios);
+    }
+    // calculates the average percentage of EBT / EBIT
+    function calculateAverageEBTtoEBITPercentageFromHistoricalData() {
+        var ebtRatios = [@string.Join(",", Model.Select(e => e.IncomeStatement.PretaxIncomeLoss / e.IncomeStatement.OperatingIncomeLoss))];
+        return calculateAverageOfSeries(ebtRatios);
     }
     // calculates the average percentage of Net Income / Operating Income
     function calculateAverageNetIncomeToOperatingIncomePercentageFromHistoricalData() {
@@ -400,6 +413,7 @@
                 }
                 calculateRemainingFields(nameOfNextField, columnOfChange);
                 break;
+
             case "netIncome" + "Input":
                 if (columnOfField != "10") {
                     nameOfNextField = (categoryOfField + (parseInt(columnOfField) + 1));
@@ -449,4 +463,6 @@
         }
         return sum / series.length;
     }
-</script>
+    </script>
+
+</div>

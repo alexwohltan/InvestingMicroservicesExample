@@ -1,0 +1,472 @@
+﻿@model CompanyBenchmarkModel
+
+@{
+    DataStructures.FundamentalData.Filing MostRecentFiling = Model.CompanyData.Filings.OrderByDescending(e => e.FilingDate).First();
+    DataStructures.FundamentalData.Filing FirstFiling = Model.CompanyData.Filings.Count() >= 5 ? Model.CompanyData.Filings.OrderByDescending(e => e.FilingDate).ToList()[4] : Model.CompanyData.Filings.Last();
+    int historicalYears = Model.CompanyData.Filings.Count() >= 5 ? 5 : Model.CompanyData.Filings.Count();
+}
+
+<div id="futureFreeCashflowCalculation">
+    <table class="table small table-hover" style="width: 50%">
+        <caption>Ratios for FCF calculation. Numbers in Percent.</caption>
+        <thead>
+            <tr>
+                <th>Ratio</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Revenue Growth Rate</td>
+                <td><input id="revenueGrowthInput1" style="width: 100%; text-align: right" onchange="ratioChanged(this)" type="number" step="1" /></td>
+                <td>Revenue grows by this every year. Normally 5-10% annually.</td>
+            </tr>
+            <tr>
+                <td>Revenue Costs Margin</td>
+                <td><input id="revenueCostsMarginInput1" style="width: 100%; text-align: right" onchange="ratioChanged(this)" type="number" step="1" /></td>
+                <td>Cost of Revenue / Revenue</td>
+            </tr>
+            <tr>
+                <td>Operating Expense Margin</td>
+                <td><input id="operatingExpMarginInput1" style="width: 100%; text-align: right" onchange="ratioChanged(this)" type="number" step="1" /></td>
+                <td>Operating Expenses / Revenue</td>
+            </tr>
+            <tr>
+                <td>Interest & Other Margin</td>
+                <td><input id="interestMarginInput1" style="width: 100%; text-align: right" onchange="ratioChanged(this)" type="number" step="1" /></td>
+                <td>Interest Expenses & Others / Revenue</td>
+            </tr>
+            <tr>
+                <td>Tax Rate</td>
+                <td><input id="taxRateInput1" style="width: 100%; text-align: right" onchange="ratioChanged(this)" type="number" step="1" /></td>
+                <td>Income Tax / Pretax Income</td>
+            </tr>
+            <tr>
+                <td>D&A Margin</td>
+                <td><input id="depAmorMarginInput1" style="width: 100%; text-align: right" onchange="ratioChanged(this)" type="number" step="1" /></td>
+                <td>Depreciation & Amortization / Revenue</td>
+            </tr>
+            <tr>
+                <td>Non Cash Margin</td>
+                <td><input id="nonCashMarginInput1" style="width: 100%; text-align: right" onchange="ratioChanged(this)" type="number" step="1" /></td>
+                <td>Non Cash Items / Revenue</td>
+            </tr>
+            <tr>
+                <td>Working Capital Change Margin</td>
+                <td><input id="wcChangeMarginInput1" style="width: 100%; text-align: right" onchange="ratioChanged(this)" type="number" step="1" /></td>
+                <td>Change in Working Capital / Revenue</td>
+            </tr>
+            <tr>
+                <td>CAPEX Margin</td>
+                <td><input id="capexMarginInput1" style="width: 100%; text-align: right" onchange="ratioChanged(this)" type="number" step="1" /></td>
+                <td>Purchase of Fixed Assets (CAPEX) / Revenue</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table small table-hover">
+        <caption>Future Owners Earnings. Numbers in Millions.</caption>
+        <thead>
+            <tr style="text-align: center">
+                <th></th>
+                <th>@(MostRecentFiling.FiscalYear + 1)</th>
+                <th>@(MostRecentFiling.FiscalYear + 2)</th>
+                <th>@(MostRecentFiling.FiscalYear + 3)</th>
+                <th>@(MostRecentFiling.FiscalYear + 4)</th>
+                <th>@(MostRecentFiling.FiscalYear + 5)</th>
+                <th>@(MostRecentFiling.FiscalYear + 6)</th>
+                <th>@(MostRecentFiling.FiscalYear + 7)</th>
+                <th>@(MostRecentFiling.FiscalYear + 8)</th>
+                <th>@(MostRecentFiling.FiscalYear + 9)</th>
+                <th>@(MostRecentFiling.FiscalYear + 10)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Revenue</td>
+                <td><input id="revenueInput1" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueInput2" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueInput3" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueInput4" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueInput5" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueInput6" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueInput7" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueInput8" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueInput9" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueInput10" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+            </tr>
+            <tr>
+                <td>Cost Of Revenue</td>
+                <td><input id="revenueCostInput1" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueCostInput2" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueCostInput3" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueCostInput4" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueCostInput5" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueCostInput6" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueCostInput7" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueCostInput8" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueCostInput9" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="revenueCostInput10" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+            </tr>
+            <tr>
+                <td>Operating Expenses</td>
+                <td><input id="operatingExpInput1" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="operatingExpInput2" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="operatingExpInput3" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="operatingExpInput4" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="operatingExpInput5" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="operatingExpInput6" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="operatingExpInput7" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="operatingExpInput8" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="operatingExpInput9" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="operatingExpInput10" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+            </tr>
+            <tr>
+                <td>Operating Income (EBIT)</td>
+                <td><input id="ebitInput1" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebitInput2" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebitInput3" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebitInput4" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebitInput5" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebitInput6" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebitInput7" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebitInput8" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebitInput9" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebitInput10" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+            </tr>
+            <tr>
+                <td>Interest Expenses & Others</td>
+                <td><input id="interestInput1" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="interestInput2" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="interestInput3" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="interestInput4" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="interestInput5" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="interestInput6" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="interestInput7" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="interestInput8" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="interestInput9" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="interestInput10" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+            </tr>
+            <tr>
+                <td>Pretax Income (EBT)</td>
+                <td><input id="ebtInput1" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebtInput2" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebtInput3" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebtInput4" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebtInput5" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebtInput6" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebtInput7" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebtInput8" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebtInput9" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ebtInput10" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+            </tr>
+            <tr>
+                <td>Income Tax</td>
+                <td><input id="taxInput1" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="taxInput2" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="taxInput3" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="taxInput4" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="taxInput5" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="taxInput6" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="taxInput7" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="taxInput8" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="taxInput9" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="taxInput10" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+            </tr>
+            <tr>
+                <td>Net Income</td>
+                <td><input id="netIncomeInput1" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="netIncomeInput2" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="netIncomeInput3" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="netIncomeInput4" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="netIncomeInput5" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="netIncomeInput6" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="netIncomeInput7" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="netIncomeInput8" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="netIncomeInput9" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="netIncomeInput10" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+            </tr>
+            <tr>
+                <td>Depreciation & Amortization</td>
+                <td><input id="depAmorInput1" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="depAmorInput2" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="depAmorInput3" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="depAmorInput4" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="depAmorInput5" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="depAmorInput6" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="depAmorInput7" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="depAmorInput8" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="depAmorInput9" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="depAmorInput10" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+            </tr>
+            <tr>
+                <td>Non Cash Items</td>
+                <td><input id="nonCashInput1" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="nonCashInput2" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="nonCashInput3" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="nonCashInput4" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="nonCashInput5" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="nonCashInput6" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="nonCashInput7" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="nonCashInput8" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="nonCashInput9" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="nonCashInput10" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+            </tr>
+            <tr>
+                <td>Change in Working Capital</td>
+                <td><input id="changeWCInput1" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="changeWCInput2" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="changeWCInput3" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="changeWCInput4" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="changeWCInput5" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="changeWCInput6" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="changeWCInput7" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="changeWCInput8" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="changeWCInput9" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="changeWCInput10" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+            </tr>
+            <tr>
+                <td>Operating Cashflow</td>
+                <td><input id="ocfInput1" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ocfInput2" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ocfInput3" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ocfInput4" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ocfInput5" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ocfInput6" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ocfInput7" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ocfInput8" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ocfInput9" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="ocfInput10" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+            </tr>
+            <tr>
+                <td>CAPEX</td>
+                <td><input id="capexInput1" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="capexInput2" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="capexInput3" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="capexInput4" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="capexInput5" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="capexInput6" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="capexInput7" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="capexInput8" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="capexInput9" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="capexInput10" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+            </tr>
+            <tr>
+                <td>Free Cashflow</td>
+                <td><input id="fcfInput1" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="fcfInput2" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="fcfInput3" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="fcfInput4" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="fcfInput5" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="fcfInput6" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="fcfInput7" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="fcfInput8" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="fcfInput9" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+                <td><input id="fcfInput10" style="width: 100%; text-align: right" onchange="ffcfCalculationChanged(this)" type="number" step="10" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <script>
+        const forecastYears = 10;
+        const numbersIn = 1000000;
+
+        let oldestRevenue = @FirstFiling.IncomeStatement.Revenue;
+        let youngestRevenue = @MostRecentFiling.IncomeStatement.Revenue;
+        let historicalYears = @historicalYears;
+
+        let revenueGrowth = Math.pow((youngestRevenue / oldestRevenue), (1 / (historicalYears - 1))) - 1;
+        let revenueCostsMargin = @Model.CompanyData.Filings.Select(e => e.IncomeStatement.CostofRevenue / e.IncomeStatement.Revenue).Average();
+        let operatingExpMargin = @Model.CompanyData.Filings.Select(e => e.IncomeStatement.OperatingExpenses / e.IncomeStatement.Revenue).Average();
+        let interestMargin = @Model.CompanyData.Filings.Select(e => (e.IncomeStatement.OperatingIncomeLoss - e.IncomeStatement.PretaxIncomeLoss) / e.IncomeStatement.Revenue).Average();
+        let taxRate = @Model.CompanyData.Filings.Select(e => e.IncomeStatement.IncomeTaxExpenseBenefitNet / e.IncomeStatement.PretaxIncomeLoss).Average();
+        let depAmorMargin = @Model.CompanyData.Filings.Select(e => e.CashflowStatement.DepreciationAmortization / e.IncomeStatement.Revenue).Average();
+        let nonCashMargin = @Model.CompanyData.Filings.Select(e => e.CashflowStatement.NonCashItems / e.IncomeStatement.Revenue).Average();
+        let wcChangeMargin = @Model.CompanyData.Filings.Select(e => e.CashflowStatement.ChangeinWorkingCapital / e.IncomeStatement.Revenue).Average();
+        let capexMargin = @Model.CompanyData.Filings.Select(e => e.CashflowStatement.PurchaseofFixedAssets / e.IncomeStatement.Revenue).Average();
+
+        function ratioChanged(sender) {
+            revenueGrowth = document.getElementById("revenueGrowthInput1").value / 100;
+            revenueCostsMargin = document.getElementById("revenueCostsMarginInput1").value / 100;
+            operatingExpMargin = document.getElementById("operatingExpMarginInput1").value / 100;
+            interestMargin = document.getElementById("interestMarginInput1").value / 100;
+            taxRate = document.getElementById("taxRateInput1").value / 100;
+            depAmorMargin = document.getElementById("depAmorMarginInput1").value / 100;
+            nonCashMargin = document.getElementById("nonCashMarginInput1").value / 100;
+            wcChangeMargin = document.getElementById("wcChangeMarginInput1").value / 100;
+            capexMargin = document.getElementById("capexMarginInput1").value / 100;
+
+            for (let i = 1; i <= forecastYears; i++) {
+                calculateYear(i);
+            }
+        }
+
+        function ffcfCalculationChanged(sender) {
+            var senderColumn = parseInt(sender.id.slice(-1));
+            if (senderColumn === "0") senderColumn = 10;
+            let senderCategory = sender.id.replace(senderColumn, "").replace("Input", "");
+
+            calculateYearAfterField(senderCategory, senderColumn)
+
+            if (senderCategory === "revenue") {
+                for (let i = senderColumn + 1; i <= forecastYears; i++) {
+                    calculateYear(i);
+                }
+            }
+        }
+
+        function initialize() {
+
+            document.getElementById("revenueGrowthInput1").value = Math.round(revenueGrowth * 100);
+            document.getElementById("revenueCostsMarginInput1").value = Math.round(revenueCostsMargin * 100);
+            document.getElementById("operatingExpMarginInput1").value = Math.round(operatingExpMargin * 100);
+            document.getElementById("interestMarginInput1").value = Math.round(interestMargin * 100);
+            document.getElementById("taxRateInput1").value = Math.round(taxRate * 100);
+            document.getElementById("depAmorMarginInput1").value = Math.round(depAmorMargin * 100);
+            document.getElementById("nonCashMarginInput1").value = Math.round(nonCashMargin * 100);
+            document.getElementById("wcChangeMarginInput1").value = Math.round(wcChangeMargin * 100);
+            document.getElementById("capexMarginInput1").value = Math.round(capexMargin * 100);
+
+            for (let i = 1; i <= forecastYears; i++) {
+                calculateYear(i);
+            }
+        }
+
+        function calculateYear(year) {
+            document.getElementById("revenue" + "Input" + year).value = formatNumber(calculateRevenue(year));
+
+            calculateYearAfterField("revenue", year);
+        }
+
+        function calculateYearAfterField(nameOfField, year) {
+            switch (nameOfField) {
+                case "revenue":
+                    document.getElementById("revenueCost" + "Input" + year).value = formatNumber(calculateRevenueCost(year));
+                    calculateYearAfterField("revenueCost", year);
+                    break;
+                case "revenueCost":
+                    document.getElementById("operatingExp" + "Input" + year).value = formatNumber(calculateOperatingExp(year));
+                    calculateYearAfterField("operatingExp", year);
+                    break;
+                case "operatingExp":
+                    document.getElementById("ebit" + "Input" + year).value = formatNumber(calculateEBIT(year));
+                    calculateYearAfterField("ebit", year);
+                    break;
+                case "ebit":
+                    document.getElementById("interest" + "Input" + year).value = formatNumber(calculateInterest(year));
+                    calculateYearAfterField("interest", year);
+                    break;
+                case "interest":
+                    document.getElementById("ebt" + "Input" + year).value = formatNumber(calculateEBT(year));
+                    calculateYearAfterField("ebt", year);
+                    break;
+                case "ebt":
+                    document.getElementById("tax" + "Input" + year).value = formatNumber(calculateTax(year));
+                    calculateYearAfterField("tax", year);
+                    break;
+                case "tax":
+                    document.getElementById("netIncome" + "Input" + year).value = formatNumber(calculateNetIncome(year));
+                    calculateYearAfterField("netIncome", year);
+                    break;
+                case "netIncome":
+                    document.getElementById("depAmor" + "Input" + year).value = formatNumber(calculateDepAmor(year));
+                    calculateYearAfterField("depAmor", year);
+                    break;
+                case "depAmor":
+                    document.getElementById("nonCash" + "Input" + year).value = formatNumber(calculateNonCash(year));
+                    calculateYearAfterField("nonCash", year);
+                    break;
+                case "nonCash":
+                    document.getElementById("changeWC" + "Input" + year).value = formatNumber(calculateChangeWC(year));
+                    calculateYearAfterField("changeWC", year);
+                    break;
+                case "changeWC":
+                    document.getElementById("ocf" + "Input" + year).value = formatNumber(calculateOcf(year));
+                    calculateYearAfterField("ocf", year);
+                    break;
+                case "ocf":
+                    document.getElementById("capex" + "Input" + year).value = formatNumber(calculateCapex(year));
+                    calculateYearAfterField("capex", year);
+                    break;
+                case "capex":
+                    document.getElementById("fcf" + "Input" + year).value = formatNumber(calculateFcf(year));
+                    calculateYearAfterField("fcf", year);
+                    break;
+            }
+        }
+
+        function calculateRevenue(year) {
+            let previousRevenue = 0;
+            if (year === 1)
+                previousRevenue = youngestRevenue / numbersIn;
+            else
+                previousRevenue = parseFloat(document.getElementById("revenue" + "Input" + (year - 1)).value);
+
+            return previousRevenue * (1 + revenueGrowth);
+        }
+        function calculateRevenueCost(year) {
+            let revenue = parseFloat(document.getElementById("revenue" + "Input" + year).value);
+            return revenue * revenueCostsMargin;
+        }
+        function calculateOperatingExp(year) {
+            let revenue = parseFloat(document.getElementById("revenue" + "Input" + year).value);
+            return revenue * operatingExpMargin;
+        }
+        function calculateEBIT(year) {
+            let revenue = parseFloat(document.getElementById("revenue" + "Input" + year).value);
+            let revenueCost = parseFloat(document.getElementById("revenueCost" + "Input" + year).value);
+            let operatingExp = parseFloat(document.getElementById("operatingExp" + "Input" + year).value);
+            return revenue + revenueCost + operatingExp;
+        }
+        function calculateInterest(year) {
+            let revenue = parseFloat(document.getElementById("revenue" + "Input" + year).value);
+            return revenue * interestMargin;
+        }
+        function calculateEBT(year) {
+            let ebit = parseFloat(document.getElementById("ebit" + "Input" + year).value);
+            let interest = parseFloat(document.getElementById("interest" + "Input" + year).value);
+            return ebit + interest;
+        }
+        function calculateTax(year) {
+            let ebt = parseFloat(document.getElementById("ebt" + "Input" + year).value);
+            return ebt * taxRate;
+        }
+        function calculateNetIncome(year) {
+            let ebt = parseFloat(document.getElementById("ebt" + "Input" + year).value);
+            let tax = parseFloat(document.getElementById("tax" + "Input" + year).value);
+            return ebt + tax;
+        }
+        function calculateDepAmor(year) {
+            let revenue = parseFloat(document.getElementById("revenue" + "Input" + year).value);
+            return revenue * depAmorMargin;
+        }
+        function calculateNonCash(year) {
+            let revenue = parseFloat(document.getElementById("revenue" + "Input" + year).value);
+            return revenue * nonCashMargin;
+        }
+        function calculateChangeWC(year) {
+            let revenue = parseFloat(document.getElementById("revenue" + "Input" + year).value);
+            return revenue * wcChangeMargin;
+        }
+        function calculateOcf(year) {
+            let netIncome = parseFloat(document.getElementById("netIncome" + "Input" + year).value);
+            let depAmor = parseFloat(document.getElementById("depAmor" + "Input" + year).value);
+            let nonCash = parseFloat(document.getElementById("nonCash" + "Input" + year).value);
+            let changeWC = parseFloat(document.getElementById("changeWC" + "Input" + year).value);
+            return netIncome + depAmor + nonCash + changeWC;
+        }
+        function calculateCapex(year) {
+            let revenue = parseFloat(document.getElementById("revenue" + "Input" + year).value);
+            return revenue * capexMargin;
+        }
+        function calculateFcf(year) {
+            let ocf = parseFloat(document.getElementById("ocf" + "Input" + year).value);
+            let capex = parseFloat(document.getElementById("capex" + "Input" + year).value);
+            return ocf + capex;
+        }
+
+        function formatNumber(number) {
+            return Math.round(number);
+        }
+
+        initialize();
+    </script>
+</div>

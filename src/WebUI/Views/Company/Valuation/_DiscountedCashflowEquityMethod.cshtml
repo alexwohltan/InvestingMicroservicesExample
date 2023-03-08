@@ -12,6 +12,8 @@
     <h5>Discounted Cashflow Model (Equity Method)</h5>
 
     <h6>Determining the Free Cashflows / Owners Earnings</h6>
-    <p>We need to forecast the Owners Earnings (Free Cashflow) for the next 5-10 years. Free Cashflow is calculated as follows.</p>
+    <p>We need to forecast the Owners Earnings (Free Cashflow) for the next 5-10 years. The Free Cashflow calculations for the previous years are shown below.</p>
     @await Html.PartialAsync("Valuation/_FreeCashflowCalculation", Model)
+    <p>In the following table the next years need to be forecasted. For the next 2 years exact numbers should be used. After that we will estimate the Revenue, approximate EBT Margin & Tax Rate and will then caclulate the rest (below Net Income).</p>
+    @await Html.PartialAsync("Valuation/_FutureFCFCalculation", Model)
 </div>

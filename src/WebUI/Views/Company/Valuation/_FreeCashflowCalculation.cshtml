@@ -9,7 +9,8 @@
 }
 
 <div id="freeCashflowCalculation">
-    <table class="table table-small">
+    <table class="table small table-hover">
+        <caption>Owners Earnings in previous years. Numbers in Thousands.</caption>
         <tr style="text-align:right">
             <th></th>
             @if (Filing5 != null)
@@ -129,6 +130,26 @@
                 <td>@string.Format("{0:#,##0}", Filing2.IncomeStatement.OperatingIncomeLoss / 1000)</td>
             }
             <td>@string.Format("{0:#,##0}", Filing1.IncomeStatement.OperatingIncomeLoss / 1000)</td>
+        </tr>
+        <tr style="text-align: right">
+            <td style="text-align:left">Interest Expenses & Others</td>
+            @if (Filing5 != null)
+            {
+                <td>@string.Format("{0:#,##0}", (Filing5.IncomeStatement.OperatingIncomeLoss - Filing5.IncomeStatement.PretaxIncomeLoss) / 1000)</td>
+            }
+            @if (Filing4 != null)
+            {
+                <td>@string.Format("{0:#,##0}", (Filing4.IncomeStatement.OperatingIncomeLoss - Filing4.IncomeStatement.PretaxIncomeLoss) / 1000)</td>
+            }
+            @if (Filing3 != null)
+            {
+                <td>@string.Format("{0:#,##0}", (Filing3.IncomeStatement.OperatingIncomeLoss - Filing3.IncomeStatement.PretaxIncomeLoss) / 1000)</td>
+            }
+            @if (Filing2 != null)
+            {
+                <td>@string.Format("{0:#,##0}", (Filing2.IncomeStatement.OperatingIncomeLoss - Filing2.IncomeStatement.PretaxIncomeLoss) / 1000)</td>
+            }
+            <td>@string.Format("{0:#,##0}", (Filing1.IncomeStatement.OperatingIncomeLoss - Filing1.IncomeStatement.PretaxIncomeLoss) / 1000)</td>
         </tr>
         <tr style="text-align: right; font-weight: bold">
             <td style="text-align:left">Pretax Income (EBT)</td>
